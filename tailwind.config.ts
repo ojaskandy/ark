@@ -11,6 +11,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        'dance-pink': '#ff69b4',
+        'dance-purple': '#a259d9',
+        'dance-light-pink': '#ffb6da',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
