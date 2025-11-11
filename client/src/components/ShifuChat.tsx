@@ -80,7 +80,7 @@ export default function ShifuChat({
       }
     } catch (error) {
       console.error('Failed to load daily wisdom:', error);
-      setDailyWisdom("Welcome, young warrior. I am here to guide you on your martial arts journey.");
+      setDailyWisdom("hey! i'm vibe, your dance coach. let's find your flow together.");
     }
   };
 
