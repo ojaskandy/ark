@@ -103,7 +103,7 @@ function CurrentPageTimer() {
     const s = (totalSeconds % 60).toString().padStart(2, '0');
     return `${h}:${m}:${s}`;
   };
-  return <span className="font-mono text-red-400">{formatDisplayTime(sessionSeconds)}</span>;
+  return <span className="font-mono text-dance-pink">{formatDisplayTime(sessionSeconds)}</span>;
 }
 
 export default function Home() {
@@ -421,9 +421,9 @@ export default function Home() {
 
   // Handle feedback submission by opening email client
   const handleFeedbackSubmit = () => {
-    const username = user?.username || 'User';
-    const subject = encodeURIComponent(`Feedback on CoachT by ${username}`);
-    const body = encodeURIComponent("Please type your feedback here:\n\n"); // Default body
+    const username = user?.username || 'user';
+    const subject = encodeURIComponent(`feedback on moveflow by ${username}`);
+    const body = encodeURIComponent("please type your feedback here:\n\n"); // Default body
     window.location.href = `mailto:ojaskandy@gmail.com?subject=${subject}&body=${body}`;
   };
 
@@ -638,22 +638,22 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-black overflow-hidden">
       {/* Mobile-optimized Header */}
-      <header className="bg-gradient-to-r from-black to-red-950/90 border-b border-red-900/30 px-3 sm:px-6 py-2 sm:py-3 flex justify-between items-center shadow-md">
+      <header className="bg-gradient-to-r from-black to-purple-950/90 border-b border-dance-purple/30 px-3 sm:px-6 py-2 sm:py-3 flex justify-between items-center shadow-md">
         <div className="flex items-center gap-2 sm:gap-4">
           <Link to="/app" className="cursor-pointer">
-            <h1 className="text-lg sm:text-2xl font-bold gradient-heading flex items-center group z-50 relative">
-              <motion.span 
-                className="material-icons text-red-600 mr-1 sm:mr-2 text-base sm:text-lg"
+            <h1 className="text-lg sm:text-2xl font-bold gradient-heading flex items-center group z-50 relative lowercase">
+              <motion.span
+                className="material-icons text-dance-pink mr-1 sm:mr-2 text-base sm:text-lg"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
               >
-                sports_martial_arts
+                music_note
               </motion.span>
-              <span className="group-hover:text-red-500 transition-colors">CoachT</span>
+              <span className="group-hover:text-dance-purple transition-colors">moveflow</span>
             </h1>
           </Link>
           
-          <div className="hidden sm:block h-8 w-px bg-red-900/30 mx-2"></div>
+          <div className="hidden sm:block h-8 w-px bg-dance-purple/30 mx-2"></div>
           
           {/* Current time - hidden on mobile */}
           <div className="hidden md:block">
@@ -696,12 +696,12 @@ export default function Home() {
               whileTap={{ scale: 0.95 }} 
               className="relative group"
             >
-              <Button 
-                variant="outline" 
-                className="h-8 rounded-full border-red-600 bg-transparent hover:bg-red-700/20 flex items-center px-2 sm:px-3 transition-all duration-300 hover:shadow-red-500/30 hover:shadow-sm"
+              <Button
+                variant="outline"
+                className="h-8 rounded-full border-dance-pink bg-transparent hover:bg-dance-purple/20 flex items-center px-2 sm:px-3 transition-all duration-300 hover:shadow-dance-pink/30 hover:shadow-sm"
               >
                 <User className="h-4 w-4 text-white sm:mr-2" />
-                <span className="hidden sm:inline text-sm text-white font-medium">Profile</span>
+                <span className="hidden sm:inline text-sm text-white font-medium lowercase">profile</span>
               </Button>
             </motion.div>
           </Link>
@@ -709,37 +709,37 @@ export default function Home() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  variant="outline" 
-                  className="h-8 rounded-full border-red-600 bg-transparent hover:bg-red-700/20 flex items-center px-2 sm:px-3"
+                <Button
+                  variant="outline"
+                  className="h-8 rounded-full border-dance-pink bg-transparent hover:bg-dance-purple/20 flex items-center px-2 sm:px-3"
                 >
                   <Settings className="h-4 w-4 text-white sm:mr-2" />
-                  <span className="hidden sm:inline text-sm text-white font-medium">Menu</span>
+                  <span className="hidden sm:inline text-sm text-white font-medium lowercase">menu</span>
                 </Button>
               </motion.div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40 border border-red-600 bg-gray-900">
-              <DropdownMenuItem 
-                className="cursor-pointer flex items-center text-white hover:bg-red-700/30"
+            <DropdownMenuContent align="end" className="w-40 border border-dance-pink bg-gray-900">
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center text-white hover:bg-dance-purple/30 lowercase"
                 onClick={() => setShowCustomizeDialog(true)}
               >
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+                <span>settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="cursor-pointer flex items-center text-white hover:bg-red-700/30"
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center text-white hover:bg-dance-purple/30 lowercase"
                 onClick={() => setShowTips(true)}
               >
                 <Info className="mr-2 h-4 w-4" />
-                <span>Training Tips</span>
+                <span>dance tips</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-red-900/30" />
-              <DropdownMenuItem 
-                className="cursor-pointer flex items-center text-white hover:bg-red-700/30" 
+              <DropdownMenuSeparator className="bg-dance-purple/30" />
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center text-white hover:bg-dance-purple/30 lowercase"
                 onClick={() => logoutMutation.mutate()}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
+                <span>logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
