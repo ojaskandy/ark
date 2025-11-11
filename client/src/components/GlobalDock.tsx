@@ -28,9 +28,9 @@ export default function GlobalDock() {
 
   // Handle feedback submission by opening email client
   const handleFeedbackSubmit = () => {
-    const username = user?.username || 'User';
-    const subject = encodeURIComponent(`Feedback on CoachT by ${username}`);
-    const body = encodeURIComponent("Please type your feedback here:\n\n"); // Default body
+    const username = user?.username || 'user';
+    const subject = encodeURIComponent(`feedback on moveflow by ${username}`);
+    const body = encodeURIComponent("please type your feedback here:\n\n"); // Default body
     window.location.href = `mailto:ojaskandy@gmail.com?subject=${subject}&body=${body}`;
   };
 
@@ -44,16 +44,16 @@ export default function GlobalDock() {
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => window.history.back()}
-                className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                title="Go Back"
+                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                title="go back"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
-              
+
               <button
                 onClick={() => window.location.href = '/app'}
-                className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                title="Home"
+                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                title="home"
               >
                 <Home className="h-5 w-5" />
               </button>
@@ -66,16 +66,16 @@ export default function GlobalDock() {
             <div className="flex items-center space-x-1">
               <button
                 onClick={handleShifuChatToggle}
-                className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                title="Chat with Shifu"
+                className="p-2 rounded-full text-gray-400 hover:text-dance-purple hover:bg-gray-800 transition-colors"
+                title="chat with vibe"
               >
                 <Sparkles className="h-5 w-5" />
               </button>
 
               <button
                 onClick={handleFeedbackSubmit}
-                className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                title="Send Feedback"
+                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                title="send feedback"
               >
                 <MessageSquare className="h-5 w-5" />
               </button>
@@ -86,7 +86,7 @@ export default function GlobalDock() {
               <button
                 onClick={() => setIsDockVisible(!isDockVisible)}
                 className="p-1 rounded-full text-gray-500 hover:text-white hover:bg-gray-800 transition-colors"
-                title="Hide Dock"
+                title="hide dock"
               >
                 <X className="h-4 w-4" />
               </button>
