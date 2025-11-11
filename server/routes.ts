@@ -330,8 +330,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             quantity: 1,
           },
         ],
-        success_url: `${process.env.NODE_ENV === 'production' ? 'https://coacht.xyz' : 'http://localhost:5001'}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NODE_ENV === 'production' ? 'https://coacht.xyz' : 'http://localhost:5001'}/onboarding`,
+        success_url: `${process.env.NODE_ENV === 'production' ? 'https://coacht.xyz' : 'http://localhost:3333'}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.NODE_ENV === 'production' ? 'https://coacht.xyz' : 'http://localhost:3333'}/onboarding`,
         metadata: {
           userId: req.user.id.toString(),
         },

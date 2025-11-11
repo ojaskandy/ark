@@ -422,7 +422,7 @@ export default function Home() {
   // Handle feedback submission by opening email client
   const handleFeedbackSubmit = () => {
     const username = user?.username || 'user';
-    const subject = encodeURIComponent(`feedback on moveflow by ${username}`);
+    const subject = encodeURIComponent(`feedback on ark by ${username}`);
     const body = encodeURIComponent("please type your feedback here:\n\n"); // Default body
     window.location.href = `mailto:ojaskandy@gmail.com?subject=${subject}&body=${body}`;
   };
@@ -649,7 +649,7 @@ export default function Home() {
               >
                 music_note
               </motion.span>
-              <span className="group-hover:text-dance-purple transition-colors">moveflow</span>
+              <span className="group-hover:text-dance-purple transition-colors">ark</span>
             </h1>
           </Link>
           

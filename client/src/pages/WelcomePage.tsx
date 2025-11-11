@@ -245,7 +245,7 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-black text-white">
       {/* Navigation - Simplified */}
       <div className="bg-black py-4 px-6 flex justify-between items-center">
-        <span className="text-2xl font-bold bg-gradient-to-r from-dance-pink to-dance-purple bg-clip-text text-transparent">moveflow</span>
+        <span className="text-2xl font-bold bg-gradient-to-r from-dance-pink to-dance-purple bg-clip-text text-transparent">ark</span>
         <Link href="/auth">
           <Button
             className="bg-gradient-to-r from-dance-pink to-dance-purple text-white hover:opacity-90 px-6 py-3 text-lg font-semibold"
@@ -567,7 +567,7 @@ export default function WelcomePage() {
                     <div className="w-6 h-6 bg-dance-pink rounded-full flex items-center justify-center group-hover:bg-purple-400 transition-colors">
                       <div className="w-3 h-2 bg-white rounded"></div>
                     </div>
-                    <span className="text-2xl font-bold lowercase">join 500+ dancers using moveflow</span>
+                    <span className="text-2xl font-bold lowercase">join 500+ dancers using ark</span>
                   </motion.div>
                 </Link>
 
@@ -666,7 +666,7 @@ export default function WelcomePage() {
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-4 lowercase">loved by dancers everywhere</h2>
           <p className="text-lg text-gray-400 mb-12 lowercase">
-            people all around the world choose moveflow to find their groove.
+            people all around the world choose ark to find their groove.
           </p>
           <div className="relative flex gap-8 h-[600px] [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
             <div className="flex flex-col gap-8 animate-scroll-up">

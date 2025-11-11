@@ -29,7 +29,7 @@ export default function GlobalDock() {
   // Handle feedback submission by opening email client
   const handleFeedbackSubmit = () => {
     const username = user?.username || 'user';
-    const subject = encodeURIComponent(`feedback on moveflow by ${username}`);
+    const subject = encodeURIComponent(`feedback on ark by ${username}`);
     const body = encodeURIComponent("please type your feedback here:\n\n"); // Default body
     window.location.href = `mailto:ojaskandy@gmail.com?subject=${subject}&body=${body}`;
   };

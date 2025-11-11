@@ -9,9 +9,9 @@ const app = express();
 
 // Configure CORS for Google OAuth
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://www.coacht.xyz', 'https://coacht.xyz'] 
-    : ['http://localhost:5001', 'http://localhost:3000'],
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://www.coacht.xyz', 'https://coacht.xyz']
+    : ['http://localhost:3333', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
@@ -74,8 +74,8 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Use port 5001 for development and deployment
-  const port = process.env.PORT || 5001;
+  // Use port 3333 for development and deployment
+  const port = process.env.PORT || 3333;
   server.listen({
     port,
     host: "0.0.0.0" // Listen on all interfaces to make it accessible in deployment
