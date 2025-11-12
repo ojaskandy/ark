@@ -50,57 +50,52 @@ export default function ReferenceMediaSelector({
 
   // Main selection view
   return (
-    <div className="p-8 bg-gray-900 rounded-lg max-w-md w-full border border-red-900/30 shadow-lg">
+    <div className="p-8 bg-white rounded-lg max-w-md w-full border border-gray-200 shadow-xl">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-serif bg-gradient-to-r from-red-500 to-red-600 text-transparent bg-clip-text">
-          Select Reference Media
+        <h3 className="text-2xl font-bold text-gray-900">
+          select reference media
         </h3>
-        <button 
+        <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-white"
+          className="text-gray-400 hover:text-gray-900"
         >
-          <span className="material-icons">close</span>
+          ✕
         </button>
       </div>
 
-      <p className="text-gray-300 text-center mb-8">
-        Upload an image or video to compare with your live tracking
+      <p className="text-gray-600 text-center mb-8">
+        choose a video or upload your own
       </p>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* Pre-loaded Video Option */}
-        <Button
+        <button
           onClick={() => setCurrentView('preloaded')}
-          className="w-full h-16 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-semibold text-lg flex items-center justify-center gap-3"
+          className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg flex items-center justify-center gap-3 transition-colors"
         >
-          <span className="material-icons text-2xl">video_library</span>
-          Choose Pre-loaded Video
-        </Button>
+          📹 choose pre-loaded video
+        </button>
 
         {/* Upload Option */}
-        <Button
+        <button
           onClick={() => setCurrentView('upload')}
-          className="w-full h-16 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-800 hover:to-gray-700 text-white font-semibold text-lg flex items-center justify-center gap-3"
+          className="w-full h-14 border border-gray-300 hover:border-gray-400 text-gray-900 font-medium rounded-lg flex items-center justify-center gap-3 transition-colors"
         >
-          <span className="material-icons text-2xl">file_upload</span>
-          Upload Video
-        </Button>
+          📤 upload your own
+        </button>
 
         {/* Cancel Button */}
-        <Button
-          variant="outline"
+        <button
           onClick={onCancel}
-          className="w-full border-red-900/30 bg-transparent text-gray-300 hover:bg-red-900/20 hover:text-white"
+          className="w-full h-12 text-gray-600 hover:text-gray-900 font-medium"
         >
-          <span className="material-icons mr-2">close</span>
-          Cancel
-        </Button>
+          cancel
+        </button>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-red-900/30">
+      <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="text-xs text-gray-500 text-center space-y-1">
-          <p>Pre-loaded videos include martial arts forms and techniques</p>
-          <p>Upload supports: JPG, PNG, WEBP, MP4, WEBM</p>
+          <p>supports: jpg, png, webp, mp4, webm</p>
         </div>
       </div>
     </div>
