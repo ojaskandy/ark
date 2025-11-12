@@ -98,50 +98,50 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
   };
 
   return (
-    <div className="p-6 bg-gray-900 rounded-lg max-w-md w-full border border-red-900/30 shadow-lg">
+    <div className="p-6 bg-white rounded-lg max-w-md w-full border border-gray-200 shadow-xl">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-serif bg-gradient-to-r from-red-500 to-red-600 text-transparent bg-clip-text">
-          Upload Media
+        <h3 className="text-xl font-bold text-gray-900">
+          upload media
         </h3>
-        <button 
+        <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-white"
+          className="text-gray-400 hover:text-gray-900"
         >
-          <span className="material-icons">close</span>
+          ✕
         </button>
       </div>
-      
-      <div 
-        className={`upload-zone p-8 mb-4 flex flex-col items-center justify-center bg-gray-800/50 border border-dashed border-red-900/50 rounded-lg ${isDragging ? 'bg-red-900/20 border-red-600' : ''}`}
+
+      <div
+        className={`upload-zone p-8 mb-4 flex flex-col items-center justify-center bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg ${isDragging ? 'bg-gray-100 border-gray-400' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <span className="material-icons text-4xl text-red-500 mb-3">
-          {loading ? "hourglass_top" : "cloud_upload"}
-        </span>
-        
-        <p className="text-center text-gray-300 mb-3">
-          {loading 
-            ? "Processing your file..." 
-            : "Drag & drop your image or video here"}
+        <div className="text-4xl mb-3">
+          {loading ? "⏳" : "📤"}
+        </div>
+
+        <p className="text-center text-gray-900 mb-3 font-medium">
+          {loading
+            ? "processing your file..."
+            : "drag & drop your image or video here"}
         </p>
-        
+
         <p className="text-xs text-gray-500 mb-4 text-center">
-          Supported formats: JPG, PNG, WEBP, MP4, WEBM
+          supported: jpg, png, webp, mp4, webm
         </p>
-        
+
         {!loading && (
-          <Button 
+          <button
             onClick={handleBrowseClick}
-            className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700"
+            className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium"
           >
-            Browse Files
-          </Button>
+            browse files
+          </button>
         )}
-        
+
         {loading && <div className="loader mt-2"></div>}
-        
+
         <input
           type="file"
           ref={fileInputRef}
@@ -150,29 +150,28 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
           className="hidden"
         />
       </div>
-      
+
       {error && (
-        <Alert variant="destructive" className="mb-4 bg-red-950 border border-red-700 text-red-300">
+        <Alert variant="destructive" className="mb-4 bg-red-50 border border-red-200 text-red-800">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      
+
       <div className="grid grid-cols-2 gap-3">
-        <Button 
-          variant="outline" 
+        <button
           onClick={onCancel}
-          className="border-red-900/30 bg-gray-900 text-gray-300 hover:bg-gray-800"
+          className="px-4 py-2 border border-gray-300 text-gray-900 rounded-lg hover:border-gray-400 font-medium"
         >
-          Cancel
-        </Button>
-        
-        <Button
-          className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700"
+          cancel
+        </button>
+
+        <button
+          className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium disabled:opacity-50"
           onClick={handleBrowseClick}
           disabled={loading}
         >
-          {loading ? "Processing..." : "Select File"}
-        </Button>
+          {loading ? "processing..." : "select file"}
+        </button>
       </div>
     </div>
   );

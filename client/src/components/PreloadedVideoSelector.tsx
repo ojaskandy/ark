@@ -42,12 +42,12 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+    <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-gray-200 shadow-xl">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-white">Select Reference Video</h2>
+        <h2 className="text-2xl font-bold text-gray-900">select reference video</h2>
         <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-white text-2xl"
+          className="text-gray-400 hover:text-gray-900 text-2xl"
         >
           ✕
         </button>
@@ -61,8 +61,8 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
             onClick={() => setSelectedCategory(category)}
             className={`px-4 py-2 rounded-lg capitalize whitespace-nowrap ${
               selectedCategory === category
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-gray-900 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             {category.replace('-', ' ')}
@@ -75,11 +75,11 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
         {categorizedVideos[selectedCategory]?.map((video) => (
           <div
             key={video.id}
-            className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-colors cursor-pointer"
+            className="border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors cursor-pointer"
             onClick={() => handleVideoLoad(video)}
           >
             {/* Thumbnail */}
-            <div className="aspect-video bg-gray-700 flex items-center justify-center">
+            <div className="aspect-video bg-gray-100 flex items-center justify-center">
               <img
                 src={video.thumbnailUrl}
                 alt={video.name}
@@ -99,10 +99,10 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
 
             {/* Video Info */}
             <div className="p-4">
-              <h3 className="text-white font-semibold mb-2 line-clamp-2">
+              <h3 className="text-gray-900 font-semibold mb-2 line-clamp-2">
                 {video.name}
               </h3>
-              <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+              <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                 {video.description}
               </p>
               <div className="flex justify-between items-center text-sm">
@@ -118,9 +118,9 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
 
       {categorizedVideos[selectedCategory]?.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-lg mb-2">No videos available</div>
+          <div className="text-gray-600 text-lg mb-2">no videos available</div>
           <div className="text-gray-500 text-sm">
-            Videos for {selectedCategory} category will appear here when added
+            videos for {selectedCategory} category will appear here when added
           </div>
         </div>
       )}
@@ -129,9 +129,9 @@ export default function PreloadedVideoSelector({ onVideoSelect, onCancel }: Prel
       <div className="flex justify-center mt-6">
         <button
           onClick={onCancel}
-          className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+          className="px-6 py-2 border border-gray-300 text-gray-900 rounded-lg hover:border-gray-400 transition-colors font-medium"
         >
-          Cancel
+          cancel
         </button>
       </div>
     </div>
