@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useLocation } from 'wouter';
 import ReferenceMediaSelector from '@/components/ReferenceMediaSelector';
+import CameraView from '@/components/CameraView';
 import { MartialArtsVideo } from '@/data/martialArtsVideos';
+import { requestCameraPermission, getCameraStream } from '@/lib/cameraUtils';
+import { initPoseDetection } from '@/lib/poseDetection';
+
+type ViewMode = 'select' | 'comparison';
 
 const LiveRoutineDemo: React.FC = () => {
   const [, navigate] = useLocation();
+  const [viewMode, setViewMode] = useState<ViewMode>('select');
   const [showSelector, setShowSelector] = useState(false);
+
+  // Media state
   const [selectedVideo, setSelectedVideo] = useState<{
     video: HTMLVideoElement;
     url: string;
@@ -16,6 +24,12 @@ const LiveRoutineDemo: React.FC = () => {
     image: HTMLImageElement;
     url: string;
   } | null>(null);
+
+  // Camera state
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isTracking, setIsTracking] = useState(false);
+  const [permissionGranted, setPermissionGranted] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   const handleVideoUpload = (video: HTMLVideoElement, url: string, videoData?: MartialArtsVideo) => {
     setSelectedVideo({ video, url, data: videoData });
@@ -31,6 +45,103 @@ const LiveRoutineDemo: React.FC = () => {
     setShowSelector(false);
   };
 
+  const handleStartComparison = async () => {
+    setIsInitializing(true);
+
+    try {
+      // Request camera permission
+      const hasPermission = await requestCameraPermission();
+      if (!hasPermission) {
+        alert('camera permission is required for pose comparison');
+        setIsInitializing(false);
+        return;
+      }
+
+      setPermissionGranted(true);
+
+      // Get camera stream
+      const cameraStream = await getCameraStream('user');
+      setStream(cameraStream);
+
+      // Initialize pose detection
+      await initPoseDetection('MoveNet');
+
+      // Switch to comparison view
+      setViewMode('comparison');
+      setIsTracking(true);
+    } catch (error) {
+      console.error('Failed to start comparison:', error);
+      alert('failed to start camera. please check permissions.');
+    } finally {
+      setIsInitializing(false);
+    }
+  };
+
+  const handleBackToSelect = () => {
+    // Stop camera stream
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setIsTracking(false);
+    setViewMode('select');
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
+
+  if (viewMode === 'comparison') {
+    return (
+      <div className="min-h-screen bg-white">
+        {/* Header */}
+        <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <button
+            onClick={handleBackToSelect}
+            className="flex items-center text-gray-900 hover:text-gray-600 font-medium"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" /> back to selection
+          </button>
+          <div className="text-gray-900 font-medium">
+            pose comparison
+          </div>
+        </div>
+
+        {/* Camera View */}
+        <div className="p-6">
+          <CameraView
+            stream={stream}
+            isTracking={isTracking}
+            confidenceThreshold={0.5}
+            modelSelection="MoveNet"
+            maxPoses={1}
+            skeletonColor="#000000"
+            showSkeleton={true}
+            showPoints={true}
+            showBackground={true}
+            backgroundOpacity={100}
+            backgroundBlur={0}
+            sourceType={selectedVideo ? 'video' : 'image'}
+            videoElement={selectedVideo?.video}
+            imageElement={selectedImage?.image}
+            mediaUrl={selectedVideo?.url || selectedImage?.url}
+            showReferenceOverlay={true}
+            isFullscreenMode={false}
+            onScreenshot={(dataUrl) => console.log('Screenshot:', dataUrl)}
+            toggleTracking={() => setIsTracking(!isTracking)}
+            cameraFacing="user"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Selection view
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -86,9 +197,11 @@ const LiveRoutineDemo: React.FC = () => {
               )}
               <div className="flex gap-3">
                 <button
-                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium"
+                  onClick={handleStartComparison}
+                  disabled={isInitializing}
+                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  start comparison
+                  {isInitializing ? 'starting...' : 'start comparison'}
                 </button>
                 <button
                   onClick={() => setSelectedVideo(null)}
@@ -114,9 +227,11 @@ const LiveRoutineDemo: React.FC = () => {
               </div>
               <div className="flex gap-3">
                 <button
-                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium"
+                  onClick={handleStartComparison}
+                  disabled={isInitializing}
+                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  start comparison
+                  {isInitializing ? 'starting...' : 'start comparison'}
                 </button>
                 <button
                   onClick={() => setSelectedImage(null)}
