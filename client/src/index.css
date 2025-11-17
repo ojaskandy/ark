@@ -229,46 +229,45 @@ h1, h2, h3, h4, h5, h6 {
     background-color: transparent !important;
   }
   
-  /* Light mode specific navigation buttons */
+  /* Light mode specific navigation buttons - NEUTRAL */
   .light .nav-button,
   .light .dock-button {
-    background-color: rgb(220, 38, 38) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    border: none !important;
   }
   
   .light .nav-button:hover,
   .light .dock-button:hover {
-    background-color: rgb(185, 28, 28) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
+    background-color: transparent !important;
   }
   
-  /* Light mode profile and menu buttons */
+  /* Light mode profile and menu buttons - NEUTRAL */
   .light .profile-button,
   .light .menu-button {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    border: none !important;
   }
   
   .light .profile-button:hover,
   .light .menu-button:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
+    background-color: transparent !important;
   }
   
-  /* Light mode header text elements */
+  /* Light mode header text elements - NEUTRAL */
   .light .time,
   .light .username,
   .light .belt-display {
-    color: white !important;
+    color: inherit !important;
   }
   
-  /* Override any dark text in header area for light mode */
+  /* Override any dark text in header area for light mode - NEUTRAL */
   .light header *,
   .light .header *,
   .light .top-bar *,
   .light .banner * {
-    color: white !important;
+    color: inherit !important;
   }
   
   /* Light mode card headers to match theme */
