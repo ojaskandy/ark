@@ -21,7 +21,7 @@ export default function Welcome() {
       });
 
       if (response.ok) {
-        navigate('/app');
+        window.location.href = '/app';
       } else {
         setError('incorrect password');
       }
