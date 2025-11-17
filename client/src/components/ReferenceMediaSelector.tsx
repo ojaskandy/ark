@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import MediaUploader from './MediaUploader';
 import PreloadedVideoSelector from './PreloadedVideoSelector';
 import { type DanceRoutine } from '@/data/danceRoutines';
@@ -48,52 +49,62 @@ export default function ReferenceMediaSelector({
   }
 
   return (
-    <div className="p-8 bg-white rounded-3xl max-w-md w-full border border-rose-100 shadow-xl">
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.9, opacity: 0 }}
+      className="bg-gray-900 border border-gray-800 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.4em] text-rose-300 mb-1">reference</p>
-          <h3 className="text-2xl font-semibold text-rose-900">select media</h3>
+          <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Reference</p>
+          <h3 className="text-2xl font-semibold text-white">Select Media</h3>
         </div>
         <button
           onClick={onCancel}
-          className="text-rose-300 hover:text-rose-500 transition-colors"
+          className="text-gray-500 hover:text-gray-300 transition-colors"
         >
           ✕
         </button>
       </div>
 
-      <p className="text-rose-500 text-center mb-8 text-sm">
-        grab a routine from our studio shelf or upload your own clip / still.
+      <p className="text-gray-400 text-center mb-8 text-sm">
+        Choose a routine from our library or upload your own
       </p>
 
       <div className="space-y-3">
-        <button
+        <motion.button
           onClick={() => setCurrentView('preloaded')}
-          className="w-full h-14 bg-rose-600 hover:bg-rose-500 text-white font-medium rounded-2xl flex items-center justify-center gap-3 transition-colors"
+          className="w-full h-14 bg-gradient-to-r from-pink-500 to-orange-400 hover:from-pink-400 hover:to-orange-300 text-white font-semibold rounded-2xl flex items-center justify-center gap-3 transition-all"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
-          🎞️ choose studio routine
-        </button>
+          🎞️ Choose Studio Routine
+        </motion.button>
 
-        <button
+        <motion.button
           onClick={() => setCurrentView('upload')}
-          className="w-full h-14 border border-rose-200 hover:border-rose-300 text-rose-900 font-medium rounded-2xl flex items-center justify-center gap-3 transition-colors bg-rose-50"
+          className="w-full h-14 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white font-semibold rounded-2xl flex items-center justify-center gap-3 transition-all bg-gray-800/50"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
-          📤 upload your own
-        </button>
+          📤 Upload Your Own
+        </motion.button>
 
         <button
           onClick={onCancel}
-          className="w-full h-12 text-rose-400 hover:text-rose-600 font-medium"
+          className="w-full h-12 text-gray-500 hover:text-gray-300 font-medium transition-colors"
         >
-          cancel
+          Cancel
         </button>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-rose-100">
-        <div className="text-xs text-rose-300 text-center space-y-1">
-          <p>supports: jpg, png, webp, mp4, webm</p>
+      <div className="mt-6 pt-4 border-t border-gray-800">
+        <div className="text-xs text-gray-600 text-center">
+          <p>Supports: JPG, PNG, WEBP, MP4, WEBM</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

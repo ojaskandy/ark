@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { motion } from 'framer-motion';
 import ReferenceMediaSelector from '@/components/ReferenceMediaSelector';
 import CameraView from '@/components/CameraView';
 import { type DanceRoutine } from '@/data/danceRoutines';
@@ -82,15 +83,15 @@ const LiveRoutineDemo: React.FC = () => {
 
   if (viewMode === 'comparison') {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <div className="min-h-screen bg-gray-950">
+        <div className="border-b border-gray-800 bg-gray-900/50 backdrop-blur px-6 py-4 flex items-center justify-between">
           <button
             onClick={handleBackToSelect}
-            className="flex items-center text-gray-600 hover:text-gray-900 font-light"
+            className="flex items-center text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> back
           </button>
-          <div className="text-gray-900 font-light">live routine</div>
+          <div className="text-white font-medium">Live Routine</div>
         </div>
 
         <div className="p-6">
@@ -100,7 +101,7 @@ const LiveRoutineDemo: React.FC = () => {
             confidenceThreshold={0.5}
             modelSelection="MoveNet"
             maxPoses={1}
-            skeletonColor="#4a5568"
+            skeletonColor="#fb923c"
             showSkeleton
             showPoints
             showBackground
@@ -122,105 +123,154 @@ const LiveRoutineDemo: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="border-b border-gray-100 px-6 py-4 flex items-center">
+    <div className="min-h-screen bg-gray-950">
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-gray-950 to-orange-500/10" />
+      </div>
+
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 border-b border-gray-800 bg-gray-900/30 backdrop-blur px-6 py-4 flex items-center"
+      >
         <button
           onClick={() => navigate('/app')}
-          className="flex items-center text-gray-600 hover:text-gray-900 font-light"
+          className="flex items-center text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" /> back
         </button>
-      </div>
+      </motion.div>
 
-      <div className="container mx-auto px-6 py-12">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <header className="space-y-4">
-            <h1 className="text-4xl font-light text-gray-900">live routine</h1>
-            <p className="text-gray-500">
-              upload a reference or choose from our library
+      <div className="relative z-10 container mx-auto px-6 py-12">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <motion.header
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-4"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold text-white">Live Routine</h1>
+            <p className="text-xl text-gray-400">
+              Upload a reference or choose from our library
             </p>
-          </header>
+          </motion.header>
 
           {!selectedVideo && !selectedImage && (
-            <div
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               onClick={() => setShowSelector(true)}
-              className="border border-dashed border-gray-200 rounded-2xl p-16 text-center bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer"
+              className="group relative bg-gradient-to-br from-gray-900/50 to-gray-800/30 backdrop-blur-xl border border-gray-800 hover:border-pink-500/50 rounded-3xl p-20 text-center cursor-pointer overflow-hidden"
+              whileHover={{ y: -4 }}
             >
-              <div className="text-5xl mb-4">🎥</div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">select reference</h3>
-              <p className="text-gray-400 text-sm">click to choose a video or image</p>
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-orange-500/0 group-hover:from-pink-500/10 group-hover:to-orange-500/10 transition-all duration-500" />
+              <div className="relative z-10">
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-7xl mb-6"
+                >
+                  🎥
+                </motion.div>
+                <h3 className="text-2xl font-semibold mb-3 text-white">Select Reference</h3>
+                <p className="text-gray-400">Click to choose a video or image</p>
+              </div>
+            </motion.div>
           )}
 
           {selectedVideo && (
-            <div className="border border-gray-200 rounded-2xl p-6 bg-white">
-              <h3 className="text-lg font-medium mb-4 text-gray-900">selected routine</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-3xl p-6"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-white">Selected Routine</h3>
               <div className="mb-4">
-                <video src={selectedVideo.url} controls className="w-full rounded-xl" style={{ maxHeight: '400px' }} />
+                <video src={selectedVideo.url} controls className="w-full rounded-2xl" style={{ maxHeight: '400px' }} />
               </div>
               {selectedVideo.data && (
-                <div className="space-y-1 mb-4">
-                  <h4 className="font-medium text-gray-900">{selectedVideo.data.name}</h4>
-                  <p className="text-gray-500 text-sm">{selectedVideo.data.description}</p>
+                <div className="space-y-2 mb-6">
+                  <h4 className="font-semibold text-white">{selectedVideo.data.name}</h4>
+                  <p className="text-gray-400 text-sm">{selectedVideo.data.description}</p>
                 </div>
               )}
               <div className="flex gap-3">
-                <button
+                <motion.button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gray-900 text-white rounded-full font-light disabled:opacity-40"
+                  className="px-6 py-3 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-full font-semibold disabled:opacity-40"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {isInitializing ? 'starting...' : 'start'}
-                </button>
-                <button
+                  {isInitializing ? 'Starting...' : 'Start'}
+                </motion.button>
+                <motion.button
                   onClick={() => setSelectedVideo(null)}
-                  className="px-6 py-3 border border-gray-200 text-gray-900 rounded-full font-light hover:bg-gray-50"
+                  className="px-6 py-3 border border-gray-700 text-gray-300 rounded-full font-semibold hover:bg-gray-800"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  remove
-                </button>
+                  Remove
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {selectedImage && (
-            <div className="border border-gray-200 rounded-2xl p-6 bg-white">
-              <h3 className="text-lg font-medium mb-4 text-gray-900">selected image</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-3xl p-6"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-white">Selected Image</h3>
               <div className="mb-4">
                 <img
                   src={selectedImage.url}
                   alt="reference"
-                  className="w-full rounded-xl object-contain"
+                  className="w-full rounded-2xl object-contain"
                   style={{ maxHeight: '400px' }}
                 />
               </div>
               <div className="flex gap-3">
-                <button
+                <motion.button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gray-900 text-white rounded-full font-light disabled:opacity-40"
+                  className="px-6 py-3 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-full font-semibold disabled:opacity-40"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {isInitializing ? 'starting...' : 'start'}
-                </button>
-                <button
+                  {isInitializing ? 'Starting...' : 'Start'}
+                </motion.button>
+                <motion.button
                   onClick={() => setSelectedImage(null)}
-                  className="px-6 py-3 border border-gray-200 text-gray-900 rounded-full font-light hover:bg-gray-50"
+                  className="px-6 py-3 border border-gray-700 text-gray-300 rounded-full font-semibold hover:bg-gray-800"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  remove
-                </button>
+                  Remove
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
 
       {showSelector && (
-        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4"
+        >
           <ReferenceMediaSelector
             onImageUpload={handleImageUpload}
             onVideoUpload={handleVideoUpload}
             onCancel={handleCancel}
           />
-        </div>
+        </motion.div>
       )}
     </div>
   );
