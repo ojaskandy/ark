@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
+import AIAssistant from '@/components/AIAssistant';
 
 export default function Welcome() {
   const [, navigate] = useLocation();
@@ -142,6 +143,8 @@ export default function Welcome() {
           </div>
         </div>
       )}
+
+      <AIAssistant />
     </div>
   );
 }
