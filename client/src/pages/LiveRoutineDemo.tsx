@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useLocation } from 'wouter';
 import ReferenceMediaSelector from '@/components/ReferenceMediaSelector';
 import CameraView from '@/components/CameraView';
-import { MartialArtsVideo } from '@/data/martialArtsVideos';
+import { type DanceRoutine } from '@/data/danceRoutines';
 import { requestCameraPermission, getCameraStream } from '@/lib/cameraUtils';
 import { initPoseDetection } from '@/lib/poseDetection';
 
@@ -14,24 +14,21 @@ const LiveRoutineDemo: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('select');
   const [showSelector, setShowSelector] = useState(false);
 
-  // Media state
   const [selectedVideo, setSelectedVideo] = useState<{
     video: HTMLVideoElement;
     url: string;
-    data?: MartialArtsVideo;
+    data?: DanceRoutine;
   } | null>(null);
   const [selectedImage, setSelectedImage] = useState<{
     image: HTMLImageElement;
     url: string;
   } | null>(null);
 
-  // Camera state
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isTracking, setIsTracking] = useState(false);
-  const [permissionGranted, setPermissionGranted] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
 
-  const handleVideoUpload = (video: HTMLVideoElement, url: string, videoData?: MartialArtsVideo) => {
+  const handleVideoUpload = (video: HTMLVideoElement, url: string, videoData?: DanceRoutine) => {
     setSelectedVideo({ video, url, data: videoData });
     setShowSelector(false);
   };
@@ -41,44 +38,32 @@ const LiveRoutineDemo: React.FC = () => {
     setShowSelector(false);
   };
 
-  const handleCancel = () => {
-    setShowSelector(false);
-  };
+  const handleCancel = () => setShowSelector(false);
 
   const handleStartComparison = async () => {
     setIsInitializing(true);
-
     try {
-      // Request camera permission
       const hasPermission = await requestCameraPermission();
       if (!hasPermission) {
-        alert('camera permission is required for pose comparison');
+        alert('camera permission is required');
         setIsInitializing(false);
         return;
       }
 
-      setPermissionGranted(true);
-
-      // Get camera stream
       const cameraStream = await getCameraStream('user');
       setStream(cameraStream);
-
-      // Initialize pose detection
       await initPoseDetection('MoveNet');
-
-      // Switch to comparison view
       setViewMode('comparison');
       setIsTracking(true);
     } catch (error) {
       console.error('Failed to start comparison:', error);
-      alert('failed to start camera. please check permissions.');
+      alert('failed to start camera');
     } finally {
       setIsInitializing(false);
     }
   };
 
   const handleBackToSelect = () => {
-    // Stop camera stream
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
@@ -87,7 +72,6 @@ const LiveRoutineDemo: React.FC = () => {
     setViewMode('select');
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (stream) {
@@ -99,20 +83,16 @@ const LiveRoutineDemo: React.FC = () => {
   if (viewMode === 'comparison') {
     return (
       <div className="min-h-screen bg-white">
-        {/* Header */}
-        <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <div className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <button
             onClick={handleBackToSelect}
-            className="flex items-center text-gray-900 hover:text-gray-600 font-medium"
+            className="flex items-center text-gray-600 hover:text-gray-900 font-light"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" /> back to selection
+            <ArrowLeft className="w-4 h-4 mr-2" /> back
           </button>
-          <div className="text-gray-900 font-medium">
-            pose comparison
-          </div>
+          <div className="text-gray-900 font-light">live routine</div>
         </div>
 
-        {/* Camera View */}
         <div className="p-6">
           <CameraView
             stream={stream}
@@ -120,17 +100,17 @@ const LiveRoutineDemo: React.FC = () => {
             confidenceThreshold={0.5}
             modelSelection="MoveNet"
             maxPoses={1}
-            skeletonColor="#000000"
-            showSkeleton={true}
-            showPoints={true}
-            showBackground={true}
+            skeletonColor="#ec4899"
+            showSkeleton
+            showPoints
+            showBackground
             backgroundOpacity={100}
             backgroundBlur={0}
             sourceType={selectedVideo ? 'video' : 'image'}
             videoElement={selectedVideo?.video}
             imageElement={selectedImage?.image}
             mediaUrl={selectedVideo?.url || selectedImage?.url}
-            showReferenceOverlay={true}
+            showReferenceOverlay
             isFullscreenMode={false}
             onScreenshot={(dataUrl) => console.log('Screenshot:', dataUrl)}
             toggleTracking={() => setIsTracking(!isTracking)}
@@ -141,71 +121,60 @@ const LiveRoutineDemo: React.FC = () => {
     );
   }
 
-  // Selection view
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="border-b border-gray-200 px-6 py-4 flex items-center">
+      <div className="border-b border-gray-100 px-6 py-4 flex items-center">
         <button
-          onClick={() => navigate('/')}
-          className="flex items-center text-gray-900 hover:text-gray-600 font-medium"
+          onClick={() => navigate('/app')}
+          className="flex items-center text-gray-600 hover:text-gray-900 font-light"
         >
-          <ArrowLeft className="w-5 h-5 mr-2" /> back
+          <ArrowLeft className="w-4 h-4 mr-2" /> back
         </button>
       </div>
 
       <div className="container mx-auto px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            live routine
-          </h1>
-          <p className="text-gray-600 text-lg mb-12">
-            upload a reference video or image and get real-time pose comparison
-          </p>
+        <div className="max-w-4xl mx-auto space-y-8">
+          <header className="space-y-4">
+            <h1 className="text-4xl font-light text-gray-900">live routine</h1>
+            <p className="text-gray-500">
+              upload a reference or choose from our library
+            </p>
+          </header>
 
-          {/* Main Action */}
           {!selectedVideo && !selectedImage && (
             <div
               onClick={() => setShowSelector(true)}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-gray-400 transition-colors cursor-pointer"
+              className="border border-dashed border-gray-200 rounded-2xl p-16 text-center bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer"
             >
-              <div className="text-6xl mb-4">📹</div>
-              <h3 className="text-xl font-medium mb-2 text-gray-900">upload reference media</h3>
-              <p className="text-gray-600">
-                click to select a video or image
-              </p>
+              <div className="text-5xl mb-4">🎥</div>
+              <h3 className="text-lg font-medium mb-2 text-gray-900">select reference</h3>
+              <p className="text-gray-400 text-sm">click to choose a video or image</p>
             </div>
           )}
 
-          {/* Selected Video Display */}
           {selectedVideo && (
-            <div className="border border-gray-200 rounded-lg p-6 mb-8">
-              <h3 className="text-xl font-medium mb-4 text-gray-900">selected video</h3>
+            <div className="border border-gray-200 rounded-2xl p-6 bg-white">
+              <h3 className="text-lg font-medium mb-4 text-gray-900">selected routine</h3>
               <div className="mb-4">
-                <video
-                  src={selectedVideo.url}
-                  controls
-                  className="w-full rounded-lg"
-                  style={{ maxHeight: '400px' }}
-                />
+                <video src={selectedVideo.url} controls className="w-full rounded-xl" style={{ maxHeight: '400px' }} />
               </div>
               {selectedVideo.data && (
-                <div className="mb-4">
+                <div className="space-y-1 mb-4">
                   <h4 className="font-medium text-gray-900">{selectedVideo.data.name}</h4>
-                  <p className="text-gray-600 text-sm">{selectedVideo.data.description}</p>
+                  <p className="text-gray-500 text-sm">{selectedVideo.data.description}</p>
                 </div>
               )}
               <div className="flex gap-3">
                 <button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-gray-900 text-white rounded-full font-light disabled:opacity-40"
                 >
-                  {isInitializing ? 'starting...' : 'start comparison'}
+                  {isInitializing ? 'starting...' : 'start'}
                 </button>
                 <button
                   onClick={() => setSelectedVideo(null)}
-                  className="px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:border-gray-400 font-medium"
+                  className="px-6 py-3 border border-gray-200 text-gray-900 rounded-full font-light hover:bg-gray-50"
                 >
                   remove
                 </button>
@@ -213,66 +182,39 @@ const LiveRoutineDemo: React.FC = () => {
             </div>
           )}
 
-          {/* Selected Image Display */}
           {selectedImage && (
-            <div className="border border-gray-200 rounded-lg p-6 mb-8">
-              <h3 className="text-xl font-medium mb-4 text-gray-900">selected image</h3>
+            <div className="border border-gray-200 rounded-2xl p-6 bg-white">
+              <h3 className="text-lg font-medium mb-4 text-gray-900">selected image</h3>
               <div className="mb-4">
                 <img
                   src={selectedImage.url}
-                  alt="Reference"
-                  className="w-full rounded-lg"
-                  style={{ maxHeight: '400px', objectFit: 'contain' }}
+                  alt="reference"
+                  className="w-full rounded-xl object-contain"
+                  style={{ maxHeight: '400px' }}
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-gray-900 text-white rounded-full font-light disabled:opacity-40"
                 >
-                  {isInitializing ? 'starting...' : 'start comparison'}
+                  {isInitializing ? 'starting...' : 'start'}
                 </button>
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="px-6 py-3 border border-gray-300 text-gray-900 rounded-lg hover:border-gray-400 font-medium"
+                  className="px-6 py-3 border border-gray-200 text-gray-900 rounded-full font-light hover:bg-gray-50"
                 >
                   remove
                 </button>
               </div>
             </div>
           )}
-
-          {/* Features */}
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-3">📹</div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">video upload</h3>
-              <p className="text-gray-600 text-sm">
-                upload your own reference videos
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-3">📸</div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">image upload</h3>
-              <p className="text-gray-600 text-sm">
-                or use reference images
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl mb-3">🤖</div>
-              <h3 className="text-lg font-medium mb-2 text-gray-900">ai analysis</h3>
-              <p className="text-gray-600 text-sm">
-                real-time pose comparison
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Media Selector Modal */}
       {showSelector && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <ReferenceMediaSelector
             onImageUpload={handleImageUpload}
             onVideoUpload={handleVideoUpload}

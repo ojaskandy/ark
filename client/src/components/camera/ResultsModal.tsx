@@ -174,7 +174,7 @@ export default function ResultsModal({
         body: JSON.stringify({
           userAngleData: userAngleTable,
           instructorAngleData: instructorAngleTable,
-          routineType: 'martial arts routine',
+          routineType: 'dance routine',
           overallScore: performanceScore
         }),
       });
@@ -294,7 +294,7 @@ export default function ResultsModal({
               <div>
                 <CardTitle className="text-2xl font-bold">Performance Analysis</CardTitle>
                 <CardDescription className="text-purple-100">
-                  Your martial arts technique breakdown
+                  your dance technique breakdown
                 </CardDescription>
               </div>
           </div>

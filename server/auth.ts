@@ -158,7 +158,27 @@ export function setupAuth(app: Express): void {
   });
 
   // Login route
-  app.post("/api/login", (req, res, next) => {
+  app.post("/api/login", async (req, res, next) => {
+    // Auto-create student user if it doesn't exist
+    if (req.body.username === 'student') {
+      try {
+        let studentUser = await storage.getUserByUsername('student');
+        if (!studentUser) {
+          // Create student user with password "arshia"
+          studentUser = await storage.createUser({
+            username: 'student',
+            email: 'student@arshia.studio',
+            password: await hashPassword('arshia'),
+            hasPaid: true,
+            hasCompletedOnboarding: true,
+            hasCodeBypass: true,
+          });
+        }
+      } catch (error) {
+        console.error('Error ensuring student user exists:', error);
+      }
+    }
+
     passport.authenticate(
       "local",
       (

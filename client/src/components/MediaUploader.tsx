@@ -1,5 +1,4 @@
 import { useState, useRef, ChangeEvent, DragEvent } from 'react';
-import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface MediaUploaderProps {
@@ -98,21 +97,24 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg max-w-md w-full border border-gray-200 shadow-xl">
+    <div className="p-6 bg-white rounded-3xl max-w-md w-full border border-rose-100 shadow-xl">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-gray-900">
-          upload media
-        </h3>
+        <div>
+          <p className="text-xs uppercase tracking-[0.4em] text-rose-300 mb-1">upload</p>
+          <h3 className="text-xl font-semibold text-rose-900">
+            upload media
+          </h3>
+        </div>
         <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-gray-900"
+          className="text-rose-300 hover:text-rose-500"
         >
           ✕
         </button>
       </div>
 
       <div
-        className={`upload-zone p-8 mb-4 flex flex-col items-center justify-center bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg ${isDragging ? 'bg-gray-100 border-gray-400' : ''}`}
+        className={`upload-zone p-8 mb-4 flex flex-col items-center justify-center bg-rose-50 border-2 border-dashed border-rose-200 rounded-2xl ${isDragging ? 'bg-gray-100 border-rose-300' : ''}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -121,20 +123,20 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
           {loading ? "⏳" : "📤"}
         </div>
 
-        <p className="text-center text-gray-900 mb-3 font-medium">
+        <p className="text-center text-rose-900 mb-3 font-medium">
           {loading
             ? "processing your file..."
             : "drag & drop your image or video here"}
         </p>
 
-        <p className="text-xs text-gray-500 mb-4 text-center">
+        <p className="text-xs text-rose-400 mb-4 text-center">
           supported: jpg, png, webp, mp4, webm
         </p>
 
         {!loading && (
           <button
             onClick={handleBrowseClick}
-            className="px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium"
+            className="px-6 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-medium"
           >
             browse files
           </button>
@@ -152,7 +154,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       </div>
 
       {error && (
-        <Alert variant="destructive" className="mb-4 bg-red-50 border border-red-200 text-red-800">
+        <Alert variant="destructive" className="mb-4 bg-rose-50 border border-rose-200 text-rose-800">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -160,13 +162,13 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 text-gray-900 rounded-lg hover:border-gray-400 font-medium"
+          className="px-4 py-2 border border-rose-200 text-rose-900 rounded-2xl hover:border-rose-300 font-medium"
         >
           cancel
         </button>
 
         <button
-          className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-medium disabled:opacity-50"
           onClick={handleBrowseClick}
           disabled={loading}
         >

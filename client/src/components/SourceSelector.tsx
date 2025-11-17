@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import ReferenceMediaSelector from "./ReferenceMediaSelector";
-import { MartialArtsVideo } from "@/data/martialArtsVideos";
+import { type DanceRoutine } from "@/data/danceRoutines";
 
 interface SourceSelectorProps {
   sourceType: 'camera' | 'image' | 'video';
   setSourceType: (type: 'camera' | 'image' | 'video') => void;
   onImageUpload: (image: HTMLImageElement, url: string) => void;
-  onVideoUpload: (video: HTMLVideoElement, url: string, videoData?: MartialArtsVideo) => void;
+  onVideoUpload: (video: HTMLVideoElement, url: string, videoData?: DanceRoutine) => void;
   hasCameraPermission: boolean;
   requestCameraPermission: () => void;
 }
@@ -109,7 +109,7 @@ export default function SourceSelector({
               onImageUpload(image, url);
               setShowUploader(false);
             }}
-            onVideoUpload={(video: HTMLVideoElement, url: string, videoData?: MartialArtsVideo) => {
+            onVideoUpload={(video: HTMLVideoElement, url: string, videoData?: DanceRoutine) => {
               onVideoUpload(video, url, videoData);
               setShowUploader(false);
             }}

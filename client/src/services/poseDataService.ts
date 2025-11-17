@@ -21,7 +21,7 @@ interface PoseSequence {
   frames: PoseFrame[];
 }
 
-interface MartialArtsVideo {
+interface DanceVideo {
   id: number;
   name: string;
   description: string;
@@ -44,7 +44,7 @@ class PoseDataService {
   }
   
   // Get all available videos with pose data
-  async getVideos(): Promise<MartialArtsVideo[]> {
+  async getVideos(): Promise<DanceVideo[]> {
     const cacheKey = 'videos';
     
     if (this.cache.has(cacheKey)) {
@@ -162,5 +162,5 @@ export type {
   PoseKeypoint,
   PoseFrame,
   PoseSequence,
-  MartialArtsVideo
+  DanceVideo
 }; 

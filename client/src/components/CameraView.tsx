@@ -11,7 +11,7 @@ import { isVideoUrl } from './camera/utils';
 import StopTestIntermediatePopup from './camera/StopTestIntermediatePopup';
 import TestResultsPopup from './camera/TestResultsPopup';
 import PreloadedVideoSelector from './PreloadedVideoSelector';
-import { MartialArtsVideo } from '@/data/martialArtsVideos';
+import { type DanceRoutine } from '@/data/danceRoutines';
 
 interface CameraViewProps {
   stream: MediaStream | null;
@@ -2750,34 +2750,34 @@ export default function CameraView({
               )}
 
               {!mediaLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/70">
-                  <div className="text-center p-4 bg-black/80 rounded border border-red-900/30">
-                    <div className="loader mx-auto mb-3 border-t-red-500"></div>
-                    <p className="text-red-100 font-medium">Loading media...</p>
+                <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/70">
+                  <div className="text-center p-4 bg-white/80 rounded-2xl border border-rose-200">
+                    <div className="loader mx-auto mb-3 border-t-rose-400"></div>
+                    <p className="text-rose-500 font-medium">loading media...</p>
                   </div>
                 </div>
               )}
 
               {mediaLoaded && !isTracking && (
-                <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/70">
-                  <div className="text-center p-3 backdrop-blur-sm bg-black/80 rounded-lg border border-red-900/30">
-                    <span className="material-icons text-4xl text-red-500 mb-2">sports_martial_arts</span>
-                    <p className="text-white font-medium">Start tracking to begin pose analysis</p>
+                <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/70">
+                  <div className="text-center p-3 backdrop-blur bg-white/80 rounded-2xl border border-rose-200">
+                    <span className="material-icons text-4xl text-rose-500 mb-2">music_note</span>
+                    <p className="text-rose-900 font-medium">start tracking to let ai follow your lines</p>
                   </div>
                 </div>
               )}
 
               {isTracking && !testResults.isRunning && (
-                <div className="absolute top-2 right-2 bg-gradient-to-r from-red-800 to-red-700 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
+                <div className="absolute top-2 right-2 bg-gradient-to-r from-rose-500 to-rose-400 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
                   <span className="inline-block w-2 h-2 rounded-full bg-white animate-pulse mr-1.5"></span>
-                  Tracking Active
+                  tracking active
                 </div>
               )}
 
               {testResults.isRunning && (
-                <div className="absolute top-2 right-2 bg-gradient-to-r from-red-900 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
+                <div className="absolute top-2 right-2 bg-gradient-to-r from-rose-600 to-rose-500 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
                   <span className="inline-block w-2 h-2 rounded-full bg-white animate-pulse mr-1.5"></span>
-                  Test in progress
+                  test in progress
                 </div>
               )}
 
@@ -2935,7 +2935,7 @@ export default function CameraView({
                 <div className="w-full max-w-md">
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-bold text-red-500 mb-2">Select Reference Media</h3>
-                    <p className="text-red-100 text-sm">Choose a pre-loaded martial arts form or upload your own media</p>
+                    <p className="text-red-100 text-sm">choose a studio routine or drop your own reference</p>
                   </div>
 
                   <div className="space-y-4">
@@ -2997,7 +2997,7 @@ export default function CameraView({
 
                   <div className="mt-6 pt-4 border-t border-red-900/30">
                     <div className="text-xs text-gray-500 text-center space-y-1">
-                      <p>Pre-loaded videos include martial arts forms and techniques</p>
+                      <p>studio videos include contemporary, hip-hop, and fusion combos</p>
                       <p>Upload supports: MP4, WEBM, OGG</p>
                     </div>
                   </div>
@@ -3009,7 +3009,7 @@ export default function CameraView({
             {showPreloadedSelector && (
               <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                 <PreloadedVideoSelector
-                  onVideoSelect={(video: HTMLVideoElement | null, url: string, videoData: MartialArtsVideo) => {
+                  onVideoSelect={(video: HTMLVideoElement | null, url: string, videoData: DanceRoutine) => {
                     if (video) {
                       // Handle local video file
                       const flaggedUrl = url + '#video';
