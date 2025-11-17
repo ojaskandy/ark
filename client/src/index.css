@@ -197,37 +197,36 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgb(255, 255, 255) !important;
   }
   
-  /* Light mode banner/header styling */
+  /* Light mode banner/header styling - REMOVED RED */
   .light header,
   .light .header,
   .light .top-bar,
   .light .banner {
-    background: linear-gradient(135deg, rgb(220, 38, 38), rgb(239, 68, 68)) !important;
-    color: white !important;
+    background: transparent !important;
+    color: inherit !important;
   }
   
-  /* Light mode CoachT branding */
+  /* Light mode branding */
   .light .logo,
   .light .brand,
   .light .app-title {
-    color: white !important;
-    font-weight: bold !important;
+    color: inherit !important;
+    font-weight: normal !important;
   }
   
-  /* Light mode button styling - make them red */
+  /* Light mode button styling - NEUTRAL */
   .light button,
   .light .btn,
   .light .button {
-    background-color: rgb(220, 38, 38) !important;
-    color: white !important;
-    border: 1px solid rgb(185, 28, 28) !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    border: none !important;
   }
   
   .light button:hover,
   .light .btn:hover,
   .light .button:hover {
-    background-color: rgb(185, 28, 28) !important;
-    border-color: rgb(153, 27, 27) !important;
+    background-color: transparent !important;
   }
   
   /* Light mode specific navigation buttons */
