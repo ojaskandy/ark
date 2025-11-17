@@ -53,8 +53,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.6); }
-  50% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.8), 0 0 20px rgba(220, 38, 38, 0.4); }
+  0%, 100% { box-shadow: 0 0 5px transparent; }
+  50% { box-shadow: 0 0 15px transparent, 0 0 20px transparent; }
 }
 
 @keyframes sparkle-rotate {
@@ -270,10 +270,10 @@ h1, h2, h3, h4, h5, h6 {
     color: inherit !important;
   }
   
-  /* Light mode card headers to match theme */
+  /* Light mode card headers - NEUTRAL */
   .light .card-header {
-    background: linear-gradient(135deg, rgb(252, 165, 165), rgb(254, 202, 202)) !important;
-    color: rgb(127, 29, 29) !important;
+    background: transparent !important;
+    color: inherit !important;
   }
 
   /* Comprehensive light mode overrides */
@@ -444,7 +444,7 @@ h1, h2, h3, h4, h5, h6 {
   .light textarea:focus,
   .light select:focus {
     border-color: rgb(220 38 38) !important;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    box-shadow: 0 0 0 3px transparent !important;
   }
 
   /* Theme-aware component overrides */
@@ -457,7 +457,7 @@ h1, h2, h3, h4, h5, h6 {
     --theme-text-gray-400: rgb(160, 160, 160);
     --theme-text-gray-500: rgb(140, 140, 140);
     --theme-bg-gradient: linear-gradient(to bottom right, rgb(17, 17, 17), rgb(10, 10, 10));
-    --theme-border-red-900: rgba(220, 38, 38, 0.3);
+    --theme-border-red-900: transparent;
   }
   
   .light {
@@ -469,7 +469,7 @@ h1, h2, h3, h4, h5, h6 {
     --theme-text-gray-400: rgb(100, 100, 100);
     --theme-text-gray-500: rgb(120, 120, 120);
     --theme-bg-gradient: linear-gradient(to bottom right, rgb(255, 255, 255), rgb(240, 240, 245));
-    --theme-border-red-900: rgba(220, 38, 38, 0.5);
+    --theme-border-red-900: transparent;
   }
 
   /* Apply theme variables to specific elements */
@@ -617,7 +617,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .btn-gradient:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+    box-shadow: 0 5px 15px transparent;
   }
   
   .btn-gradient-light {
@@ -627,7 +627,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .btn-gradient-light:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(220, 38, 38, 0.15);
+    box-shadow: 0 5px 15px transparent;
   }
   
   .card-highlight {
@@ -638,20 +638,20 @@ h1, h2, h3, h4, h5, h6 {
   
   .card-highlight:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.25);
+    box-shadow: 0 10px 25px transparent;
   }
 
   .camera-container {
     @apply relative w-full aspect-video overflow-hidden rounded-none;
     background-color: #000000;
-    border: 1px solid rgba(185, 28, 28, 0.5);
+    border: 1px solid transparent;
   }
   
   /* Default dark background - overridden by inline styles for light mode */
   /* Background colors are now controlled directly in components via isDarkMode conditional styles */
 
   .taekwondo-shadow {
-    box-shadow: 0 0 15px rgba(220, 38, 38, 0.2), 0 0 30px rgba(185, 28, 28, 0.1);
+    box-shadow: 0 0 15px transparent, 0 0 30px transparent;
   }
   
   .progress-ring {
@@ -674,7 +674,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .badge-trust {
     @apply inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full;
-    border: 1px solid rgba(220, 38, 38, 0.3);
+    border: 1px solid transparent;
     transition: all 0.3s ease;
   }
   
@@ -687,7 +687,7 @@ h1, h2, h3, h4, h5, h6 {
   .modal-premium {
     @apply border border-red-900/30 rounded-lg p-6;
     /* Light/dark mode styling is applied via inline styles in the component */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(220, 38, 38, 0.15);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px transparent;
   }
 }
 
@@ -703,12 +703,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(185, 28, 28, 0.6);
+  background: transparent;
   border-radius: 4px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(220, 38, 38, 0.8);
+  background: transparent;
 }
 
 /* Light mode scrollbar */
@@ -717,21 +717,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .light ::-webkit-scrollbar-thumb {
-  background: rgba(220, 38, 38, 0.4);
+  background: transparent;
   border-radius: 4px;
 }
 
 .light ::-webkit-scrollbar-thumb:hover {
-  background: rgba(220, 38, 38, 0.6);
+  background: transparent;
 }
 
 /* Loader animation */
 .loader {
   width: 48px;
   height: 48px;
-  border: 3px solid rgba(185, 28, 28, 0.2);
+  border: 3px solid transparent;
   border-radius: 50%;
-  border-top-color: rgba(220, 38, 38, 1);
+  border-top-color: transparent;
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -743,12 +743,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glow effect */
 .glow {
-  box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+  box-shadow: 0 0 15px transparent;
   transition: box-shadow 0.3s ease;
 }
 
 .glow:hover {
-  box-shadow: 0 0 25px rgba(220, 38, 38, 0.6);
+  box-shadow: 0 0 25px transparent;
 }
 
 /* Fullscreen mode styles */
@@ -833,7 +833,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   50% {
     filter: brightness(1.5);
-    border-color: rgba(220, 38, 38, 1);
+    border-color: transparent;
   }
   100% {
     filter: brightness(1);
@@ -954,7 +954,7 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(220, 38, 38, 0.3), rgba(220, 38, 38, 0.5), rgba(220, 38, 38, 0.7), rgba(220, 38, 38, 0.5), rgba(220, 38, 38, 0.3), transparent);
+  background: linear-gradient(to bottom, transparent, transparent, transparent, transparent, transparent, transparent, transparent);
   transform: translateX(-50%);
   z-index: 0;
 }
@@ -966,9 +966,9 @@ h1, h2, h3, h4, h5, h6 {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: linear-gradient(to bottom right, #b91c1c, #dc2626);
+  background: linear-gradient(to bottom right, transparent, transparent);
   border: 3px solid rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3), 0 0 15px rgba(220, 38, 38, 0.5);
+  box-shadow: 0 0 0 3px transparent, 0 0 15px transparent;
   z-index: 1;
 }
 
@@ -985,7 +985,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(to right, transparent, rgba(220, 38, 38, 0.7), transparent);
+  background: linear-gradient(to right, transparent, transparent, transparent);
   transform: translateX(-100%);
   transition: transform 0.5s ease-out;
 }
@@ -999,7 +999,7 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(to right, #b91c1c, #dc2626);
+  background: linear-gradient(to right, transparent, transparent);
   transition: width 0.3s ease-out;
 }
 
@@ -1010,7 +1010,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .testimonial-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px transparent;
 }
 
 /* Engraved text effect for belt */
