@@ -42,8 +42,8 @@ export default function MainPage() {
     <div className="min-h-screen bg-white flex flex-col md:flex-row">
       <aside className="md:w-64 w-full border-b md:border-b-0 md:border-r border-gray-100 bg-white px-6 py-8 space-y-8">
         <div>
-          <h1 className="text-xl font-light text-gray-900">arshia</h1>
-          <p className="text-xs text-gray-400 mt-1">dance studio</p>
+          <h1 className="text-xl font-light text-gray-900">ARK</h1>
+          <p className="text-xs text-gray-400 mt-1">Dance Studio</p>
         </div>
 
         <nav className="space-y-2">

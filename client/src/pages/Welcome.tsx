@@ -34,7 +34,7 @@ export default function Welcome() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="w-full px-6 md:px-12 py-6 flex justify-between items-center">
-        <div className="text-xl font-medium text-gray-900">arshia</div>
+        <div className="text-xl font-medium text-gray-900">ARK</div>
         <button
           onClick={() => setShowLogin(true)}
           className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
@@ -74,7 +74,7 @@ export default function Welcome() {
               </div>
               <h3 className="text-2xl font-medium text-gray-900 mb-3">whenever, wherever</h3>
               <p className="text-gray-600 leading-relaxed">
-                never need a mirror at 3 a.m. again. just start practicing with arshia, your ai dance coach that's ready 24/7.
+                never need a mirror at 3 a.m. again. just start practicing with ARK, your ai dance coach that's ready 24/7.
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function Welcome() {
               </div>
               <h3 className="text-2xl font-medium text-gray-900 mb-3">safe & sound</h3>
               <p className="text-gray-600 leading-relaxed">
-                practice freely — arshia's got you. your sessions are secure and confidential.
+                practice freely — ARK's got you. your sessions are secure and confidential.
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Welcome() {
             onClick={() => navigate('/live-routine')}
             className="px-8 py-4 bg-gray-900 text-white rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
           >
-            try arshia free
+            try ARK free
           </button>
         </div>
       </main>
