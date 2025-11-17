@@ -100,7 +100,7 @@ const LiveRoutineDemo: React.FC = () => {
             confidenceThreshold={0.5}
             modelSelection="MoveNet"
             maxPoses={1}
-            skeletonColor="#ec4899"
+            skeletonColor="#4a5568"
             showSkeleton
             showPoints
             showBackground

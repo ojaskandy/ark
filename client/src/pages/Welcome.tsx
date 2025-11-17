@@ -17,7 +17,7 @@ export default function Welcome() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ username: 'student', password: password.toLowerCase() }),
+        body: JSON.stringify({ username: 'student', password: password.toLowerCase().trim() }),
       });
 
       if (response.ok) {
@@ -31,87 +31,106 @@ export default function Welcome() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="w-full px-8 py-6 flex justify-end">
+      <header className="w-full px-6 md:px-12 py-6 flex justify-between items-center">
+        <div className="text-xl font-medium text-gray-900">arshia</div>
         <button
           onClick={() => setShowLogin(true)}
-          className="text-sm text-gray-500 hover:text-gray-900 transition-colors font-light"
+          className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
         >
           student portal
         </button>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-8 py-12">
-        <div className="max-w-3xl w-full space-y-16">
-          {/* Hero */}
-          <div className="text-center space-y-6">
-            <h1 className="text-6xl md:text-7xl font-light text-gray-900 tracking-tight">
-              arshia
-            </h1>
-            <p className="text-lg text-gray-400 font-light">
-              dance studio
-            </p>
+      <main className="max-w-6xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        {/* Hero Section */}
+        <div className="text-center mb-20 space-y-6">
+          <h1 className="text-6xl md:text-7xl font-medium text-gray-900 leading-tight">
+            it's not just practice.<br />it's arshia.
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            your intelligent dance studio built to help you refine movement, perfect technique, and express yourself.
+          </p>
+          <div className="pt-4">
+            <button
+              onClick={() => navigate('/live-routine')}
+              className="px-8 py-4 bg-gray-900 text-white rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
+            >
+              start practicing — it's free
+            </button>
           </div>
+          <p className="text-sm text-gray-500 pt-2">loved by ambitious dancers</p>
+        </div>
 
-          {/* AI Assistant Card */}
-          <div className="bg-gray-50 rounded-3xl p-12 border border-gray-100">
-            <div className="flex items-start gap-6">
-              <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                <span className="text-3xl">✨</span>
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mb-20">
+          {/* Feature 1 */}
+          <div className="bg-gray-50 rounded-3xl p-10 border border-gray-100">
+            <div className="mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center mb-4">
+                <span className="text-3xl">🎥</span>
               </div>
-              <div className="flex-1 space-y-4">
-                <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">studio assistant</p>
-                  <p className="text-gray-700 text-lg leading-relaxed font-light">
-                    practice with real-time ai feedback. upload a routine, mirror it live, and refine your movement.
-                  </p>
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <button
-                    onClick={() => navigate('/live-routine')}
-                    className="px-6 py-3 bg-gray-900 text-white rounded-full text-sm font-light hover:bg-gray-800 transition-colors"
-                  >
-                    start practicing
-                  </button>
-                  <button
-                    onClick={() => navigate('/challenges')}
-                    className="px-6 py-3 border border-gray-200 text-gray-700 rounded-full text-sm font-light hover:bg-gray-50 transition-colors"
-                  >
-                    view challenges
-                  </button>
-                </div>
-              </div>
+              <h3 className="text-2xl font-medium text-gray-900 mb-3">whenever, wherever</h3>
+              <p className="text-gray-600 leading-relaxed">
+                never need a mirror at 3 a.m. again. just start practicing with arshia, your ai dance coach that's ready 24/7.
+              </p>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={() => navigate('/live-routine')}
-              className="p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 transition-colors text-left group"
-            >
-              <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider">live routine</p>
-              <p className="text-gray-900 text-lg font-light group-hover:text-gray-700">practice with ai</p>
-            </button>
-            <button
-              onClick={() => navigate('/challenges')}
-              className="p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 transition-colors text-left group"
-            >
-              <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider">challenges</p>
-              <p className="text-gray-900 text-lg font-light group-hover:text-gray-700">quick drills</p>
-            </button>
+          {/* Feature 2 */}
+          <div className="bg-gray-50 rounded-3xl p-10 border border-gray-100">
+            <div className="mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center mb-4">
+                <span className="text-3xl">🔒</span>
+              </div>
+              <h3 className="text-2xl font-medium text-gray-900 mb-3">safe & sound</h3>
+              <p className="text-gray-600 leading-relaxed">
+                practice freely — arshia's got you. your sessions are secure and confidential.
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-medium text-gray-900 mb-8 text-center">your progress</h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <p className="text-sm text-gray-500 mb-2">routines completed</p>
+              <p className="text-4xl font-medium text-gray-900">0</p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <p className="text-sm text-gray-500 mb-2">practice sessions</p>
+              <p className="text-4xl font-medium text-gray-900">0</p>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <p className="text-sm text-gray-500 mb-2">improvement score</p>
+              <p className="text-4xl font-medium text-gray-900">—</p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center bg-gray-50 rounded-3xl p-12 border border-gray-100">
+          <h2 className="text-3xl font-medium text-gray-900 mb-4">get started for free</h2>
+          <p className="text-gray-600 mb-6">be seen. be understood. be better.</p>
+          <button
+            onClick={() => navigate('/live-routine')}
+            className="px-8 py-4 bg-gray-900 text-white rounded-full text-base font-medium hover:bg-gray-800 transition-colors"
+          >
+            try arshia free
+          </button>
         </div>
       </main>
 
       {/* Login Modal */}
       {showLogin && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-xl border border-gray-100">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-light text-gray-900">student portal</h2>
+              <h2 className="text-2xl font-medium text-gray-900">student portal</h2>
               <button
                 onClick={() => {
                   setShowLogin(false);
@@ -126,24 +145,24 @@ export default function Welcome() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-500 mb-2 font-light">password</label>
+                <label className="block text-sm text-gray-600 mb-2">password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 transition-colors font-light"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 transition-colors"
                   placeholder="enter password"
                   autoFocus
                 />
               </div>
 
               {error && (
-                <p className="text-sm text-rose-500">{error}</p>
+                <p className="text-sm text-red-500">{error}</p>
               )}
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gray-900 text-white rounded-xl font-light hover:bg-gray-800 transition-colors"
+                className="w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
               >
                 log in
               </button>

@@ -6,7 +6,9 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { OAuth2Client } from "google-auth-library";
 import { storage } from "./storage";
-import { User as SelectUser } from "@shared/schema";
+import { User as SelectUser, users } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 declare global {
   namespace Express {
@@ -173,6 +175,19 @@ export function setupAuth(app: Express): void {
             hasCompletedOnboarding: true,
             hasCodeBypass: true,
           });
+          console.log('Created student user with password hash');
+        } else {
+          // Update password if it doesn't match - use direct DB update
+          const testMatch = await comparePasswords('arshia', studentUser.password || '');
+          if (!testMatch) {
+            const newPasswordHash = await hashPassword('arshia');
+            await db.update(users)
+              .set({ password: newPasswordHash })
+              .where(eq(users.id, studentUser.id));
+            console.log('Updated student user password');
+            // Refresh user object
+            studentUser = await storage.getUserByUsername('student');
+          }
         }
       } catch (error) {
         console.error('Error ensuring student user exists:', error);
