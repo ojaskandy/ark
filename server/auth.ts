@@ -85,7 +85,7 @@ export function setupAuth(app: Express): void {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        console.log("Login attempt for username:", username);
+        console.log("Login attempt for username:", username, "password length:", password.length);
         const user = await storage.getUserByUsername(username);
 
         if (!user) {
@@ -98,7 +98,10 @@ export function setupAuth(app: Express): void {
           console.log("User has no password set:", username);
           return done(null, false, { message: "Invalid username or password" });
         }
-        const passwordMatch = await comparePasswords(password, user.password);
+        
+        // Normalize password for comparison
+        const normalizedPassword = password.toLowerCase().trim();
+        const passwordMatch = await comparePasswords(normalizedPassword, user.password);
         console.log("Password match result:", passwordMatch);
 
         if (!passwordMatch) {

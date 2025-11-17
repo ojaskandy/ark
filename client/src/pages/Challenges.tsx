@@ -33,7 +33,7 @@ const vibeColors: Record<string, string> = {
   groove: 'bg-emerald-50 text-emerald-700 border-emerald-100',
   'slow flow': 'bg-sky-50 text-sky-700 border-sky-100',
   precision: 'bg-amber-50 text-amber-700 border-amber-100',
-  performance: 'bg-rose-50 text-rose-700 border-rose-100'
+  performance: 'bg-gray-50 text-gray-700 border-gray-200'
 };
 
 const Challenges: React.FC = () => {

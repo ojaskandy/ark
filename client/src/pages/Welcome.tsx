@@ -157,7 +157,7 @@ export default function Welcome() {
               </div>
 
               {error && (
-                <p className="text-sm text-red-500">{error}</p>
+                <p className="text-sm text-gray-600">{error}</p>
               )}
 
               <button
