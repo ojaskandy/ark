@@ -48,7 +48,7 @@ export default function Welcome() {
         {/* Hero Section */}
         <div className="text-center mb-20 space-y-6">
           <h1 className="text-6xl md:text-7xl font-medium text-gray-900 leading-tight">
-            it's not just practice.<br />it's arshia.
+            it's not just practice.<br />it's ARK.
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             your intelligent dance studio built to help you refine movement, perfect technique, and express yourself.
