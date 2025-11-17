@@ -62,7 +62,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       };
       img.onerror = () => {
         setLoading(false);
-        setError('Failed to load image. Please try another file.');
+        setError('failed to load image. please try another file.');
         URL.revokeObjectURL(fileURL);
       };
       img.src = fileURL;
@@ -74,14 +74,14 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       };
       video.onerror = () => {
         setLoading(false);
-        setError('Failed to load video. Please try another file.');
+        setError('failed to load video. please try another file.');
         URL.revokeObjectURL(fileURL);
       };
       video.src = fileURL;
       video.load();
     } else {
       setLoading(false);
-      setError('Please upload an image (JPG, PNG, WEBP) or video (MP4, WEBM).');
+      setError('please upload an image (jpg, png, webp) or video (mp4, webm).');
     }
   };
 
@@ -95,25 +95,25 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl"
+      className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-6 max-w-md w-full shadow-2xl shadow-pink-200/30"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Upload</p>
-          <h3 className="text-xl font-semibold text-white">Upload Media</h3>
+          <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">upload</p>
+          <h3 className="text-xl font-medium text-gray-800">upload media</h3>
         </div>
         <button
           onClick={onCancel}
-          className="text-gray-500 hover:text-gray-300"
+          className="text-gray-400 hover:text-gray-600"
         >
           ✕
         </button>
       </div>
 
       <div
-        className={`upload-zone p-10 mb-4 flex flex-col items-center justify-center bg-gray-800/50 border-2 border-dashed rounded-2xl transition-all ${
-          isDragging ? 'border-pink-500 bg-pink-500/10' : 'border-gray-700'
+        className={`upload-zone p-10 mb-4 flex flex-col items-center justify-center bg-gray-50 border-2 border-dashed rounded-2xl transition-all ${
+          isDragging ? 'border-pink-300 bg-pink-50' : 'border-gray-300'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -123,22 +123,22 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
           {loading ? "⏳" : "📤"}
         </div>
 
-        <p className="text-center text-white mb-3 font-medium">
-          {loading ? "Processing..." : "Drag & drop your file here"}
+        <p className="text-center text-gray-800 mb-3 font-medium">
+          {loading ? "processing..." : "drag & drop your file here"}
         </p>
 
         <p className="text-xs text-gray-500 mb-4 text-center">
-          Supports: JPG, PNG, WEBP, MP4, WEBM
+          supports: jpg, png, webp, mp4, webm
         </p>
 
         {!loading && (
           <motion.button
             onClick={handleBrowseClick}
-            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-full font-medium"
+            className="px-6 py-2 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-full font-medium shadow-md shadow-pink-200/50"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Browse Files
+            browse files
           </motion.button>
         )}
 
@@ -152,7 +152,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       </div>
 
       {error && (
-        <Alert variant="destructive" className="mb-4 bg-orange-500/10 border border-orange-500/30 text-orange-400">
+        <Alert className="mb-4 bg-orange-50 border border-orange-200 text-orange-700">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -160,17 +160,17 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-700 text-gray-400 rounded-xl hover:bg-gray-800 hover:text-gray-300 font-medium transition-colors"
+          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors"
         >
-          Cancel
+          cancel
         </button>
 
         <button
-          className="px-4 py-2 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-xl font-medium disabled:opacity-40"
+          className="px-4 py-2 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-xl font-medium disabled:opacity-40 shadow-md shadow-pink-200/50"
           onClick={handleBrowseClick}
           disabled={loading}
         >
-          {loading ? "Processing..." : "Select File"}
+          {loading ? "processing..." : "select file"}
         </button>
       </div>
     </motion.div>
