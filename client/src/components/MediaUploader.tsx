@@ -1,4 +1,5 @@
 import { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import { motion } from 'framer-motion';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface MediaUploaderProps {
@@ -13,7 +14,6 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // File types we accept
   const acceptedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   const acceptedVideoTypes = ['video/mp4', 'video/webm', 'video/quicktime'];
 
@@ -54,7 +54,6 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
     const fileType = file.type;
     const fileURL = URL.createObjectURL(file);
     
-    // Check if file is an accepted image
     if (acceptedImageTypes.includes(fileType)) {
       const img = new Image();
       img.onload = () => {
@@ -67,9 +66,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
         URL.revokeObjectURL(fileURL);
       };
       img.src = fileURL;
-    } 
-    // Check if file is an accepted video
-    else if (acceptedVideoTypes.includes(fileType)) {
+    } else if (acceptedVideoTypes.includes(fileType)) {
       const video = document.createElement('video');
       video.onloadeddata = () => {
         setLoading(false);
@@ -82,9 +79,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       };
       video.src = fileURL;
       video.load();
-    } 
-    // File type not accepted
-    else {
+    } else {
       setLoading(false);
       setError('Please upload an image (JPG, PNG, WEBP) or video (MP4, WEBM).');
     }
@@ -97,52 +92,55 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
   };
 
   return (
-    <div className="p-6 bg-white rounded-3xl max-w-md w-full border border-rose-100 shadow-xl">
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-md w-full shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.4em] text-rose-300 mb-1">upload</p>
-          <h3 className="text-xl font-semibold text-rose-900">
-            upload media
-          </h3>
+          <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Upload</p>
+          <h3 className="text-xl font-semibold text-white">Upload Media</h3>
         </div>
         <button
           onClick={onCancel}
-          className="text-rose-300 hover:text-rose-500"
+          className="text-gray-500 hover:text-gray-300"
         >
           ✕
         </button>
       </div>
 
       <div
-        className={`upload-zone p-8 mb-4 flex flex-col items-center justify-center bg-rose-50 border-2 border-dashed border-rose-200 rounded-2xl ${isDragging ? 'bg-gray-100 border-rose-300' : ''}`}
+        className={`upload-zone p-10 mb-4 flex flex-col items-center justify-center bg-gray-800/50 border-2 border-dashed rounded-2xl transition-all ${
+          isDragging ? 'border-pink-500 bg-pink-500/10' : 'border-gray-700'
+        }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <div className="text-4xl mb-3">
+        <div className="text-5xl mb-4">
           {loading ? "⏳" : "📤"}
         </div>
 
-        <p className="text-center text-rose-900 mb-3 font-medium">
-          {loading
-            ? "processing your file..."
-            : "drag & drop your image or video here"}
+        <p className="text-center text-white mb-3 font-medium">
+          {loading ? "Processing..." : "Drag & drop your file here"}
         </p>
 
-        <p className="text-xs text-rose-400 mb-4 text-center">
-          supported: jpg, png, webp, mp4, webm
+        <p className="text-xs text-gray-500 mb-4 text-center">
+          Supports: JPG, PNG, WEBP, MP4, WEBM
         </p>
 
         {!loading && (
-          <button
+          <motion.button
             onClick={handleBrowseClick}
-            className="px-6 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-medium"
+            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-full font-medium"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            browse files
-          </button>
+            Browse Files
+          </motion.button>
         )}
-
-        {loading && <div className="loader mt-2"></div>}
 
         <input
           type="file"
@@ -154,7 +152,7 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       </div>
 
       {error && (
-        <Alert variant="destructive" className="mb-4 bg-rose-50 border border-rose-200 text-rose-800">
+        <Alert variant="destructive" className="mb-4 bg-orange-500/10 border border-orange-500/30 text-orange-400">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -162,19 +160,19 @@ export default function MediaUploader({ onImageUpload, onVideoUpload, onCancel }
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={onCancel}
-          className="px-4 py-2 border border-rose-200 text-rose-900 rounded-2xl hover:border-rose-300 font-medium"
+          className="px-4 py-2 border border-gray-700 text-gray-400 rounded-xl hover:bg-gray-800 hover:text-gray-300 font-medium transition-colors"
         >
-          cancel
+          Cancel
         </button>
 
         <button
-          className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-2xl font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-gradient-to-r from-pink-500 to-orange-400 text-white rounded-xl font-medium disabled:opacity-40"
           onClick={handleBrowseClick}
           disabled={loading}
         >
-          {loading ? "processing..." : "select file"}
+          {loading ? "Processing..." : "Select File"}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
