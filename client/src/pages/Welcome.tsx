@@ -35,9 +35,9 @@ export default function Welcome() {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40"
+          className="absolute inset-0 bg-cover bg-center opacity-50"
           style={{ 
-            backgroundImage: 'url(/images/dance-studio.jpg)',
+            backgroundImage: 'url(/images/dance-studio.png)',
             filter: 'blur(0px)'
           }}
         />
