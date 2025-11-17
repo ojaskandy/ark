@@ -172,7 +172,7 @@ export function setupAuth(app: Express): void {
           // Create student user with password "arshia"
           studentUser = await storage.createUser({
             username: 'student',
-            email: 'student@arshia.studio',
+            email: 'student@ark.studio',
             password: await hashPassword('arshia'),
             hasPaid: true,
             hasCompletedOnboarding: true,
