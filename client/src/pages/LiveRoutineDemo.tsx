@@ -127,10 +127,10 @@ const LiveRoutineDemo: React.FC = () => {
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40"
+          className="absolute inset-0 bg-cover bg-center opacity-85"
           style={{ backgroundImage: 'url(/images/dance-studio.png)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/90 via-rose-50/80 to-orange-50/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-rose-50/20 to-orange-50/30" />
       </div>
 
       {/* Header */}

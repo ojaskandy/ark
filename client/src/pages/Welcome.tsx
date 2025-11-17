@@ -35,13 +35,13 @@ export default function Welcome() {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-50"
+          className="absolute inset-0 bg-cover bg-center opacity-90"
           style={{ 
             backgroundImage: 'url(/images/dance-studio.png)',
             filter: 'blur(0px)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-rose-50/80 via-pink-50/60 to-orange-50/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rose-50/40 via-pink-50/30 to-orange-50/40" />
       </div>
 
       {/* Header */}
