@@ -31,7 +31,7 @@ export default function Welcome() {
   };
 
   return (
-    <div className="min-h-screen bg-rose-50/30 overflow-x-hidden">
+    <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <div 
@@ -41,7 +41,7 @@ export default function Welcome() {
             filter: 'blur(0px)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-rose-50/40 via-pink-50/30 to-orange-50/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
       </div>
 
       {/* Header */}
@@ -52,18 +52,18 @@ export default function Welcome() {
         className="relative z-20 w-full px-6 md:px-12 py-8 flex justify-between items-center"
       >
         <motion.div
-          className="text-2xl font-medium text-gray-800 tracking-tight"
+          className="text-2xl font-medium text-royal-purple tracking-tight"
           whileHover={{ scale: 1.02 }}
         >
-          ark
+          ARK
         </motion.div>
         <motion.button
           onClick={() => setShowLogin(true)}
-          className="px-5 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors rounded-full border border-gray-300 hover:border-gray-400 bg-white/60 backdrop-blur-sm"
+          className="px-5 py-2 text-sm text-royal-purple-dark hover:text-royal-purple transition-colors rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          student portal
+          Student Portal
         </motion.button>
       </motion.header>
 
@@ -79,10 +79,10 @@ export default function Welcome() {
             className="space-y-6"
           >
             <h1 className="text-7xl md:text-8xl lg:text-9xl font-medium text-gray-800 leading-none tracking-tight">
-              dance better.
+              Dance Your Dreams
             </h1>
-            <p className="text-2xl md:text-3xl text-gray-600 font-light">
-              the leading ai dance studio
+            <p className="text-2xl md:text-3xl text-royal-purple font-light">
+              The Leading AI Dance Studio
             </p>
           </motion.div>
 
@@ -92,9 +92,9 @@ export default function Welcome() {
             transition={{ duration: 1, delay: 0.5 }}
             className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed"
           >
-            ark dance studio uses ai to analyze your movement in real-time.
+            ARK Dance Studio Uses AI To Analyze Your Movement In Real-Time.
             <br />
-            upload a routine. practice live. perfect your technique.
+            Upload A Routine. Practice Live. Perfect Your Technique.
           </motion.p>
 
           <motion.div
@@ -105,19 +105,19 @@ export default function Welcome() {
           >
             <motion.button
               onClick={() => navigate('/live-routine')}
-              className="group relative px-10 py-4 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-full text-lg font-medium overflow-hidden shadow-lg shadow-pink-200/50"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(251, 207, 232, 0.4)' }}
+              className="group relative px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium overflow-hidden shadow-lg shadow-royal-purple/50"
+              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10">start practicing</span>
+              <span className="relative z-10">Start Practicing</span>
             </motion.button>
             <motion.button
               onClick={() => navigate('/challenges')}
-              className="px-10 py-4 border border-gray-300 text-gray-700 bg-white/60 backdrop-blur-sm rounded-full text-lg font-medium hover:bg-white/80 transition-all"
+              className="px-10 py-4 border border-royal-purple-light text-royal-purple-dark bg-white/60 backdrop-blur-sm rounded-full text-lg font-medium hover:bg-white/80 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              view challenges
+              View Challenges
             </motion.button>
           </motion.div>
         </div>
@@ -134,10 +134,10 @@ export default function Welcome() {
             className="text-center mb-16"
           >
             <h2 className="text-5xl md:text-6xl font-medium text-gray-800 mb-4">
-              your studio. everywhere.
+              Your Studio. Everywhere.
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              practice at 3 am. get instant feedback. track every improvement.
+            <p className="text-xl text-royal-purple max-w-2xl mx-auto">
+              Practice At 3 AM. Get Instant Feedback. Track Every Improvement.
             </p>
           </motion.div>
 
@@ -145,18 +145,18 @@ export default function Welcome() {
             {[
               {
                 icon: '🎥',
-                title: 'live analysis',
-                description: 'real-time pose tracking that follows every movement with precision'
+                title: 'Live Analysis',
+                description: 'Real-Time Pose Tracking That Follows Every Movement With Precision'
               },
               {
                 icon: '✨',
-                title: 'ai feedback',
-                description: 'intelligent coaching that adapts to your style and highlights improvements'
+                title: 'AI Feedback',
+                description: 'Intelligent Coaching That Adapts To Your Style And Highlights Improvements'
               },
               {
                 icon: '🎯',
-                title: 'perfect practice',
-                description: 'upload references, compare your form, refine your technique frame by frame'
+                title: 'Perfect Practice',
+                description: 'Upload References, Compare Your Form, Refine Your Technique Frame By Frame'
               }
             ].map((feature, idx) => (
               <motion.div
@@ -166,9 +166,9 @@ export default function Welcome() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="group relative bg-white/70 backdrop-blur-md border border-gray-200/50 rounded-3xl p-8 overflow-hidden shadow-lg shadow-pink-100/20"
+                className="group relative bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 overflow-hidden shadow-lg shadow-royal-purple/10"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-50/0 to-orange-50/0 group-hover:from-pink-50/50 group-hover:to-orange-50/50 transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-royal-purple/0 group-hover:from-purple-50/50 group-hover:to-royal-purple/20 transition-all duration-500" />
                 <div className="relative z-10">
                   <div className="text-5xl mb-4">{feature.icon}</div>
                   <h3 className="text-2xl font-medium text-gray-800 mb-3">{feature.title}</h3>
@@ -188,33 +188,33 @@ export default function Welcome() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center bg-white/70 backdrop-blur-md border border-gray-200/50 rounded-3xl p-12 md:p-16 shadow-xl shadow-pink-100/30"
+            className="text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 md:p-16 shadow-xl shadow-royal-purple/20"
           >
             <h2 className="text-4xl md:text-5xl font-medium text-gray-800 mb-4">
-              get started for free
+              Get Started For Free
             </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              be seen. be understood. be better.
+            <p className="text-xl text-royal-purple mb-8">
+              Be Seen. Be Understood. Be Better.
             </p>
             <motion.button
               onClick={() => navigate('/live-routine')}
-              className="px-10 py-4 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-full text-lg font-medium shadow-lg shadow-pink-200/50"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(251, 207, 232, 0.4)' }}
+              className="px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
+              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
-              try ark free
+              Try ARK Free
             </motion.button>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-gray-200/50 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
+      <footer className="relative z-10 border-t border-royal-purple-light/30 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div className="text-gray-500 text-sm">© 2025 ark dance studio</div>
+          <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
           <div className="flex gap-6">
-            <button className="text-gray-500 hover:text-gray-700 text-sm transition-colors">about</button>
-            <button className="text-gray-500 hover:text-gray-700 text-sm transition-colors">contact</button>
+            <button className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
+            <button className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</button>
           </div>
         </div>
       </footer>
@@ -225,7 +225,7 @@ export default function Welcome() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-pink-100/40 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-royal-purple/20 backdrop-blur-lg flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowLogin(false);
             setPassword('');
@@ -238,10 +238,10 @@ export default function Welcome() {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", duration: 0.5 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-pink-200/20"
+            className="bg-white/90 backdrop-blur-xl border border-royal-purple-light/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-royal-purple/30"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-medium text-gray-800">student portal</h2>
+              <h2 className="text-2xl font-medium text-royal-purple">Student Portal</h2>
               <button
                 onClick={() => {
                   setShowLogin(false);
@@ -256,13 +256,13 @@ export default function Welcome() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-600 mb-2">password</label>
+                <label className="block text-sm text-royal-purple mb-2">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-gray-200 text-gray-800 rounded-2xl focus:outline-none focus:border-pink-300 transition-colors"
-                  placeholder="enter password"
+                  className="w-full px-4 py-3 bg-white/80 border border-royal-purple-light text-gray-800 rounded-2xl focus:outline-none focus:border-royal-purple transition-colors"
+                  placeholder="Enter Password"
                   autoFocus
                 />
               </div>
@@ -273,9 +273,9 @@ export default function Welcome() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-pink-200/50 transition-all"
+                className="w-full py-3 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-royal-purple/50 transition-all"
               >
-                log in
+                Log In
               </button>
             </form>
           </motion.div>

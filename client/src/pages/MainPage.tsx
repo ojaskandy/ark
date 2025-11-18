@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 
 const menuItems = [
   {
-    label: 'live routine',
+    label: 'Live Routine',
     target: '/live-routine',
     icon: '🎥',
-    description: 'practice with ai feedback',
+    description: 'Practice With AI Feedback',
   },
   {
-    label: 'challenges',
+    label: 'Challenges',
     target: '/challenges',
     icon: '⚡',
-    description: 'quick drills',
+    description: 'Quick Drills',
   }
 ];
 
@@ -42,14 +42,14 @@ export default function MainPage() {
   }
 
   return (
-    <div className="min-h-screen bg-rose-50/30">
+    <div className="min-h-screen bg-purple-50/30">
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-85"
           style={{ backgroundImage: 'url(/images/dance-studio.png)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-rose-50/20 to-orange-50/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/40 via-royal-purple/10 to-pink-50/30" />
       </div>
 
       <div className="relative z-10 flex flex-col md:flex-row min-h-screen">
@@ -61,8 +61,8 @@ export default function MainPage() {
           className="md:w-72 w-full border-b md:border-b-0 md:border-r border-gray-200/50 bg-white/70 backdrop-blur-xl px-6 py-8"
         >
           <div className="mb-12">
-            <h1 className="text-2xl font-medium text-gray-800 mb-1">ark</h1>
-            <p className="text-sm text-gray-500">dance studio</p>
+            <h1 className="text-2xl font-medium text-royal-purple mb-1">ARK</h1>
+            <p className="text-sm text-royal-purple-light">Dance Studio</p>
           </div>
 
           <nav className="space-y-3">
@@ -70,7 +70,7 @@ export default function MainPage() {
               <motion.button
                 key={item.label}
                 onClick={() => navigate(item.target)}
-                className="w-full group relative bg-white/60 hover:bg-white/90 border border-gray-200/50 hover:border-pink-200 rounded-2xl px-4 py-4 transition-all"
+                className="w-full group relative bg-white/60 hover:bg-white/90 border border-royal-purple-light/30 hover:border-royal-purple rounded-2xl px-4 py-4 transition-all"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
@@ -80,7 +80,7 @@ export default function MainPage() {
                 <div className="relative flex items-center gap-3">
                   <span className="text-2xl">{item.icon}</span>
                   <div className="text-left flex-1">
-                    <p className="text-gray-800 font-medium">{item.label}</p>
+                    <p className="text-royal-purple-dark font-medium">{item.label}</p>
                     <p className="text-xs text-gray-500">{item.description}</p>
                   </div>
                 </div>
@@ -98,8 +98,8 @@ export default function MainPage() {
             className="max-w-4xl mx-auto space-y-8"
           >
             <div className="space-y-4">
-              <h2 className="text-5xl md:text-6xl font-medium text-gray-800">welcome back</h2>
-              <p className="text-xl text-gray-600">ready to practice?</p>
+              <h2 className="text-5xl md:text-6xl font-medium text-gray-800">Welcome Back</h2>
+              <p className="text-xl text-royal-purple">Ready To Practice?</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -107,7 +107,7 @@ export default function MainPage() {
                 <motion.button
                   key={item.label}
                   onClick={() => navigate(item.target)}
-                  className="group relative bg-white/70 backdrop-blur-xl border border-gray-200/50 hover:border-pink-200 rounded-3xl p-8 transition-all shadow-lg shadow-pink-100/20"
+                  className="group relative bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 hover:border-royal-purple rounded-3xl p-8 transition-all shadow-lg shadow-royal-purple/10"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 + idx * 0.1 }}
@@ -117,7 +117,7 @@ export default function MainPage() {
                     <div className="text-5xl">{item.icon}</div>
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{item.description}</p>
-                      <p className="text-2xl text-gray-800 font-medium">{item.label}</p>
+                      <p className="text-2xl text-royal-purple-dark font-medium">{item.label}</p>
                     </div>
                   </div>
                 </motion.button>

@@ -16,6 +16,12 @@ export default {
         'ark-purple-dark': '#4A1F5C',
         'ark-lavender': '#B794F6',
         'ark-accent': '#E9D5FF',
+        'dance-pink': '#ff69b4',
+        'dance-purple': '#a259d9',
+        'dance-light-pink': '#ffb6da',
+        'royal-purple': '#7851a9',
+        'royal-purple-light': '#9b7bb3',
+        'royal-purple-dark': '#5d3f85',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
