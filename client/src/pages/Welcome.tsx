@@ -70,7 +70,7 @@ export default function Welcome() {
             <img 
               src="/images/ark_logo.png" 
               alt="ARK Dance Studio" 
-              className="h-16 md:h-20 w-auto"
+              className="h-20 md:h-28 w-auto"
             />
           </motion.div>
 
