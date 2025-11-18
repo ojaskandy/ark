@@ -35,7 +35,8 @@ export default function Welcome() {
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
     { label: 'Registration', path: '/registration' },
-    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
+    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) },
+    { label: 'meet ARK AI', path: '/early' }
   ];
 
   return (
@@ -79,7 +80,7 @@ export default function Welcome() {
               <motion.button
                 key={item.label}
                 onClick={item.onClick || (() => navigate(item.path!))}
-                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                className="px-6 py-2.5 text-sm font-medium text-purple-600 hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
