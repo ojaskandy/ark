@@ -1022,7 +1022,7 @@ export default function Home() {
                 <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center mr-3">
                   <HelpCircle className="h-5 w-5 text-white" />
                 </div>
-                How CoachT Works
+                How ARK Works
               </DialogTitle>
               <button
                 onClick={() => setShowHowItWorksDialog(false)}
@@ -1117,7 +1117,7 @@ export default function Home() {
                       </div>
                       <div className="bg-black/30 rounded-lg p-4">
                         <h4 className="font-semibold text-purple-300 mb-2">📧 Share Feedback</h4>
-                        <p className="text-sm text-gray-300">Help improve CoachT by sharing your experience and suggestions with our team.</p>
+                        <p className="text-sm text-gray-300">Help improve ARK by sharing your experience and suggestions with our team.</p>
                       </div>
                     </div>
                   </div>
@@ -1190,7 +1190,7 @@ export default function Home() {
               Leaderboard
             </DialogTitle>
             <DialogDescription className="text-gray-400">
-              See how you rank among other CoachT practitioners
+              See how you rank among other ARK dancers
             </DialogDescription>
           </DialogHeader>
           
@@ -1313,12 +1313,12 @@ export default function Home() {
                 Mobile Device Detected
               </DialogTitle>
               <DialogDescription className="text-gray-400 mt-2">
-                For the best experience with CoachT, including optimal pose tracking and interface usability, we recommend using a tablet or laptop/desktop computer.
+                For the best experience with ARK, including optimal pose tracking and interface usability, we recommend using a tablet or laptop/desktop computer.
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 text-gray-300">
               <p>
-                While CoachT may function on mobile devices, its features are optimized for larger screens. You might experience layout issues or reduced performance on a smaller screen.
+                While ARK may function on mobile devices, its features are optimized for larger screens. You might experience layout issues or reduced performance on a smaller screen.
               </p>
             </div>
             <DialogFooter className="mt-2">
@@ -1550,7 +1550,7 @@ export default function Home() {
       {showWelcomeGuide && (
         <ShifuGuide
           expression="happy"
-          message="Welcome to CoachT! I'm your AI coach Shifu. Let me guide you through your training journey!"
+          message="Welcome to ARK Dance Studios! I'm your AI coach Shifu. Let me guide you through your dance journey!"
           position="top-right"
           onDismiss={handleGuideComplete}
           showDelay={0}

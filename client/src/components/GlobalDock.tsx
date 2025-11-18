@@ -44,7 +44,7 @@ export default function GlobalDock() {
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => window.history.back()}
-                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                className="p-2 rounded-full text-gray-400 hover:text-ark-purple-light hover:bg-gray-800 transition-colors"
                 title="go back"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -52,7 +52,7 @@ export default function GlobalDock() {
 
               <button
                 onClick={() => window.location.href = '/app'}
-                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                className="p-2 rounded-full text-gray-400 hover:text-ark-purple-light hover:bg-gray-800 transition-colors"
                 title="home"
               >
                 <Home className="h-5 w-5" />
@@ -66,7 +66,7 @@ export default function GlobalDock() {
             <div className="flex items-center space-x-1">
               <button
                 onClick={handleShifuChatToggle}
-                className="p-2 rounded-full text-gray-400 hover:text-dance-purple hover:bg-gray-800 transition-colors"
+                className="p-2 rounded-full text-gray-400 hover:text-ark-lavender hover:bg-gray-800 transition-colors"
                 title="chat with vibe"
               >
                 <Sparkles className="h-5 w-5" />
@@ -74,7 +74,7 @@ export default function GlobalDock() {
 
               <button
                 onClick={handleFeedbackSubmit}
-                className="p-2 rounded-full text-gray-400 hover:text-dance-pink hover:bg-gray-800 transition-colors"
+                className="p-2 rounded-full text-gray-400 hover:text-ark-purple-light hover:bg-gray-800 transition-colors"
                 title="send feedback"
               >
                 <MessageSquare className="h-5 w-5" />

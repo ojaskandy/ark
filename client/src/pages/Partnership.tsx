@@ -45,25 +45,25 @@ const features = [
 ];
 
 const testimonials_col1 = [
-    { name: "David", city: "New York", text: "CoachT's AI feedback is like having a grandmaster watch my every move. My form has improved more in the last month than in the past year." },
-    { name: "Kenji", city: "Chicago", text: "I was skeptical about an AI coach, but CoachT is legit. The snap feedback feature is brutally honest and incredibly effective." },
-    { name: "Chloe", city: "Philadelphia", text: "As a professional fighter, every detail matters. CoachT helps me spot and correct the smallest flaws in my technique." },
+    { name: "David", city: "New York", text: "ARK's AI feedback is like having a master choreographer watch my every move. My dance technique has improved more in the last month than in the past year." },
+    { name: "Kenji", city: "Chicago", text: "I was skeptical about an AI dance coach, but ARK is legit. The snap feedback feature is incredibly precise and effective." },
+    { name: "Chloe", city: "Philadelphia", text: "As a professional dancer, every detail matters. ARK helps me spot and correct the smallest flaws in my technique." },
     { name: "Marcus", city: "San Diego", text: "The workout plans are perfectly tailored for martial arts. I've seen a huge improvement in my strength and conditioning." },
     { name: "Daniel", city: "Columbus", text: "The level of detail in the feedback is insane. It's helping me unlearn years of bad habits." },
 ]
 
 const testimonials_col2 = [
     { name: "Maria", city: "Los Angeles", text: "The practice library is a game-changer. I can drill any kata, anytime. Essential for any serious karateka." },
-    { name: "Sarah", city: "Houston", text: "We introduced CoachT at our dojo, and student engagement has skyrocketed. It's the future of martial arts training." },
+    { name: "Sarah", city: "Houston", text: "We introduced ARK at our dance studio, and student engagement has skyrocketed. It's the future of dance training." },
     { name: "Alex", city: "San Antonio", text: "I never thought an app could capture the nuance of Taekwondo. I was wrong. This is an indispensable tool." },
     { name: "Jessica", city: "Dallas", text: "Shifu Chat is surprisingly insightful. It's great for getting quick advice on my training regimen." },
-    { name: "Olivia", city: "Charlotte", text: "From kata to kumite, CoachT has it all. It's the most comprehensive martial arts training app I've ever used." },
+    { name: "Olivia", city: "Charlotte", text: "From Bollywood to contemporary, ARK has it all. It's the most comprehensive dance training app I've ever used." },
 ]
 
 const testimonials_col3 = [
     { name: "Ben", city: "Phoenix", text: "The challenges are addictive. Competing on the leaderboards has pushed me to train harder than ever." },
     { name: "Tom", city: "Austin", text: "The live routine analysis is mind-blowing. It feels like I'm in a high-tech training facility." },
-    { name: "Master Li", city: "Fort Worth", text: "I recommend CoachT to all my students. It reinforces the lessons we cover in class and helps them practice perfectly at home." },
+    { name: "Instructor Maya", city: "Fort Worth", text: "I recommend ARK to all my students. It reinforces the lessons we cover in class and helps them practice perfectly at home." },
     { name: "James", city: "Indianapolis", text: "This is the training partner that never gets tired. It's pushed my skills to a whole new level." },
     { name: "Michael", city: "Seattle", text: "The platform is incredibly intuitive. I was up and running in minutes, and it's already a core part of my training." },
 ]
@@ -74,7 +74,7 @@ export default function Partnership() {
     <div className="min-h-screen bg-black text-white">
       {/* Navigation - Simplified */}
       <div className="bg-black py-4 px-6 flex justify-between items-center">
-        <span className="text-2xl font-bold text-red-500">CoachT</span>
+        <span className="text-2xl font-bold text-purple-500">ARK</span>
         <Button 
           className="bg-white text-black hover:bg-gray-100"
           onClick={() => window.open('https://cal.com/ojas-kandhare/coacht?overlayCalendar=true', '_blank')}
@@ -161,7 +161,7 @@ export default function Partnership() {
               <div className="text-5xl font-bold text-red-400">$15k+</div>
               <h3 className="text-xl font-semibold text-white">Additional Revenue</h3>
               <p className="text-gray-300">
-                Schools using CoachT generate an additional $15,000+ in revenue through increased enrollment and premium programs.
+                Studios using ARK generate an additional $15,000+ in revenue through increased enrollment and premium programs.
               </p>
             </div>
             <div className="space-y-4">
@@ -253,7 +253,7 @@ export default function Partnership() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-purple-600/20 to-orange-600/20 rounded-2xl blur-3xl"></div>
             <div className="relative bg-gradient-to-r from-red-600/10 via-purple-600/10 to-orange-600/10 rounded-2xl p-12 border border-gray-800">
-              <h2 className="text-5xl font-bold mb-6">Partner with CoachT</h2>
+              <h2 className="text-5xl font-bold mb-6">Partner with ARK</h2>
               <p className="text-xl text-gray-300 mb-8">
                 Transform your martial arts school with AI-powered training technology
               </p>
@@ -277,7 +277,7 @@ export default function Partnership() {
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-4">Loved by world-class martial artists</h2>
           <p className="text-lg text-gray-400 mb-12">
-            Martial artists all around the world reach for CoachT by choice.
+            Dancers all around the world reach for ARK by choice.
           </p>
           <div className="relative flex gap-8 h-[600px] [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
             <div className="flex flex-col gap-8 animate-scroll-up">

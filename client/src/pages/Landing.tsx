@@ -23,11 +23,11 @@ export default function Landing() {
         // @ts-ignore - Capacitor global may not be typed
         if ((window as any).Capacitor?.Plugins?.Browser) {
           await (window as any).Capacitor.Plugins.Browser.open({ 
-            url: 'https://www.coacht.xyz/auth'
+            url: 'https://www.arkdancestudios.com/auth'
           });
         } else {
           // Fallback to window.open
-          window.open('https://www.coacht.xyz/auth', '_system');
+          window.open('https://www.arkdancestudios.com/auth', '_system');
         }
       } catch (error) {
         console.error('Failed to open login in system browser:', error);
@@ -88,40 +88,40 @@ export default function Landing() {
     <div className={`min-h-screen flex flex-col overflow-hidden relative ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
       {/* Animated background shapes */}
       <div className="absolute w-full h-full overflow-hidden z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-red-900/10 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-800/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] rounded-full bg-red-700/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-ark-purple/10 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-ark-purple-light/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] rounded-full bg-ark-lavender/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
       {/* Header */}
-      <header className={`${isDarkMode ? 'bg-black/50' : 'bg-white/70'} backdrop-blur-sm py-4 border-b ${isDarkMode ? 'border-red-900/20' : 'border-red-300/30'} sticky top-0 z-50`}>
+      <header className={`${isDarkMode ? 'bg-black/50' : 'bg-white/70'} backdrop-blur-sm py-4 border-b ${isDarkMode ? 'border-ark-purple/20' : 'border-ark-lavender/30'} sticky top-0 z-50`}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
-            <div className="w-10 h-10 text-red-600 mr-2 animate-bounce" style={{ animationDuration: '3s' }}>
-              <span className="material-icons text-3xl">sports_martial_arts</span>
+            <div className="w-10 h-10 text-ark-purple-light mr-2 animate-bounce" style={{ animationDuration: '3s' }}>
+              <span className="material-icons text-3xl">music_note</span>
             </div>
             <div className="relative">
               {isDarkMode ? (
                 <>
                   <h1 className="text-2xl font-serif font-bold logo-dark absolute">
-                    CoachT
+                    ARK
                   </h1>
                   <h1 className="text-2xl font-serif font-bold logo-dark-glow absolute">
-                    CoachT
+                    ARK
                   </h1>
                 </>
               ) : (
                 <>
                   <h1 className="text-2xl font-serif font-bold logo-light absolute">
-                    CoachT
+                    ARK
                   </h1>
                   <h1 className="text-2xl font-serif font-bold logo-light-glow absolute">
-                    CoachT
+                    ARK
                   </h1>
                 </>
               )}
               <h1 className="text-2xl font-serif font-bold invisible">
-                CoachT
+                ARK
               </h1>
             </div>
           </div>
@@ -129,11 +129,11 @@ export default function Landing() {
           {/* Theme toggle button */}
           <button 
             onClick={toggleTheme} 
-            className={`p-2 rounded-full ${isDarkMode ? 'bg-black/60 border-red-900/50' : 'bg-white/60 border-red-300/50'} border transition-all duration-300 mr-4`}
+            className={`p-2 rounded-full ${isDarkMode ? 'bg-black/60 border-ark-purple/50' : 'bg-white/60 border-ark-lavender/50'} border transition-all duration-300 mr-4`}
             aria-label="Toggle theme"
           >
             {isDarkMode ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(220, 38, 38, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(124, 58, 237, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="5" />
                 <line x1="12" y1="1" x2="12" y2="3" />
                 <line x1="12" y1="21" x2="12" y2="23" />
@@ -145,7 +145,7 @@ export default function Landing() {
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9f1239" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B2C6F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
             )}
@@ -153,18 +153,18 @@ export default function Landing() {
           
           <div className="flex items-center space-x-4">
             {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-red-500" />
+              <Loader2 className="h-5 w-5 animate-spin text-ark-purple-light" />
             ) : user ? (
               <>
                 <Link to="/app">
-                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white transition duration-300 flex items-center space-x-1">
+                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-ark-purple to-ark-purple-light hover:from-ark-purple-dark hover:to-ark-purple text-white transition duration-300 flex items-center space-x-1">
                     <span className="material-icons text-sm">play_arrow</span>
                     <span>Start Routine</span>
                   </button>
                 </Link>
                 <button 
                   onClick={handleLogout}
-                  className="px-5 py-2 rounded-md border border-red-700/50 text-red-500 hover:bg-red-900/20 transition duration-300 flex items-center space-x-1"
+                  className="px-5 py-2 rounded-md border border-ark-purple/50 text-ark-purple-light hover:bg-ark-purple/20 transition duration-300 flex items-center space-x-1"
                 >
                   <span className="material-icons text-sm">logout</span>
                   <span>Logout</span>
@@ -175,7 +175,7 @@ export default function Landing() {
                 <button 
                   onClick={handleLoginClick}
                   disabled={isLoading}
-                  className="px-5 py-2 rounded-md border border-red-700/50 text-red-500 hover:bg-red-900/20 transition duration-300 flex items-center space-x-1 disabled:opacity-50"
+                  className="px-5 py-2 rounded-md border border-ark-purple/50 text-ark-purple-light hover:bg-ark-purple/20 transition duration-300 flex items-center space-x-1 disabled:opacity-50"
                 >
                   <span className="material-icons text-sm">
                     {isLoading ? 'hourglass_empty' : 'login'}
@@ -183,7 +183,7 @@ export default function Landing() {
                   <span>{isLoading ? 'Opening...' : 'Login'}</span>
                 </button>
                 <Link to="/auth?tab=register">
-                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white transition duration-300 flex items-center space-x-1">
+                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-ark-purple to-ark-purple-light hover:from-ark-purple-dark hover:to-ark-purple text-white transition duration-300 flex items-center space-x-1">
                     <span className="material-icons text-sm">person_add</span>
                     <span>Register</span>
                   </button>
@@ -198,17 +198,17 @@ export default function Landing() {
       <main className="flex-1 relative z-10">
         {isLoading ? (
           <div className="flex items-center justify-center min-h-[50vh]">
-            <Loader2 className="h-10 w-10 animate-spin text-red-500" />
+            <Loader2 className="h-10 w-10 animate-spin text-ark-purple-light" />
           </div>
         ) : user ? (
           // Show user profile and dashboard
           <div className="container mx-auto px-4 py-8">
             <UserProfileCard />
             
-            <div className="mt-8 w-full bg-black/30 border border-red-900/30 rounded-lg p-4 animate-fade-in">
+            <div className="mt-8 w-full bg-black/30 border border-ark-purple/30 rounded-lg p-4 animate-fade-in">
               <div className="flex items-center mb-3">
-                <span className="material-icons text-red-500 mr-2">edit_note</span>
-                <h3 className="text-lg font-medium text-red-100">Routine Notes</h3>
+                <span className="material-icons text-ark-purple-light mr-2">edit_note</span>
+                <h3 className="text-lg font-medium text-ark-lavender">Routine Notes</h3>
               </div>
               <textarea 
                 className="w-full h-32 bg-black/70 border border-red-900/40 rounded p-3 text-white placeholder-red-200/50
@@ -229,7 +229,7 @@ export default function Landing() {
                         START TRAINING
                       </span>
                     </span>
-                    <span className="material-icons text-red-500 text-xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+                    <span className="material-icons text-ark-purple-light text-xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
                   </div>
                 </div>
               </Link>
@@ -264,28 +264,28 @@ export default function Landing() {
                   {isDarkMode ? (
                     <>
                       <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-dark absolute inset-0">
-                        CoachT
+                        ARK
                       </h2>
                       <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-dark-glow absolute inset-0">
-                        CoachT
+                        ARK
                       </h2>
                     </>
                   ) : (
                     <>
                       <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-light absolute inset-0">
-                        CoachT
+                        ARK
                       </h2>
                       <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-light-glow absolute inset-0">
-                        CoachT
+                        ARK
                       </h2>
                     </>
                   )}
                   <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold invisible">
-                    CoachT
+                    ARK
                   </h2>
                 </div>
-                <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 ${isDarkMode ? 'text-red-100' : 'text-red-800'}`}>
-                  AI-powered martial arts form perfection.
+                <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>
+                  AI-powered dance technique perfection.
                 </p>
               </div>
               
@@ -316,8 +316,8 @@ export default function Landing() {
               {/* Routine Notes Section */}
               <div className={`w-full max-w-lg mx-auto mb-10 ${isDarkMode ? 'bg-black/30 border-red-900/30' : 'bg-white/70 border-red-300/40'} border rounded-lg p-4 animate-fade-in`}>
                 <div className="flex items-center mb-3">
-                  <span className="material-icons text-red-500 mr-2">edit_note</span>
-                  <h3 className={`text-lg font-medium ${isDarkMode ? 'text-red-100' : 'text-red-700'}`}>Routine Notes</h3>
+                  <span className="material-icons text-ark-purple-light mr-2">edit_note</span>
+                  <h3 className={`text-lg font-medium ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>Routine Notes</h3>
                 </div>
                 <textarea 
                   className={`w-full h-32 rounded p-3 ${
@@ -358,7 +358,7 @@ export default function Landing() {
           : 'bg-white/80 border-red-300/20'
       }`}>
         <div className="container mx-auto px-4 text-center">
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>© 2025 CoachT</p>
+          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>© 2025 ARK Dance Studios</p>
           <p className={`${isDarkMode ? 'text-gray-600' : 'text-gray-500'} text-sm mt-1`}>
             Powered by TensorFlow.js
           </p>

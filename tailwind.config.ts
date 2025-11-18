@@ -11,9 +11,11 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        'dance-pink': '#ff69b4',
-        'dance-purple': '#a259d9',
-        'dance-light-pink': '#ffb6da',
+        'ark-purple': '#5B2C6F',
+        'ark-purple-light': '#7C3AED',
+        'ark-purple-dark': '#4A1F5C',
+        'ark-lavender': '#B794F6',
+        'ark-accent': '#E9D5FF',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
