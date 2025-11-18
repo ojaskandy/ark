@@ -15,8 +15,8 @@ function App() {
       <Switch>
         <Route path="/" component={Welcome} />
         <Route path="/about" component={About} />
-        <Route path="/classes" component={ClassSchedule} />
-        <Route path="/register" component={Registration} />
+        <Route path="/class-schedule" component={ClassSchedule} />
+        <Route path="/registration" component={Registration} />
         <Route path="/app" component={MainPage} />
         <Route path="/live-routine" component={LiveRoutineDemo} />
         <Route path="/challenges" component={Challenges} />

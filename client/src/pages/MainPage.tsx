@@ -61,7 +61,11 @@ export default function MainPage() {
           className="md:w-72 w-full border-b md:border-b-0 md:border-r border-gray-200/50 bg-white/70 backdrop-blur-xl px-6 py-8"
         >
           <div className="mb-12">
-            <h1 className="text-2xl font-medium text-royal-purple mb-1">ARK</h1>
+            <img 
+              src="/images/ark_logo.png" 
+              alt="ARK Dance Studio" 
+              className="h-16 w-auto mb-2"
+            />
             <p className="text-sm text-royal-purple-light">Dance Studio</p>
           </div>
 

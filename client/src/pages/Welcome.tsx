@@ -30,6 +30,14 @@ export default function Welcome() {
     }
   };
 
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Class Schedule', path: '/class-schedule' },
+    { label: 'Registration', path: '/registration' },
+    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
+  ];
+
   return (
     <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
       {/* Background Image */}
@@ -44,27 +52,45 @@ export default function Welcome() {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
       </div>
 
-      {/* Header */}
+      {/* Header with Logo and Navigation */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative z-20 w-full px-6 md:px-12 py-8 flex justify-between items-center"
+        className="relative z-20 w-full px-6 md:px-12 py-6"
       >
-        <motion.div
-          className="text-2xl font-medium text-royal-purple tracking-tight"
-          whileHover={{ scale: 1.02 }}
-        >
-          ARK
-        </motion.div>
-        <motion.button
-          onClick={() => setShowLogin(true)}
-          className="px-5 py-2 text-sm text-royal-purple-dark hover:text-royal-purple transition-colors rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Student Portal
-        </motion.button>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Logo */}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/images/ark_logo.png" 
+              alt="ARK Dance Studio" 
+              className="h-16 md:h-20 w-auto"
+            />
+          </motion.div>
+
+          {/* Navigation */}
+          <nav className="flex flex-wrap items-center justify-center gap-3">
+            {navItems.map((item, idx) => (
+              <motion.button
+                key={item.label}
+                onClick={item.onClick || (() => navigate(item.path!))}
+                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.label}
+              </motion.button>
+            ))}
+          </nav>
+        </div>
       </motion.header>
 
       {/* Hero Section */}
@@ -79,7 +105,7 @@ export default function Welcome() {
             className="space-y-6"
           >
             <h1 className="text-7xl md:text-8xl lg:text-9xl font-medium text-gray-800 leading-none tracking-tight">
-              Dance Your Dreams
+              ARK Dance Studio
             </h1>
             <p className="text-2xl md:text-3xl text-royal-purple font-light">
               The Leading AI Dance Studio
@@ -180,7 +206,7 @@ export default function Welcome() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Contact Us Section */}
       <section className="relative z-10 py-24 px-6 md:px-12">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -191,19 +217,19 @@ export default function Welcome() {
             className="text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 md:p-16 shadow-xl shadow-royal-purple/20"
           >
             <h2 className="text-4xl md:text-5xl font-medium text-gray-800 mb-4">
-              Get Started For Free
+              Contact Us
             </h2>
             <p className="text-xl text-royal-purple mb-8">
               Be Seen. Be Understood. Be Better.
             </p>
-            <motion.button
-              onClick={() => navigate('/live-routine')}
-              className="px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
+            <motion.a
+              href="mailto:arshia.x.kathpalia@gmail.com"
+              className="inline-block px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
               whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
-              Try ARK Free
-            </motion.button>
+              Contact Us
+            </motion.a>
           </motion.div>
         </div>
       </section>
@@ -213,8 +239,8 @@ export default function Welcome() {
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
           <div className="flex gap-6">
-            <button className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
-            <button className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</button>
+            <button onClick={() => navigate('/about')} className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
+            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</a>
           </div>
         </div>
       </footer>

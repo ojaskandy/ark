@@ -1,222 +1,250 @@
-import React from 'react';
-import { Link } from 'wouter';
-import { useTheme } from '@/hooks/use-theme';
-import { Clock, Users, Star, Calendar } from 'lucide-react';
+import { useState } from 'react';
+import { useLocation } from 'wouter';
+import { motion } from 'framer-motion';
 
 export default function ClassSchedule() {
-  const { isDarkMode } = useTheme();
+  const [, navigate] = useLocation();
+  const [showLogin, setShowLogin] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const classes = [
-    {
-      title: "Little Stars Bollywood",
-      ageGroup: "Ages 5-8",
-      level: "Beginner",
-      schedule: "Mondays & Wednesdays, 4:00 PM - 5:00 PM",
-      price: "$120/month",
-      description: "Fun introduction to Bollywood dance for young children. Learn basic steps and express yourself through music and movement!"
-    },
-    {
-      title: "Junior Bollywood",
-      ageGroup: "Ages 9-12",
-      level: "Beginner/Intermediate",
-      schedule: "Tuesdays & Thursdays, 4:30 PM - 5:30 PM",
-      price: "$120/month",
-      description: "Build on fundamentals with more complex choreography. Perfect for kids who want to explore Bollywood dance styles."
-    },
-    {
-      title: "Teen Contemporary",
-      ageGroup: "Ages 13-17",
-      level: "All Levels",
-      schedule: "Wednesdays & Fridays, 5:30 PM - 6:30 PM",
-      price: "$130/month",
-      description: "Expressive contemporary dance focusing on technique, creativity, and performance skills."
-    },
-    {
-      title: "Teen Hip-Hop",
-      ageGroup: "Ages 13-17",
-      level: "All Levels",
-      schedule: "Saturdays, 11:00 AM - 12:00 PM",
-      price: "$130/month",
-      description: "High-energy hip-hop classes teaching urban dance styles, rhythm, and freestyle."
-    },
-    {
-      title: "Adult Bollywood",
-      ageGroup: "18+",
-      level: "All Levels",
-      schedule: "Mondays & Thursdays, 7:00 PM - 8:00 PM",
-      price: "$140/month",
-      description: "Experience the joy of Bollywood dance while getting a great workout. No experience necessary!"
-    },
-    {
-      title: "Adult Contemporary",
-      ageGroup: "18+",
-      level: "Intermediate",
-      schedule: "Tuesdays, 7:30 PM - 8:30 PM",
-      price: "$140/month",
-      description: "Develop your contemporary technique with focus on fluidity, expression, and performance quality."
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: 'student', password: password.toLowerCase().trim() }),
+      });
+
+      if (response.ok) {
+        window.location.href = '/app';
+      } else {
+        setError('incorrect password');
+      }
+    } catch (err) {
+      setError('login failed');
     }
+  };
+
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Class Schedule', path: '/class-schedule' },
+    { label: 'Registration', path: '/registration' },
+    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
+  ];
+
+  const schedule = [
+    { day: 'Monday', time: '6:00 PM - 7:30 PM', class: 'Contemporary Dance', level: 'Intermediate' },
+    { day: 'Tuesday', time: '5:00 PM - 6:30 PM', class: 'Ballet Fundamentals', level: 'Beginner' },
+    { day: 'Wednesday', time: '6:00 PM - 7:30 PM', class: 'Hip Hop', level: 'All Levels' },
+    { day: 'Thursday', time: '5:00 PM - 6:30 PM', class: 'Jazz Dance', level: 'Intermediate' },
+    { day: 'Friday', time: '6:00 PM - 7:30 PM', class: 'Modern Dance', level: 'Advanced' },
+    { day: 'Saturday', time: '10:00 AM - 11:30 AM', class: 'Ballet Technique', level: 'All Levels' },
+    { day: 'Saturday', time: '2:00 PM - 3:30 PM', class: 'Choreography Workshop', level: 'Advanced' }
   ];
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-b from-ark-purple-dark to-black' : 'bg-gradient-to-b from-white to-ark-accent'}`}>
-      {/* Navigation */}
-      <nav className={`${isDarkMode ? 'bg-ark-purple-dark/90' : 'bg-white/90'} backdrop-blur-sm sticky top-0 z-50 border-b ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/">
-              <a className="text-2xl font-bold bg-gradient-to-r from-ark-purple-light to-ark-lavender bg-clip-text text-transparent">
-                ARK Dance Studios
-              </a>
-            </Link>
-            <div className="flex gap-6">
-              <Link href="/"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Home</a></Link>
-              <Link href="/about"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>About</a></Link>
-              <Link href="/classes"><a className={`font-semibold transition ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>Classes</a></Link>
-              <Link href="/register"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Register</a></Link>
-              <Link href="/app"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Student Portal</a></Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-90"
+          style={{ 
+            backgroundImage: 'url(/images/dance-studio.png)',
+            filter: 'blur(0px)'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
+      </div>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className={`text-5xl md:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Our Class Schedule
-          </h1>
-          <p className={`text-xl max-w-3xl mx-auto ${isDarkMode ? 'text-ark-lavender' : 'text-gray-700'}`}>
-            Find the perfect class for your age and skill level
-          </p>
-        </div>
-      </section>
+      {/* Header with Logo and Navigation */}
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-20 w-full px-6 md:px-12 py-6"
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Logo */}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/images/ark_logo.png" 
+              alt="ARK Dance Studio" 
+              className="h-16 md:h-20 w-auto"
+            />
+          </motion.div>
 
-      {/* Classes Grid */}
-      <section className="py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-8">
-            {classes.map((classInfo, index) => (
-              <div 
-                key={index}
-                className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-6 shadow-xl border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'} hover:shadow-2xl transition-shadow`}
+          {/* Navigation */}
+          <nav className="flex flex-wrap items-center justify-center gap-3">
+            {navItems.map((item, idx) => (
+              <motion.button
+                key={item.label}
+                onClick={item.onClick || (() => navigate(item.path!))}
+                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {classInfo.title}
-                  </h3>
-                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${isDarkMode ? 'bg-ark-lavender/20 text-ark-lavender' : 'bg-ark-purple/10 text-ark-purple'}`}>
-                    {classInfo.level}
-                  </span>
+                {item.label}
+              </motion.button>
+            ))}
+          </nav>
+        </div>
+      </motion.header>
+
+      {/* Class Schedule Content */}
+      <motion.section
+        className="relative z-10 py-20 px-6 md:px-12"
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-6xl md:text-7xl font-medium text-gray-800 mb-6">
+              Class Schedule
+            </h1>
+            <p className="text-2xl text-royal-purple font-light">
+              Find Your Perfect Class
+            </p>
+          </motion.div>
+
+          {/* Schedule Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {schedule.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 shadow-lg shadow-royal-purple/10"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-medium text-royal-purple">{item.day}</span>
+                    <span className="text-sm px-3 py-1 bg-royal-purple/10 text-royal-purple-dark rounded-full">
+                      {item.level}
+                    </span>
+                  </div>
+                  <div className="text-lg text-gray-600">{item.time}</div>
+                  <div className="text-xl font-medium text-gray-800">{item.class}</div>
                 </div>
-                
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center gap-2">
-                    <Users className={`h-5 w-5 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                    <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{classInfo.ageGroup}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Calendar className={`h-5 w-5 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                    <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{classInfo.schedule}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Star className={`h-5 w-5 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                    <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{classInfo.price}</span>
-                  </div>
-                </div>
-                
-                <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {classInfo.description}
-                </p>
-                
-                <Link href="/register">
-                  <a className="inline-block w-full text-center bg-gradient-to-r from-ark-purple to-ark-purple-light text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                    Enroll Now
-                  </a>
-                </Link>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Pricing Info */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-2xl p-8 md:p-12 shadow-xl border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-            <h2 className={`text-3xl font-bold mb-6 text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Class Information
+          {/* CTA Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-16 text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 shadow-xl shadow-royal-purple/20"
+          >
+            <h2 className="text-3xl font-medium text-gray-800 mb-4">
+              Ready To Join?
             </h2>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Clock className={`h-6 w-6 mt-1 flex-shrink-0 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                <div>
-                  <h4 className={`font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Class Duration</h4>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Each class is 60 minutes long with time for warm-up, instruction, and practice.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Users className={`h-6 w-6 mt-1 flex-shrink-0 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                <div>
-                  <h4 className={`font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Class Size</h4>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Maximum 15 students per class to ensure personalized attention from our instructors.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Star className={`h-6 w-6 mt-1 flex-shrink-0 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                <div>
-                  <h4 className={`font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Trial Class</h4>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>First class is FREE! Come experience ARK before committing to a monthly membership.</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Calendar className={`h-6 w-6 mt-1 flex-shrink-0 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-                <div>
-                  <h4 className={`font-semibold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Membership</h4>
-                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Monthly membership includes 8 classes per month. Additional drop-in classes available for $20 each.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className={`text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Questions About Our Classes?
-          </h2>
-          <p className={`text-xl mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Contact us for more information or to schedule a studio tour
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/register">
-              <a className="inline-block bg-gradient-to-r from-ark-purple to-ark-purple-light text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all">
-                Register Now
-              </a>
-            </Link>
-            <a 
-              href="mailto:info@arkdancestudios.com"
-              className={`inline-block px-8 py-4 rounded-full text-lg font-semibold border-2 transition-all hover:scale-105 ${isDarkMode ? 'border-ark-lavender text-ark-lavender hover:bg-ark-lavender/10' : 'border-ark-purple text-ark-purple hover:bg-ark-purple/10'}`}
+            <p className="text-lg text-gray-600 mb-8">
+              Register for classes today and start your dance journey with ARK.
+            </p>
+            <motion.button
+              onClick={() => navigate('/registration')}
+              className="px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
+              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
+              whileTap={{ scale: 0.95 }}
             >
-              Contact Us
-            </a>
-          </div>
+              Register Now
+            </motion.button>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
-      <footer className={`${isDarkMode ? 'bg-ark-purple-dark' : 'bg-gray-100'} border-t ${isDarkMode ? 'border-ark-purple' : 'border-gray-200'} py-8`}>
-        <div className="container mx-auto px-4 text-center">
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>© 2025 ARK Dance Studios. All rights reserved.</p>
+      <footer className="relative z-10 border-t border-royal-purple-light/30 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
+          <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
+          <div className="flex gap-6">
+            <button onClick={() => navigate('/about')} className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
+            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</a>
+          </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      {showLogin && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-royal-purple/20 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setShowLogin(false);
+            setPassword('');
+            setError('');
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white/90 backdrop-blur-xl border border-royal-purple-light/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-royal-purple/30"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-medium text-royal-purple">Student Portal</h2>
+              <button
+                onClick={() => {
+                  setShowLogin(false);
+                  setPassword('');
+                  setError('');
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm text-royal-purple mb-2">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/80 border border-royal-purple-light text-gray-800 rounded-2xl focus:outline-none focus:border-royal-purple transition-colors"
+                  placeholder="Enter Password"
+                  autoFocus
+                />
+              </div>
+
+              {error && (
+                <p className="text-sm text-gray-500">{error}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-royal-purple/50 transition-all"
+              >
+                Log In
+              </button>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
-

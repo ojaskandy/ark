@@ -1,168 +1,245 @@
-import React from 'react';
-import { Link } from 'wouter';
-import { useTheme } from '@/hooks/use-theme';
-import { Music, Heart, Users, Award } from 'lucide-react';
+import { useState } from 'react';
+import { useLocation } from 'wouter';
+import { motion } from 'framer-motion';
 
 export default function About() {
-  const { isDarkMode } = useTheme();
+  const [, navigate] = useLocation();
+  const [showLogin, setShowLogin] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: 'student', password: password.toLowerCase().trim() }),
+      });
+
+      if (response.ok) {
+        window.location.href = '/app';
+      } else {
+        setError('incorrect password');
+      }
+    } catch (err) {
+      setError('login failed');
+    }
+  };
+
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Class Schedule', path: '/class-schedule' },
+    { label: 'Registration', path: '/registration' },
+    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
+  ];
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-b from-ark-purple-dark to-black' : 'bg-gradient-to-b from-white to-ark-accent'}`}>
-      {/* Navigation */}
-      <nav className={`${isDarkMode ? 'bg-ark-purple-dark/90' : 'bg-white/90'} backdrop-blur-sm sticky top-0 z-50 border-b ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/">
-              <a className="text-2xl font-bold bg-gradient-to-r from-ark-purple-light to-ark-lavender bg-clip-text text-transparent">
-                ARK Dance Studios
-              </a>
-            </Link>
-            <div className="flex gap-6">
-              <Link href="/"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Home</a></Link>
-              <Link href="/about"><a className={`font-semibold transition ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>About</a></Link>
-              <Link href="/classes"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Classes</a></Link>
-              <Link href="/register"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Register</a></Link>
-              <Link href="/app"><a className={`hover:text-ark-purple-light transition ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Student Portal</a></Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-90"
+          style={{ 
+            backgroundImage: 'url(/images/dance-studio.png)',
+            filter: 'blur(0px)'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
+      </div>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className={`text-5xl md:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            About ARK Dance Studios
-          </h1>
-          <p className={`text-xl max-w-3xl mx-auto ${isDarkMode ? 'text-ark-lavender' : 'text-gray-700'}`}>
-            Where tradition meets innovation in dance education.
-          </p>
-        </div>
-      </section>
+      {/* Header with Logo and Navigation */}
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-20 w-full px-6 md:px-12 py-6"
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Logo */}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="cursor-pointer"
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/images/ark_logo.png" 
+              alt="ARK Dance Studio" 
+              className="h-16 md:h-20 w-auto"
+            />
+          </motion.div>
 
-      {/* Mission Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-2xl p-8 md:p-12 shadow-xl border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-            <h2 className={`text-3xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Our Mission
-            </h2>
-            <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              At ARK Dance Studios, we believe that dance is more than movement—it's a form of expression, a celebration of culture, and a path to confidence. Established in 2025, we're dedicated to providing world-class dance education that combines traditional techniques with cutting-edge AI technology.
+          {/* Navigation */}
+          <nav className="flex flex-wrap items-center justify-center gap-3">
+            {navItems.map((item, idx) => (
+              <motion.button
+                key={item.label}
+                onClick={item.onClick || (() => navigate(item.path!))}
+                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.label}
+              </motion.button>
+            ))}
+          </nav>
+        </div>
+      </motion.header>
+
+      {/* About Content */}
+      <motion.section
+        className="relative z-10 py-20 px-6 md:px-12"
+      >
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-6xl md:text-7xl font-medium text-gray-800 mb-6">
+              About ARK
+            </h1>
+            <p className="text-2xl text-royal-purple font-light">
+              The Leading AI Dance Studio
             </p>
-            <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Our innovative approach uses real-time pose analysis to help students perfect their technique, while our experienced instructors provide the personal touch and cultural context that makes learning dance truly transformative.
+          </motion.div>
+
+          {/* Arshia Bio Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-12 md:p-16 shadow-xl shadow-royal-purple/20 mb-12"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-medium text-gray-800 mb-4">
+                Meet Arshia Kathpalia
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-royal-purple to-royal-purple-light mx-auto mb-8"></div>
+            </div>
+            
+            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+              <p>
+                Arshia Kathpalia is a visionary dance educator and technologist who founded ARK Dance Studio 
+                to revolutionize how dancers train and perfect their craft. With a deep passion for both 
+                the art of dance and cutting-edge technology, Arshia has created a unique platform that 
+                brings world-class dance instruction to students anywhere, anytime.
+              </p>
+              
+              <p>
+                Her innovative approach combines years of professional dance experience with advanced AI 
+                technology, providing real-time feedback and personalized coaching that was once only 
+                available in elite studios. Arshia's commitment to making high-quality dance education 
+                accessible has helped countless students achieve their dreams and reach new heights in 
+                their dance journey.
+              </p>
+              
+              <p>
+                Under her leadership, ARK Dance Studio has become the premier destination for dancers 
+                seeking to elevate their skills through intelligent, adaptive training. Arshia continues 
+                to push the boundaries of what's possible in dance education, empowering students to 
+                dance their dreams into reality.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Mission Statement */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="bg-gradient-to-br from-royal-purple to-royal-purple-light text-white rounded-3xl p-12 md:p-16 shadow-xl"
+          >
+            <h3 className="text-3xl font-medium mb-6 text-center">Our Mission</h3>
+            <p className="text-xl text-center leading-relaxed">
+              To democratize dance education by combining the art of movement with the power of AI, 
+              making world-class instruction accessible to every aspiring dancer.
             </p>
-          </div>
+          </motion.div>
         </div>
-      </section>
-
-      {/* Dance Styles Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className={`text-4xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Dance Styles We Teach
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-6 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <div className="w-16 h-16 bg-gradient-to-br from-ark-purple-light to-ark-lavender rounded-full flex items-center justify-center mb-4">
-                <Music className="h-8 w-8 text-white" />
-              </div>
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Bollywood</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                Experience the vibrant energy of Bollywood dance. Learn classical Indian movements fused with contemporary choreography, bringing the magic of Indian cinema to life.
-              </p>
-            </div>
-            
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-6 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <div className="w-16 h-16 bg-gradient-to-br from-ark-purple-light to-ark-lavender rounded-full flex items-center justify-center mb-4">
-                <Heart className="h-8 w-8 text-white" />
-              </div>
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Contemporary</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                Explore expressive contemporary dance that combines technical precision with emotional storytelling. Perfect for developing versatility and artistic expression.
-              </p>
-            </div>
-            
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-6 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <div className="w-16 h-16 bg-gradient-to-br from-ark-purple-light to-ark-lavender rounded-full flex items-center justify-center mb-4">
-                <Users className="h-8 w-8 text-white" />
-              </div>
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Hip-Hop</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                Get moving with high-energy hip-hop classes that teach rhythm, coordination, and urban dance styles. Great for building confidence and having fun!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className={`text-4xl font-bold text-center mb-12 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            What Sets Us Apart
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-8 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <Award className={`h-12 w-12 mb-4 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>AI-Powered Learning</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                Our unique technology provides real-time feedback on your movements, helping you perfect your technique faster than ever before.
-              </p>
-            </div>
-            
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-8 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <Users className={`h-12 w-12 mb-4 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Expert Instructors</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                Learn from professional dancers with years of performance and teaching experience. Our instructors are passionate about sharing their love of dance.
-              </p>
-            </div>
-            
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-8 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <Heart className={`h-12 w-12 mb-4 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Welcoming Environment</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                We create a supportive, inclusive space where dancers of all ages and skill levels feel comfortable expressing themselves.
-              </p>
-            </div>
-            
-            <div className={`${isDarkMode ? 'bg-ark-purple/20' : 'bg-white'} rounded-xl p-8 shadow-lg border ${isDarkMode ? 'border-ark-purple' : 'border-ark-accent'}`}>
-              <Music className={`h-12 w-12 mb-4 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`} />
-              <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Cultural Connection</h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
-                We honor the cultural roots of each dance style while making them accessible and enjoyable for everyone.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className={`text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Ready to Start Dancing?
-          </h2>
-          <p className={`text-xl mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Join our community of passionate dancers today!
-          </p>
-          <Link href="/register">
-            <a className="inline-block bg-gradient-to-r from-ark-purple to-ark-purple-light text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all">
-              Register Now
-            </a>
-          </Link>
-        </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
-      <footer className={`${isDarkMode ? 'bg-ark-purple-dark' : 'bg-gray-100'} border-t ${isDarkMode ? 'border-ark-purple' : 'border-gray-200'} py-8`}>
-        <div className="container mx-auto px-4 text-center">
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>© 2025 ARK Dance Studios. All rights reserved.</p>
+      <footer className="relative z-10 border-t border-royal-purple-light/30 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
+          <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
+          <div className="flex gap-6">
+            <button onClick={() => navigate('/about')} className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
+            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</a>
+          </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      {showLogin && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-royal-purple/20 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setShowLogin(false);
+            setPassword('');
+            setError('');
+          }}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white/90 backdrop-blur-xl border border-royal-purple-light/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-royal-purple/30"
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-medium text-royal-purple">Student Portal</h2>
+              <button
+                onClick={() => {
+                  setShowLogin(false);
+                  setPassword('');
+                  setError('');
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm text-royal-purple mb-2">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/80 border border-royal-purple-light text-gray-800 rounded-2xl focus:outline-none focus:border-royal-purple transition-colors"
+                  placeholder="Enter Password"
+                  autoFocus
+                />
+              </div>
+
+              {error && (
+                <p className="text-sm text-gray-500">{error}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-royal-purple/50 transition-all"
+              >
+                Log In
+              </button>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
-
