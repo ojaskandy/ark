@@ -8,6 +8,7 @@ import Challenges from "@/pages/Challenges";
 import About from "@/pages/About";
 import ClassSchedule from "@/pages/ClassSchedule";
 import Registration from "@/pages/Registration";
+import Pricing from "@/pages/Pricing";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/about" component={About} />
         <Route path="/class-schedule" component={ClassSchedule} />
         <Route path="/registration" component={Registration} />
+        <Route path="/pricing" component={Pricing} />
         <Route path="/app" component={MainPage} />
         <Route path="/live-routine" component={LiveRoutineDemo} />
         <Route path="/challenges" component={Challenges} />

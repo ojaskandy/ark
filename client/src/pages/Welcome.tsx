@@ -34,9 +34,8 @@ export default function Welcome() {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
-    { label: 'Registration', path: '/registration' },
-    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) },
-    { label: 'Meet Ark AI', path: '/early' }
+    { label: 'Pricing', path: '/pricing' },
+    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 
   return (
@@ -207,6 +206,260 @@ export default function Welcome() {
         </div>
       </section>
 
+      {/* ARK AI Section */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-gradient-to-br from-royal-purple/5 to-purple-100/20">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-medium text-gray-800 mb-4">
+              Meet ARK AI
+            </h2>
+            <p className="text-2xl text-royal-purple font-light">
+              Your Personal AI Dance Coach
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 shadow-xl">
+                <div className="text-4xl mb-4">🤖</div>
+                <h3 className="text-3xl font-medium text-gray-800 mb-4">Advanced Pose Analysis</h3>
+                <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                  ARK AI uses cutting-edge computer vision to track every movement in real-time. 
+                  Get instant, precise feedback on your form, posture, and technique.
+                </p>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start gap-3">
+                    <span className="text-royal-purple mt-1">✓</span>
+                    <span>Real-time joint angle tracking</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-royal-purple mt-1">✓</span>
+                    <span>Personalized improvement suggestions</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-royal-purple mt-1">✓</span>
+                    <span>Progress tracking over time</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-royal-purple mt-1">✓</span>
+                    <span>Encouraging, age-appropriate feedback</span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="bg-gradient-to-br from-royal-purple to-royal-purple-light text-white rounded-3xl p-8 shadow-xl">
+                <h3 className="text-2xl font-medium mb-4">Try ARK AI Free</h3>
+                <p className="text-lg mb-6 opacity-90">
+                  Experience the future of dance training. No credit card required.
+                </p>
+                <motion.button
+                  onClick={() => navigate('/live-routine')}
+                  className="w-full py-4 bg-white text-royal-purple rounded-2xl text-lg font-medium shadow-lg hover:shadow-xl transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Start Free Trial →
+                </motion.button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { number: '10K+', label: 'Analyses' },
+                  { number: '95%', label: 'Accuracy' },
+                  { number: '24/7', label: 'Available' }
+                ].map((stat, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
+                    className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-2xl p-4 text-center"
+                  >
+                    <div className="text-3xl font-bold text-royal-purple">{stat.number}</div>
+                    <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Parents Choose ARK */}
+      <section className="relative z-10 py-24 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-medium text-gray-800 mb-4">
+              Why Parents Choose ARK
+            </h2>
+            <p className="text-xl text-royal-purple max-w-2xl mx-auto">
+              Safe, Professional, Results-Driven Dance Education
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: '📊',
+                title: 'Track Progress',
+                description: 'Visual reports show improvement over time with detailed metrics'
+              },
+              {
+                icon: '🔒',
+                title: 'Safe & Secure',
+                description: 'No social features, privacy-first design, parent controls'
+              },
+              {
+                icon: '💰',
+                title: 'Great Value',
+                description: 'Unlimited practice at a fraction of studio costs'
+              },
+              {
+                icon: '🎓',
+                title: 'Expert-Led',
+                description: 'Created by professional dance instructor Arshia Kathpalia'
+              }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-6 shadow-lg shadow-royal-purple/10 text-center"
+              >
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="text-xl font-medium text-gray-800 mb-3">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="relative z-10 py-24 px-6 md:px-12 bg-gradient-to-br from-purple-100/20 to-royal-purple/5">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-medium text-gray-800 mb-4">
+              Success Stories
+            </h2>
+            <p className="text-xl text-royal-purple">
+              Hear From Our Dancing Community
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Sarah M.',
+                role: 'Parent',
+                text: 'My daughter practices every day now! The AI feedback is amazing and she loves seeing her progress. Best investment we\'ve made.',
+                rating: 5
+              },
+              {
+                name: 'Emily R.',
+                role: 'Student, Age 14',
+                text: 'ARK AI is like having a coach in my room 24/7. I\'ve improved so much and my recital went perfectly!',
+                rating: 5
+              },
+              {
+                name: 'Michael T.',
+                role: 'Parent',
+                text: 'Safe, educational, and my son is actually excited to practice. The progress tracking helps us see real improvement.',
+                rating: 5
+              }
+            ].map((testimonial, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.2 }}
+                className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 shadow-lg"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-xl">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
+                <div className="border-t border-royal-purple-light/30 pt-4">
+                  <p className="font-medium text-gray-800">{testimonial.name}</p>
+                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Indicators */}
+      <section className="relative z-10 py-16 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 shadow-lg"
+          >
+            <div className="grid md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-royal-purple mb-2">1,000+</div>
+                <div className="text-gray-600">Active Dancers</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-royal-purple mb-2">500+</div>
+                <div className="text-gray-600">Happy Parents</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-royal-purple mb-2">4.9★</div>
+                <div className="text-gray-600">Average Rating</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-royal-purple mb-2">💯</div>
+                <div className="text-gray-600">Money-Back Guarantee</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Contact Us Section */}
       <section className="relative z-10 py-24 px-6 md:px-12">
         <div className="max-w-4xl mx-auto">
@@ -218,19 +471,29 @@ export default function Welcome() {
             className="text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 md:p-16 shadow-xl shadow-royal-purple/20"
           >
             <h2 className="text-4xl md:text-5xl font-medium text-gray-800 mb-4">
-              Contact Us
+              Ready To Start?
             </h2>
             <p className="text-xl text-royal-purple mb-8">
               Be Seen. Be Understood. Be Better.
             </p>
-            <motion.a
-              href="mailto:arshia.x.kathpalia@gmail.com"
-              className="inline-block px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Contact Us
-            </motion.a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                onClick={() => navigate('/registration')}
+                className="px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Start Free Trial
+              </motion.button>
+              <motion.a
+                href="mailto:arshia.x.kathpalia@gmail.com"
+                className="inline-block px-10 py-4 border border-royal-purple-light text-royal-purple-dark bg-white/60 backdrop-blur-sm rounded-full text-lg font-medium hover:bg-white/80 transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Contact Us
+              </motion.a>
+            </div>
           </motion.div>
         </div>
       </section>

@@ -17,9 +17,33 @@ const menuItems = [
   }
 ];
 
+const achievements = [
+  { icon: '🔥', label: '7-Day Streak', unlocked: true, color: 'from-orange-400 to-red-500' },
+  { icon: '⭐', label: 'First Practice', unlocked: true, color: 'from-yellow-400 to-orange-500' },
+  { icon: '🎯', label: '90% Score', unlocked: true, color: 'from-purple-400 to-pink-500' },
+  { icon: '👑', label: 'Master Level', unlocked: false, color: 'from-gray-300 to-gray-400' },
+  { icon: '💎', label: '50 Sessions', unlocked: false, color: 'from-gray-300 to-gray-400' },
+  { icon: '🚀', label: 'Perfect Week', unlocked: false, color: 'from-gray-300 to-gray-400' }
+];
+
 export default function MainPage() {
   const [, navigate] = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Mock user stats - in production, fetch from API
+  const userStats = {
+    level: 'Intermediate',
+    currentStreak: 7,
+    totalSessions: 24,
+    totalMinutes: 360,
+    averageScore: 87,
+    improvementRate: 12,
+    todayGoal: {
+      completed: 1,
+      total: 2,
+      progress: 50
+    }
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -60,13 +84,43 @@ export default function MainPage() {
           transition={{ duration: 0.6 }}
           className="md:w-72 w-full border-b md:border-b-0 md:border-r border-gray-200/50 bg-white/70 backdrop-blur-xl px-6 py-8"
         >
-          <div className="mb-12">
+          <div className="mb-8">
             <img 
               src="/images/ark_logo.png" 
               alt="ARK Dance Studio" 
               className="h-16 w-auto mb-2"
             />
             <p className="text-sm text-royal-purple-light">Dance Studio</p>
+          </div>
+
+          {/* Level Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-6 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl p-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="text-3xl">🌟</div>
+              <div>
+                <div className="text-xs opacity-90">Current Level</div>
+                <div className="text-lg font-bold">{userStats.level}</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Quick Stats */}
+          <div className="space-y-3 mb-6">
+            <div className="bg-white/60 rounded-xl p-3 flex items-center justify-between">
+              <span className="text-sm text-gray-600">Streak</span>
+              <span className="font-bold text-royal-purple flex items-center gap-1">
+                🔥 {userStats.currentStreak} days
+              </span>
+            </div>
+            <div className="bg-white/60 rounded-xl p-3 flex items-center justify-between">
+              <span className="text-sm text-gray-600">Avg Score</span>
+              <span className="font-bold text-royal-purple">{userStats.averageScore}%</span>
+            </div>
           </div>
 
           <nav className="space-y-3">
@@ -77,7 +131,7 @@ export default function MainPage() {
                 className="w-full group relative bg-white/60 hover:bg-white/90 border border-royal-purple-light/30 hover:border-royal-purple rounded-2xl px-4 py-4 transition-all"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
                 whileHover={{ scale: 1.02, x: 4 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -94,38 +148,136 @@ export default function MainPage() {
         </motion.aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 md:p-12">
+        <main className="flex-1 p-8 md:p-12 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-4xl mx-auto space-y-8"
+            className="max-w-6xl mx-auto space-y-8"
           >
+            {/* Welcome Header */}
             <div className="space-y-4">
-              <h2 className="text-5xl md:text-6xl font-medium text-gray-800">Welcome Back</h2>
-              <p className="text-xl text-royal-purple">Ready To Practice?</p>
+              <h2 className="text-5xl md:text-6xl font-medium text-gray-800">Welcome Back!</h2>
+              <p className="text-xl text-royal-purple">Let's Keep That Momentum Going 🚀</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {menuItems.map((item, idx) => (
-                <motion.button
-                  key={item.label}
-                  onClick={() => navigate(item.target)}
-                  className="group relative bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 hover:border-royal-purple rounded-3xl p-8 transition-all shadow-lg shadow-royal-purple/10"
+            {/* Today's Goal */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 rounded-3xl p-6 shadow-lg"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-medium text-gray-800">Today's Goal</h3>
+                <span className="text-3xl">🎯</span>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Practice Sessions</span>
+                  <span className="font-medium text-royal-purple">{userStats.todayGoal.completed}/{userStats.todayGoal.total}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-royal-purple to-royal-purple-light"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${userStats.todayGoal.progress}%` }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 text-center">Keep going! You're halfway there!</p>
+              </div>
+            </motion.div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: 'Sessions', value: userStats.totalSessions, icon: '📊', color: 'from-blue-400 to-blue-600' },
+                { label: 'Minutes', value: userStats.totalMinutes, icon: '⏱️', color: 'from-green-400 to-green-600' },
+                { label: 'Improvement', value: `+${userStats.improvementRate}%`, icon: '📈', color: 'from-purple-400 to-pink-600' },
+                { label: 'Streak', value: `${userStats.currentStreak} days`, icon: '🔥', color: 'from-orange-400 to-red-600' }
+              ].map((stat, idx) => (
+                <motion.div
+                  key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 + idx * 0.1 }}
-                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.6, delay: 0.4 + idx * 0.1 }}
+                  className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-2xl p-4 text-center shadow-lg"
                 >
-                  <div className="relative z-10 text-left space-y-4">
-                    <div className="text-5xl">{item.icon}</div>
-                    <div>
-                      <p className="text-sm text-gray-500 mb-1">{item.description}</p>
-                      <p className="text-2xl text-royal-purple-dark font-medium">{item.label}</p>
-                    </div>
+                  <div className={`inline-block text-3xl mb-2 p-3 rounded-xl bg-gradient-to-br ${stat.color}`}>
+                    {stat.icon}
                   </div>
-                </motion.button>
+                  <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
+                  <div className="text-sm text-gray-500">{stat.label}</div>
+                </motion.div>
               ))}
+            </div>
+
+            {/* Achievements */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 rounded-3xl p-6 shadow-lg"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-medium text-gray-800">Achievements</h3>
+                <span className="text-sm text-gray-500">3/6 Unlocked</span>
+              </div>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                {achievements.map((achievement, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.7 + idx * 0.1 }}
+                    whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+                    className={`relative aspect-square rounded-2xl p-3 flex flex-col items-center justify-center text-center ${
+                      achievement.unlocked 
+                        ? `bg-gradient-to-br ${achievement.color} shadow-lg cursor-pointer` 
+                        : 'bg-gray-200 opacity-50'
+                    }`}
+                  >
+                    <div className={`text-3xl mb-1 ${achievement.unlocked ? '' : 'grayscale'}`}>
+                      {achievement.icon}
+                    </div>
+                    <div className={`text-xs font-medium ${achievement.unlocked ? 'text-white' : 'text-gray-500'}`}>
+                      {achievement.label}
+                    </div>
+                    {achievement.unlocked && (
+                      <div className="absolute top-1 right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs">
+                        ✓
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Practice Options */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-medium text-gray-800">Start Practicing</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {menuItems.map((item, idx) => (
+                  <motion.button
+                    key={item.label}
+                    onClick={() => navigate(item.target)}
+                    className="group relative bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 hover:border-royal-purple rounded-3xl p-8 transition-all shadow-lg shadow-royal-purple/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 + idx * 0.1 }}
+                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  >
+                    <div className="relative z-10 text-left space-y-4">
+                      <div className="text-5xl">{item.icon}</div>
+                      <div>
+                        <p className="text-sm text-gray-500 mb-1">{item.description}</p>
+                        <p className="text-2xl text-royal-purple-dark font-medium">{item.label}</p>
+                      </div>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
             </div>
           </motion.div>
         </main>

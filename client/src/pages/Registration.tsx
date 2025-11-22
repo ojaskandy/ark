@@ -34,7 +34,7 @@ export default function Registration() {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
-    { label: 'Registration', path: '/registration' },
+    { label: 'Pricing', path: '/pricing' },
     { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 

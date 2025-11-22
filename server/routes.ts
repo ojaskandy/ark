@@ -1712,7 +1712,7 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
     };
 
     // LLM prompt for analysis
-    const prompt = `As Master Shifu, analyze this martial arts performance:
+    const prompt = `As ARK AI, analyze this dance performance with encouraging and specific feedback:
 
 Overall Score: ${reliableScore}%
 Joints Analyzed: ${validJoints}/${jointNames.length}
@@ -1723,19 +1723,21 @@ ${performanceData.slice(0, 3).map(joint =>
   `- ${joint.joint}: ${joint.difference}° off, ${joint.consistency}% consistent`
 ).join('\n')}
 
-Provide concise feedback in 80-100 words:
-- Overall assessment
-- 2-3 specific improvements
-- Encouraging martial arts wisdom
+Provide warm, encouraging feedback in 80-100 words that:
+- Celebrates what they did well (start positive!)
+- Gives 2-3 specific, actionable improvements with simple language
+- Ends with motivational encouragement
+- Uses emojis sparingly for engagement (1-2 max)
+- Suitable for ages 8+
 
-Format as natural paragraph, no bullet points.`;
+Format as natural paragraph. Be supportive like a caring coach!`;
 
     const completion = await visionClient.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are Master Shifu, a wise martial arts instructor. Provide encouraging yet specific feedback about technique performance."
+          content: "You are ARK AI, a warm and encouraging dance coach who provides specific, actionable feedback. Always start with something positive, then give constructive advice in simple, age-appropriate language. End with genuine encouragement. Be supportive and celebrate small wins. Make dancers feel good about their progress while helping them improve."
         },
         {
           role: "user",
@@ -1746,7 +1748,7 @@ Format as natural paragraph, no bullet points.`;
       temperature: 0.7
     });
 
-    const feedback = completion.choices[0]?.message?.content || "Your dedication to training shows promise. Continue practicing with focus and patience.";
+    const feedback = completion.choices[0]?.message?.content || "Great job practicing today! 🎉 Your dedication is already showing in your movement. Keep working on maintaining consistent form throughout each move, and focus on smooth transitions. Every practice session makes you stronger and more confident. You're doing amazing—keep dancing!";
 
     res.json({
       success: true,
