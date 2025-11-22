@@ -18,9 +18,9 @@ const menuItems = [
 ];
 
 const achievements = [
-  { icon: '🔥', label: '7-Day Streak', unlocked: true, color: 'from-orange-400 to-red-500' },
-  { icon: '⭐', label: 'First Practice', unlocked: true, color: 'from-yellow-400 to-orange-500' },
-  { icon: '🎯', label: '90% Score', unlocked: true, color: 'from-purple-400 to-pink-500' },
+  { icon: '🔥', label: '7-Day Streak', unlocked: false, color: 'from-gray-300 to-gray-400' },
+  { icon: '⭐', label: 'First Practice', unlocked: false, color: 'from-gray-300 to-gray-400' },
+  { icon: '🎯', label: '90% Score', unlocked: false, color: 'from-gray-300 to-gray-400' },
   { icon: '👑', label: 'Master Level', unlocked: false, color: 'from-gray-300 to-gray-400' },
   { icon: '💎', label: '50 Sessions', unlocked: false, color: 'from-gray-300 to-gray-400' },
   { icon: '🚀', label: 'Perfect Week', unlocked: false, color: 'from-gray-300 to-gray-400' }
@@ -30,18 +30,18 @@ export default function MainPage() {
   const [, navigate] = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Mock user stats - in production, fetch from API
+  // General user stats (reset for new users/general view)
   const userStats = {
-    level: 'Intermediate',
-    currentStreak: 7,
-    totalSessions: 24,
-    totalMinutes: 360,
-    averageScore: 87,
-    improvementRate: 12,
+    level: 'Beginner',
+    currentStreak: 0,
+    totalSessions: 0,
+    totalMinutes: 0,
+    averageScore: '--',
+    improvementRate: 0,
     todayGoal: {
-      completed: 1,
-      total: 2,
-      progress: 50
+      completed: 0,
+      total: 1,
+      progress: 0
     }
   };
 
@@ -158,8 +158,28 @@ export default function MainPage() {
             {/* Welcome Header */}
             <div className="space-y-4">
               <h2 className="text-5xl md:text-6xl font-medium text-gray-800">Welcome Back!</h2>
-              <p className="text-xl text-royal-purple">Let's Keep That Momentum Going 🚀</p>
+              <p className="text-xl text-royal-purple">Ready to dance?</p>
             </div>
+
+            {/* Admin/Coach Notes */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="bg-white/70 backdrop-blur-xl border border-royal-purple-light/30 rounded-3xl p-6 shadow-lg relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <span className="text-6xl">📌</span>
+              </div>
+              <h3 className="text-xl font-medium text-gray-800 mb-3 flex items-center gap-2">
+                <span className="text-2xl">📢</span> Coach's Board
+              </h3>
+              <div className="bg-yellow-50/80 border border-yellow-100 rounded-xl p-4 text-gray-700 leading-relaxed">
+                <p className="font-medium text-royal-purple mb-1">Weekly Focus:</p>
+                <p>Remember to keep your core engaged during all balance drills! We're seeing great progress in the "Groove Lines" routine. Keep it up!</p>
+                <div className="mt-3 text-xs text-gray-500 text-right">- Coach Arshia</div>
+              </div>
+            </motion.div>
 
             {/* Today's Goal */}
             <motion.div
@@ -185,7 +205,7 @@ export default function MainPage() {
                     transition={{ duration: 1, delay: 0.5 }}
                   />
                 </div>
-                <p className="text-xs text-gray-500 text-center">Keep going! You're halfway there!</p>
+                <p className="text-xs text-gray-500 text-center">Start your first session to hit your goal!</p>
               </div>
             </motion.div>
 
@@ -194,7 +214,7 @@ export default function MainPage() {
               {[
                 { label: 'Sessions', value: userStats.totalSessions, icon: '📊', color: 'from-blue-400 to-blue-600' },
                 { label: 'Minutes', value: userStats.totalMinutes, icon: '⏱️', color: 'from-green-400 to-green-600' },
-                { label: 'Improvement', value: `+${userStats.improvementRate}%`, icon: '📈', color: 'from-purple-400 to-pink-600' },
+                { label: 'Improvement', value: `${userStats.improvementRate}%`, icon: '📈', color: 'from-purple-400 to-pink-600' },
                 { label: 'Streak', value: `${userStats.currentStreak} days`, icon: '🔥', color: 'from-orange-400 to-red-600' }
               ].map((stat, idx) => (
                 <motion.div
@@ -222,7 +242,7 @@ export default function MainPage() {
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-medium text-gray-800">Achievements</h3>
-                <span className="text-sm text-gray-500">3/6 Unlocked</span>
+                <span className="text-sm text-gray-500">Locked</span>
               </div>
               <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                 {achievements.map((achievement, idx) => (

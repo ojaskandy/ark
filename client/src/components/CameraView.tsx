@@ -110,6 +110,7 @@ export default function CameraView({
   });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const referenceCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const recordingCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const recordingStream = useRef<MediaStream | null>(null);
   const animationRef = useRef<number | null>(null);
@@ -668,49 +669,91 @@ export default function CameraView({
                 }
 
                 if (showSkeleton) {
-                            // Define the getRgbForColor helper function
-          const getRgbForColor = (color: string) => {
-            return color === 'blue' ? { r: 59, g: 130, b: 246 } :
-                  color === 'green' ? { r: 16, g: 185, b: 129 } :
-                  color === 'purple' ? { r: 139, g: 92, b: 246 } :
-                  color === 'orange' ? { r: 249, g: 115, b: 22 } :
-                  { r: 239, g: 68, b: 68 }; // default red
-          };
-          
-          // Get RGB values for the current skeleton color
-          const skeletonRGB = getRgbForColor(skeletonColor);
+                  // Define the getRgbForColor helper function
+                  const getRgbForColor = (color: string) => {
+                    return color === 'blue' ? { r: 59, g: 130, b: 246 } :
+                          color === 'green' ? { r: 16, g: 185, b: 129 } :
+                          color === 'purple' ? { r: 139, g: 92, b: 246 } :
+                          color === 'orange' ? { r: 249, g: 115, b: 22 } :
+                          { r: 239, g: 68, b: 68 }; // default red
+                  };
                   
-                  ctx.strokeStyle = skeletonColor === 'blue' ? '#3b82f6' :
-                                   skeletonColor === 'green' ? '#10b981' :
-                                   skeletonColor === 'purple' ? '#8b5cf6' :
-                                   skeletonColor === 'orange' ? '#f97316' :
-                                   '#ef4444'; // default red
-                  ctx.lineWidth = 3;
+                  const drawSkeletonOnCtx = (
+                    targetCtx: CanvasRenderingContext2D, 
+                    kps: any[], 
+                    sX: number, 
+                    sY: number,
+                    color: string
+                  ) => {
+                    const rgb = getRgbForColor(color);
+                    targetCtx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                    targetCtx.lineWidth = 3;
+                    
+                    connections.forEach((connection) => {
+                      const fromName = connection[0];
+                      const toName = connection[1];
+                      const from = kps.find(kp => kp.name === fromName);
+                      const to = kps.find(kp => kp.name === toName);
 
-                  connections.forEach((connection) => {
-                    const fromName = connection[0];
-                    const toName = connection[1];
-                    const from = keypoints.find(kp => kp.name === fromName);
-                    const to = keypoints.find(kp => kp.name === toName);
+                      if (from && to &&
+                          typeof from.score === 'number' &&
+                          typeof to.score === 'number' &&
+                          from.score > confidenceThreshold &&
+                          to.score > confidenceThreshold) {
+                        
+                        targetCtx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.7)`;
+                        targetCtx.shadowBlur = 10;
 
-                    if (from && to &&
-                        typeof from.score === 'number' &&
-                        typeof to.score === 'number' &&
-                        from.score > confidenceThreshold &&
-                        to.score > confidenceThreshold) {
-                      const rgb = getRgbForColor(skeletonColor);
-                      ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.7)`;
-                      ctx.shadowBlur = 10;
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(from.x * sX, from.y * sY);
+                        targetCtx.lineTo(to.x * sX, to.y * sY);
+                        targetCtx.stroke();
 
-                      ctx.beginPath();
-                      ctx.moveTo(from.x * scaleX, from.y * scaleY);
-                      ctx.lineTo(to.x * scaleX, to.y * scaleY);
-                      ctx.stroke();
+                        targetCtx.shadowColor = 'transparent';
+                        targetCtx.shadowBlur = 0;
+                      }
+                    });
 
-                      ctx.shadowColor = 'transparent';
-                      ctx.shadowBlur = 0;
+                    if (showPoints) {
+                      kps.forEach((keypoint) => {
+                        if (typeof keypoint.score === 'number' && keypoint.score > confidenceThreshold) {
+                          targetCtx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                          targetCtx.beginPath();
+                          targetCtx.arc(keypoint.x * sX, keypoint.y * sY, 4, 0, 2 * Math.PI);
+                          targetCtx.fill();
+                        }
+                      });
                     }
-                  });
+                  };
+
+                  // Draw User Skeleton
+                  drawSkeletonOnCtx(ctx, keypoints, scaleX, scaleY, skeletonColor);
+
+                  // Draw Reference Skeleton if in Split View
+                  if (isSplitView && referenceCanvasRef.current && referencePose && referenceVideoRef.current) {
+                    const refCtx = referenceCanvasRef.current.getContext('2d');
+                    if (refCtx) {
+                      const refCanvas = refCtx.canvas;
+                      const rWidth = refCanvas.clientWidth || refCanvas.width;
+                      const rHeight = refCanvas.clientHeight || refCanvas.height;
+                      
+                      // Ensure canvas size matches display
+                      if (refCanvas.width !== rWidth || refCanvas.height !== rHeight) {
+                        refCanvas.width = rWidth;
+                        refCanvas.height = rHeight;
+                      }
+                      
+                      refCtx.clearRect(0, 0, rWidth, rHeight);
+                      
+                      const rVideoWidth = referenceVideoRef.current.videoWidth || rWidth;
+                      const rVideoHeight = referenceVideoRef.current.videoHeight || rHeight;
+                      const rScaleX = rWidth / rVideoWidth;
+                      const rScaleY = rHeight / rVideoHeight;
+                      
+                      drawSkeletonOnCtx(refCtx, referencePose.keypoints, rScaleX, rScaleY, 'green');
+                    }
+                  }
+                }
                 }
 
                 if (showPoints) {
@@ -2662,8 +2705,91 @@ export default function CameraView({
     />
   )}
 
+  // Execute the test start logic after countdown
+  const executeStartTest = () => {
+    setIsCountingDown(false);
+    
+    // 1. Validate reference media is available
+    if (!isSplitView || (!mediaUrl && !referenceVideoRef.current)) {
+      alert('Please select a reference video in split view first.');
+      if (!isSplitView) toggleSplitView(); // Open split view if not already open
+      return;
+    }
+    
+    // Reset routine angle data when starting a new test
+    setRoutineAngleData({ timestamps: [], angles: {} });
+    
+    // Initialize angle history tables for the test
+    const emptyTable = { timestamps: [], angles: {} };
+    const testAngleTables = {
+      userAngleTable: { ...emptyTable },
+      instructorAngleTable: { ...emptyTable }
+    };
+    
+    // A. Immediately signal that a test is starting and reference recording is active
+    setIsRecordingReference(true);
+    setTestResults({
+      isRunning: true,
+      processing: false,
+      scores: [],
+      overallScore: 0,
+      feedback: 'Follow the green guide to match the reference movement',
+      ...testAngleTables
+    });
+    setTestStartTime(Date.now());
+    setGraceTimeRemaining(0);
+
+    // B. Ensure tracking is active
+    if (!isTracking) {
+      toggleTracking();
+    }
+    
+    // C. Ensure reference skeleton overlay is visible
+    if (!showReferenceOverlay && externalToggleReferenceOverlay) {
+      externalToggleReferenceOverlay();
+    }
+    
+    // D. Reset reference video and play it from the beginning / Handle image
+    const refVideo = referenceVideoRef.current;
+    if (refVideo && refVideo instanceof HTMLVideoElement) {
+      refVideo.currentTime = 0;
+      refVideo.loop = false;
+      
+      if (isVideoPaused) {
+        refVideo.play().catch(e => console.error("Error playing reference video:", e));
+        setIsVideoPaused(false);
+      }
+      
+      startRecording(); 
+      
+      refVideo.onended = () => {
+        console.log('Reference video ended. Test angle recording will continue until explicitly stopped.');
+        if (isRecording && mediaRecorder && mediaRecorder.state === "recording") {
+          console.log('Reference video ended. Screen recording will continue until test is explicitly stopped.');
+        }
+      };
+    } else if (sourceType === 'image' && (mediaUrl || imageElement)) {
+      startRecording(); 
+      
+      setTimeout(() => {
+        console.log('Image test duration ended.');
+        setIsRecordingReference(false); 
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop(); 
+        }
+        stopRoutine();
+      }, 5000); 
+    }
+    
+    startAngleRecording();
+  };
+
   return (
-    <div className="m-0 p-0">
+    <div className="m-0 p-0 relative">
+      <CountdownOverlay 
+        isActive={isCountingDown} 
+        onComplete={executeStartTest} 
+      />
       <RecordingControls onRecordingComplete={(url) => setRecordedVideo(url)} />
 
       <div id="cameraContainer" className={`${isFullscreenMode ? 'border-0 rounded-none shadow-none h-[calc(100vh-72px)] w-screen' : 'border-0 border-red-900 overflow-hidden relative h-[calc(80vh-100px)]'}`}>
@@ -2842,6 +2968,11 @@ export default function CameraView({
                     className="w-full h-full object-cover"
                   />
                 )}
+
+                <canvas
+                  ref={referenceCanvasRef}
+                  className="absolute top-0 left-0 w-full h-full pointer-events-none z-10"
+                />
 
                 <div className={`absolute bottom-0 left-0 right-0 ${isFullscreenMode ? 'p-1' : 'p-2'} flex justify-between items-center bg-black/90 border-t border-red-900/30`}>
                   {!isFullscreenMode && (
@@ -3054,96 +3185,7 @@ export default function CameraView({
           toggleTracking();
         }}
         onStopRoutine={stopRoutine}
-        onStartTest={() => {
-          // 1. Validate reference media is available
-          if (!isSplitView || (!mediaUrl && !referenceVideoRef.current)) {
-            alert('Please select a reference video in split view first.');
-            if (!isSplitView) toggleSplitView(); // Open split view if not already open
-            return;
-          }
-          
-          // Reset routine angle data when starting a new test
-          setRoutineAngleData({ timestamps: [], angles: {} });
-          
-          // Initialize angle history tables for the test
-          const emptyTable = { timestamps: [], angles: {} };
-          const testAngleTables = {
-            userAngleTable: { ...emptyTable },
-            instructorAngleTable: { ...emptyTable }
-          };
-          
-          // A. Immediately signal that a test is starting and reference recording is active
-          setIsRecordingReference(true); // Moved earlier
-          setTestResults({
-            isRunning: true,
-            processing: false,
-            scores: [],
-            overallScore: 0,
-            feedback: 'Follow the green guide to match the reference movement',
-            ...testAngleTables // Initialize with empty tables
-          });
-          setTestStartTime(Date.now()); // Moved earlier
-          setGraceTimeRemaining(0); // No countdown - start test immediately
-
-          // B. Ensure tracking is active (like pressing "Start Routine")
-          if (!isTracking) {
-            toggleTracking(); // This will set isTracking to true
-          }
-          
-          // C. Ensure reference skeleton overlay is visible
-          if (!showReferenceOverlay && externalToggleReferenceOverlay) {
-            externalToggleReferenceOverlay(); // This will set showReferenceOverlay to true
-          }
-          
-          // D. Reset reference video and play it from the beginning / Handle image
-          const refVideo = referenceVideoRef.current;
-          if (refVideo && refVideo instanceof HTMLVideoElement) {
-            refVideo.currentTime = 0;
-            refVideo.loop = false;
-            
-            if (isVideoPaused) {
-              refVideo.play().catch(e => console.error("Error playing reference video:", e));
-              setIsVideoPaused(false);
-            }
-            
-            // Start screen recording (if not already started or handled elsewhere)
-            startRecording(); 
-            
-            // Auto end after video ends
-            refVideo.onended = () => {
-              console.log('Reference video ended. Test angle recording will continue until explicitly stopped.');
-              //setIsRecordingReference(false); // Mark test as no longer recording reference // REMOVED to allow test to continue
-              
-              if (isRecording && mediaRecorder && mediaRecorder.state === "recording") {
-                console.log('Reference video ended. Screen recording will continue until test is explicitly stopped.');
-                // mediaRecorder.stop(); // REMOVED - Screen recording should continue until test stops
-              }
-              // stopRoutine(); // REMOVED to allow test to continue
-
-              // Optional: If reference video should loop, add logic here e.g.:
-              // if (refVideo) { refVideo.currentTime = 0; refVideo.play(); }
-            };
-          } else if (sourceType === 'image' && (mediaUrl || imageElement)) {
-            // For images, start recording and set a timeout
-            startRecording(); 
-            // setIsRecordingReference(true) and setTestStartTime were already moved up
-            
-            // Set timeout to end test after 5 seconds for images
-            setTimeout(() => {
-              console.log('Image test duration ended.');
-              setIsRecordingReference(false); // Mark test as no longer recording reference
-              if (mediaRecorder && mediaRecorder.state === "recording") {
-                console.log('Stopping screen recording for image test...');
-                mediaRecorder.stop(); // Screen recording stops, onstop will set recordedVideo
-              }
-              // stopRoutine will capture final angles and initiate the popup sequence
-              stopRoutine();
-            }, 5000); // End test after 5 seconds for images
-          }
-          
-          // Start recording angles immediately for both user and instructor
-          startAngleRecording();
-        }}
+        onStartTest={() => setIsCountingDown(true)}
         onStopTest={() => {
           if (testResults.isRunning) {
             // Stop screen recording if active
