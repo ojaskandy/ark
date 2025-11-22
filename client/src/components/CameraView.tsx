@@ -144,6 +144,8 @@ export default function CameraView({
   const [showStopTestIntermediatePopup, setShowStopTestIntermediatePopup] = useState<boolean>(false);
   const [showTestResultsPopup, setShowTestResultsPopup] = useState<boolean>(false);
   const [isCountingDown, setIsCountingDown] = useState<boolean>(false);
+  const [showUserSkeleton, setShowUserSkeleton] = useState<boolean>(true);
+  const [showReferenceSkeleton, setShowReferenceSkeleton] = useState<boolean>(true);
   
   // State variables for media recording
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -729,29 +731,31 @@ export default function CameraView({
                   };
 
                   // Draw User Skeleton
-                  drawSkeletonOnCtx(ctx, keypoints, scaleX, scaleY, skeletonColor);
+                  if (showUserSkeleton) {
+                    drawSkeletonOnCtx(ctx, keypoints, scaleX, scaleY, skeletonColor);
+                  }
 
                   // Draw Reference Skeleton if in Split View
-                  if (isSplitView && referenceCanvasRef.current && referencePose && referenceVideoRef.current) {
+                  if (showReferenceSkeleton && isSplitView && referenceCanvasRef.current && referencePose && referenceVideoRef.current) {
                     const refCtx = referenceCanvasRef.current.getContext('2d');
                     if (refCtx) {
                       const refCanvas = refCtx.canvas;
                       const rWidth = refCanvas.clientWidth || refCanvas.width;
                       const rHeight = refCanvas.clientHeight || refCanvas.height;
-                      
+
                       // Ensure canvas size matches display
                       if (refCanvas.width !== rWidth || refCanvas.height !== rHeight) {
                         refCanvas.width = rWidth;
                         refCanvas.height = rHeight;
                       }
-                      
+
                       refCtx.clearRect(0, 0, rWidth, rHeight);
-                      
+
                       const rVideoWidth = referenceVideoRef.current.videoWidth || rWidth;
                       const rVideoHeight = referenceVideoRef.current.videoHeight || rHeight;
                       const rScaleX = rWidth / rVideoWidth;
                       const rScaleY = rHeight / rVideoHeight;
-                      
+
                       drawSkeletonOnCtx(refCtx, referencePose.keypoints, rScaleX, rScaleY, 'green');
                     }
                   }
@@ -3063,71 +3067,70 @@ export default function CameraView({
             )}
 
             {isSplitView && showMediaSelector && (
-              <div className="bg-black/90 border border-red-900/40 relative md:w-1/2 w-full flex flex-col items-center justify-center p-4">
+              <div className="bg-white/95 backdrop-blur-xl border border-gray-200/50 relative md:w-1/2 w-full flex flex-col items-center justify-center p-6 rounded-xl shadow-lg">
                 <div className="w-full max-w-md">
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-red-500 mb-2">Select Reference Media</h3>
-                    <p className="text-red-100 text-sm">choose a studio routine or drop your own reference</p>
+                    <h3 className="text-2xl font-medium text-gray-800 mb-2">Select Reference Media</h3>
+                    <p className="text-gray-600 text-sm">choose a studio routine or upload your own reference</p>
                   </div>
 
-                  <div className="space-y-4">
-                                         {/* Pre-loaded Video Option */}
-                  <button
-                    onClick={() => {
-                            setShowMediaSelector(false);
-                         setShowPreloadedSelector(true);
-                    }}
-                       className="w-full h-16 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-semibold text-lg flex items-center justify-center gap-3 rounded-lg shadow-lg"
-                  >
-                       <span className="material-icons text-2xl">video_library</span>
-                       Choose Pre-loaded Video
-                  </button>
+                  <div className="space-y-3">
+                    {/* Pre-loaded Video Option */}
+                    <button
+                      onClick={() => {
+                        setShowMediaSelector(false);
+                        setShowPreloadedSelector(true);
+                      }}
+                      className="w-full h-14 bg-gradient-to-r from-pink-400 to-orange-400 hover:from-pink-500 hover:to-orange-500 text-white font-medium text-lg flex items-center justify-center gap-3 rounded-2xl shadow-lg shadow-pink-200/50 transition-all"
+                    >
+                      <span className="text-xl">🎞️</span>
+                      Choose Studio Routine
+                    </button>
 
                     {/* Upload Video Option */}
-                  <button
-                    onClick={() => {
-                      const input = document.createElement('input');
-                      input.type = 'file';
-                      input.accept = 'video/mp4,video/webm,video/ogg,video/*';
-                      input.onchange = (e) => {
-                        const file = (e.target as HTMLInputElement).files?.[0];
-                        if (file) {
-                          if (!file.type.startsWith('video/')) {
-                            console.error("Not a video file:", file.type);
-                            return;
+                    <button
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'video/mp4,video/webm,video/ogg,video/*';
+                        input.onchange = (e) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            if (!file.type.startsWith('video/')) {
+                              console.error("Not a video file:", file.type);
+                              return;
+                            }
+
+                            console.log("Selected video file:", file.name, file.type);
+                            const url = URL.createObjectURL(file);
+                            const flaggedUrl = url + '#video';
+
+                            if (onScreenshot) {
+                              console.log("Sending video URL to parent:", flaggedUrl);
+                              onScreenshot(flaggedUrl);
+                            }
+
+                            setShowMediaSelector(false);
                           }
-
-                          console.log("Selected video file:", file.name, file.type);
-                          const url = URL.createObjectURL(file);
-                          const flaggedUrl = url + '#video';
-
-                          if (onScreenshot) {
-                            console.log("Sending video URL to parent:", flaggedUrl);
-                            onScreenshot(flaggedUrl);
-                          }
-
-                          setShowMediaSelector(false);
-                        }
-                      };
-                      input.click();
-                    }}
-                      className="w-full h-16 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-800 hover:to-gray-700 text-white font-semibold text-lg flex items-center justify-center gap-3 rounded-lg shadow-lg"
-                  >
-                      <span className="material-icons text-2xl">file_upload</span>
-                    Upload Video
-                  </button>
+                        };
+                        input.click();
+                      }}
+                      className="w-full h-14 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-800 font-medium text-lg flex items-center justify-center gap-3 rounded-2xl bg-white/80 transition-all"
+                    >
+                      <span className="text-xl">📤</span>
+                      Upload Your Own
+                    </button>
 
                     {/* Cancel Button */}
-                  <button
-                    onClick={() => setShowMediaSelector(false)}
-                      className="w-full border-red-900/30 bg-transparent text-gray-300 hover:bg-red-900/20 hover:text-white p-3 rounded-lg flex items-center justify-center shadow-lg border"
-                  >
-                    <span className="material-icons mr-2">close</span>
-                    Cancel
-                  </button>
+                    <button
+                      onClick={() => setShowMediaSelector(false)}
+                      className="w-full h-12 text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                    >
+                      Cancel
+                    </button>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-red-900/30">
+                  <div className="mt-6 pt-4 border-t border-gray-200">
                     <div className="text-xs text-gray-500 text-center space-y-1">
                       <p>studio videos include contemporary, hip-hop, and fusion combos</p>
                       <p>Upload supports: MP4, WEBM, OGG</p>
@@ -3238,6 +3241,10 @@ export default function CameraView({
         onRecord={toggleRecording}
         isRecording={isRecording}
         isTestRunning={testResults.isRunning}
+        showUserSkeleton={showUserSkeleton}
+        showReferenceSkeleton={showReferenceSkeleton}
+        onToggleUserSkeleton={setShowUserSkeleton}
+        onToggleReferenceSkeleton={setShowReferenceSkeleton}
       />
 
       <ResultsModal
