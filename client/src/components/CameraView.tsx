@@ -11,6 +11,7 @@ import { isVideoUrl } from './camera/utils';
 import StopTestIntermediatePopup from './camera/StopTestIntermediatePopup';
 import TestResultsPopup from './camera/TestResultsPopup';
 import PreloadedVideoSelector from './PreloadedVideoSelector';
+import CountdownOverlay from './camera/CountdownOverlay';
 import { type DanceRoutine } from '@/data/danceRoutines';
 
 interface CameraViewProps {
@@ -142,6 +143,7 @@ export default function CameraView({
   // State for popups
   const [showStopTestIntermediatePopup, setShowStopTestIntermediatePopup] = useState<boolean>(false);
   const [showTestResultsPopup, setShowTestResultsPopup] = useState<boolean>(false);
+  const [isCountingDown, setIsCountingDown] = useState<boolean>(false);
   
   // State variables for media recording
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -753,7 +755,6 @@ export default function CameraView({
                       drawSkeletonOnCtx(refCtx, referencePose.keypoints, rScaleX, rScaleY, 'green');
                     }
                   }
-                }
                 }
 
                 if (showPoints) {
