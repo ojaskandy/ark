@@ -285,7 +285,7 @@ export default function ResultsModal({
       )}
 
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 border-gray-800 text-white">
-        <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white relative">
+        <CardHeader className="bg-gradient-to-r from-pink-400 to-orange-400 text-white relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-white/20 rounded-full">
@@ -293,7 +293,7 @@ export default function ResultsModal({
               </div>
               <div>
                 <CardTitle className="text-2xl font-bold">Performance Analysis</CardTitle>
-                <CardDescription className="text-purple-100">
+                <CardDescription className="text-pink-100">
                   your dance technique breakdown
                 </CardDescription>
               </div>
@@ -440,13 +440,13 @@ export default function ResultsModal({
                 </Card>
               ) : naturalLanguageAnalysis ? (
                 <div className="space-y-6">
-                  {/* Shifu Feedback */}
-                  <Card className="bg-gradient-to-br from-purple-900 to-blue-900 border-purple-500">
+                  {/* Coach Feedback */}
+                  <Card className="bg-gradient-to-br from-pink-500/80 to-orange-500/80 border-pink-400">
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-white flex items-center space-x-2">
                           <MessageCircle className="h-5 w-5" />
-                          <span>Shifu Feedback</span>
+                          <span>Coach Feedback</span>
                         </CardTitle>
                         <Button
                           variant="ghost"
@@ -650,9 +650,9 @@ export default function ResultsModal({
             >
               Close
             </Button>
-            <Button 
+            <Button
               onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+              className="bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:from-pink-500 hover:to-orange-500"
             >
               Try Again
             </Button>
