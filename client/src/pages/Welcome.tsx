@@ -210,13 +210,13 @@ export default function Welcome() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="group relative bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 overflow-hidden shadow-lg shadow-pink-500/10"
+                className="group relative bg-white/95 backdrop-blur-lg border border-pink-200 rounded-3xl p-8 overflow-hidden shadow-xl shadow-purple-500/20"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/10 group-hover:to-purple-500/10 transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/5 group-hover:to-purple-500/5 transition-all duration-500" />
                 <div className="relative z-10">
                   <div className="text-5xl mb-4">{feature.icon}</div>
-                  <h3 className="text-2xl font-medium text-white mb-3">{feature.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -225,7 +225,7 @@ export default function Welcome() {
       </section>
 
       {/* ARK AI Section */}
-      <section className="relative z-10 py-24 px-6 md:px-12 bg-gradient-to-br from-purple-900/30 to-pink-900/20">
+      <section className="relative z-10 py-24 px-6 md:px-12">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -250,28 +250,28 @@ export default function Welcome() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              <div className="bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 shadow-xl">
+              <div className="bg-white/90 backdrop-blur-lg border border-pink-200 rounded-3xl p-8 shadow-xl shadow-purple-500/20">
                 <div className="text-4xl mb-4">🤖</div>
-                <h3 className="text-3xl font-medium text-white mb-4">Advanced Pose Analysis</h3>
-                <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Advanced Pose Analysis</h3>
+                <p className="text-lg text-gray-600 leading-relaxed mb-6">
                   ARK AI uses cutting-edge computer vision to track every movement in real-time. 
                   Get instant, precise feedback on your form, posture, and technique.
                 </p>
-                <ul className="space-y-3 text-gray-200">
+                <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
-                    <span className="text-pink-400 mt-1">✓</span>
+                    <span className="text-pink-500 mt-1 font-bold">✓</span>
                     <span>Real-time joint angle tracking</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-pink-400 mt-1">✓</span>
+                    <span className="text-pink-500 mt-1 font-bold">✓</span>
                     <span>Personalized improvement suggestions</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-pink-400 mt-1">✓</span>
+                    <span className="text-pink-500 mt-1 font-bold">✓</span>
                     <span>Progress tracking over time</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="text-pink-400 mt-1">✓</span>
+                    <span className="text-pink-500 mt-1 font-bold">✓</span>
                     <span>Encouraging, age-appropriate feedback</span>
                   </li>
                 </ul>
@@ -312,10 +312,10 @@ export default function Welcome() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    className="bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-2xl p-4 text-center"
+                    className="bg-purple-900/60 backdrop-blur-lg border border-purple-400/30 rounded-2xl p-4 text-center shadow-lg"
                   >
-                    <div className="text-3xl font-bold text-pink-400">{stat.number}</div>
-                    <div className="text-sm text-gray-300 mt-1">{stat.label}</div>
+                    <div className="text-3xl font-bold text-pink-300">{stat.number}</div>
+                    <div className="text-sm text-purple-100 mt-1">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -372,11 +372,11 @@ export default function Welcome() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.15 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-3xl p-6 shadow-lg shadow-pink-500/10 text-center"
+                className="bg-purple-900/50 backdrop-blur-lg border border-purple-400/30 rounded-3xl p-6 shadow-xl shadow-purple-500/20 text-center"
               >
                 <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-medium text-white mb-3">{item.title}</h3>
-                <p className="text-gray-300">{item.description}</p>
+                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+                <p className="text-purple-100">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -384,7 +384,7 @@ export default function Welcome() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="relative z-10 py-24 px-6 md:px-12 bg-gradient-to-br from-pink-900/20 to-purple-900/30">
+      <section className="relative z-10 py-24 px-6 md:px-12">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -428,17 +428,17 @@ export default function Welcome() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 shadow-lg"
+                className="bg-white/95 backdrop-blur-lg border border-pink-200 rounded-3xl p-8 shadow-xl shadow-purple-500/20"
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-xl">★</span>
+                    <span key={i} className="text-yellow-500 text-xl drop-shadow">★</span>
                   ))}
                 </div>
-                <p className="text-gray-200 mb-6 italic">"{testimonial.text}"</p>
-                <div className="border-t border-pink-500/20 pt-4">
-                  <p className="font-medium text-white">{testimonial.name}</p>
-                  <p className="text-sm text-gray-400">{testimonial.role}</p>
+                <p className="text-gray-700 mb-6 italic leading-relaxed">"{testimonial.text}"</p>
+                <div className="border-t border-pink-200 pt-4">
+                  <p className="font-bold text-gray-900">{testimonial.name}</p>
+                  <p className="text-sm text-pink-500">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}
@@ -454,24 +454,24 @@ export default function Welcome() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-black/40 backdrop-blur-md border border-pink-500/20 rounded-3xl p-8 shadow-lg"
+            className="bg-gradient-to-r from-purple-900/70 via-fuchsia-900/60 to-purple-900/70 backdrop-blur-lg border border-purple-400/30 rounded-3xl p-8 shadow-xl shadow-purple-500/30"
           >
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
-                <div className="text-4xl font-bold text-pink-400 mb-2">1,000+</div>
-                <div className="text-gray-300">Active Dancers</div>
+                <div className="text-4xl font-bold text-pink-300 mb-2">1,000+</div>
+                <div className="text-purple-100">Active Dancers</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-400 mb-2">500+</div>
-                <div className="text-gray-300">Happy Parents</div>
+                <div className="text-4xl font-bold text-pink-300 mb-2">500+</div>
+                <div className="text-purple-100">Happy Parents</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-400 mb-2">4.9★</div>
-                <div className="text-gray-300">Average Rating</div>
+                <div className="text-4xl font-bold text-pink-300 mb-2">4.9★</div>
+                <div className="text-purple-100">Average Rating</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-400 mb-2">💯</div>
-                <div className="text-gray-300">Money-Back Guarantee</div>
+                <div className="text-4xl font-bold text-pink-300 mb-2">💯</div>
+                <div className="text-purple-100">Money-Back Guarantee</div>
               </div>
             </div>
           </motion.div>
@@ -486,7 +486,7 @@ export default function Welcome() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center bg-gradient-to-br from-pink-500/20 to-purple-500/20 backdrop-blur-md border border-pink-500/30 rounded-3xl p-12 md:p-16 shadow-xl shadow-pink-500/20"
+            className="text-center bg-gradient-to-br from-fuchsia-500/90 to-purple-600/90 backdrop-blur-lg border border-pink-400/50 rounded-3xl p-12 md:p-16 shadow-2xl shadow-purple-500/40"
           >
             <h2 className="text-4xl md:text-5xl font-medium text-white mb-4">
               Ready To Start?
