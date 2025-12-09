@@ -1,4 +1,4 @@
-// Pose Analysis Library for Shifu Says Challenge
+// Pose Analysis Library for Dance Challenge
 // This analyzes joint angles and positions from reference images
 
 interface JointPosition {
@@ -37,151 +37,109 @@ interface PoseReferenceData {
 }
 
 // Default pose reference data - stored locally for immediate functionality
+// UPDATED FOR DANCE MOVES
 const defaultPoseReferences: PoseReferenceData = {
-  front_kick: {
+  high_v: {
     keyAngles: {
-      leftKneeAngle: 45,
-      rightKneeAngle: 160,
-      leftAnkleHeight: -100,
-      rightAnkleHeight: 50,
-      stanceWidth: 30
+      leftElbowAngle: 170, // Straight arm
+      rightElbowAngle: 170, // Straight arm
+      leftWristHeight: -100, // Above shoulder
+      rightWristHeight: -100, // Above shoulder
+      // Arms should be somewhat wide, not straight up like '11'
     },
     tolerances: {
       angleTolerance: 30,
-      heightTolerance: 40,
-      stanceTolerance: 20
-    }
-  },
-  side_kick: {
-    keyAngles: {
-      leftKneeAngle: 90,
-      rightKneeAngle: 160,
-      leftAnkleHeight: -80,
-      rightAnkleHeight: 50,
-      stanceWidth: 80
-    },
-    tolerances: {
-      angleTolerance: 25,
-      heightTolerance: 35,
-      stanceTolerance: 25
-    }
-  },
-  round_kick: {
-    keyAngles: {
-      leftKneeAngle: 110,
-      rightKneeAngle: 160,
-      leftAnkleHeight: -60,
-      rightAnkleHeight: 50,
-      stanceWidth: 70
-    },
-    tolerances: {
-      angleTolerance: 30,
-      heightTolerance: 40,
-      stanceTolerance: 25
-    }
-  },
-  back_kick: {
-    keyAngles: {
-      leftKneeAngle: 45,
-      rightKneeAngle: 160,
-      leftAnkleHeight: -90,
-      rightAnkleHeight: 50,
-      stanceWidth: 40
-    },
-    tolerances: {
-      angleTolerance: 35,
-      heightTolerance: 45,
-      stanceTolerance: 30
-    }
-  },
-  axe_kick: {
-    keyAngles: {
-      leftKneeAngle: 170,
-      rightKneeAngle: 160,
-      leftAnkleHeight: -120,
-      rightAnkleHeight: 50,
-      stanceWidth: 35
-    },
-    tolerances: {
-      angleTolerance: 25,
       heightTolerance: 50,
-      stanceTolerance: 25
-    }
-  },
-  fighting_stance: {
-    keyAngles: {
-      leftKneeAngle: 150,
-      rightKneeAngle: 150,
-      leftAnkleHeight: 40,
-      rightAnkleHeight: 40,
-      stanceWidth: 60,
-      leftElbowAngle: 90,
-      rightElbowAngle: 90
-    },
-    tolerances: {
-      angleTolerance: 20,
-      heightTolerance: 25,
       stanceTolerance: 30
     }
   },
-  horse_stance: {
+  low_v: {
     keyAngles: {
-      leftKneeAngle: 120,
-      rightKneeAngle: 120,
-      leftAnkleHeight: 45,
-      rightAnkleHeight: 45,
-      stanceWidth: 120
+      leftElbowAngle: 170,
+      rightElbowAngle: 170,
+      leftWristHeight: 100, // Below shoulder
+      rightWristHeight: 100, // Below shoulder
+    },
+    tolerances: {
+      angleTolerance: 30,
+      heightTolerance: 50,
+      stanceTolerance: 30
+    }
+  },
+  t_pose: {
+    keyAngles: {
+      leftElbowAngle: 170,
+      rightElbowAngle: 170,
+      leftWristHeight: 0, // Level with shoulder
+      rightWristHeight: 0, // Level with shoulder
     },
     tolerances: {
       angleTolerance: 25,
       heightTolerance: 30,
+      stanceTolerance: 30
+    }
+  },
+  left_l: {
+    keyAngles: {
+      leftElbowAngle: 170,
+      leftWristHeight: -100, // Left arm Up
+      rightElbowAngle: 170,
+      rightWristHeight: 0, // Right arm Side
+    },
+    tolerances: {
+      angleTolerance: 30,
+      heightTolerance: 40,
+      stanceTolerance: 30
+    }
+  },
+  right_l: {
+    keyAngles: {
+      rightElbowAngle: 170,
+      rightWristHeight: -100, // Right arm Up
+      leftElbowAngle: 170,
+      leftWristHeight: 0, // Left arm Side
+    },
+    tolerances: {
+      angleTolerance: 30,
+      heightTolerance: 40,
+      stanceTolerance: 30
+    }
+  },
+  // Rebranded 'punches' to 'reaches' for the Beat Striker challenge
+  left_reach: {
+    keyAngles: {
+      leftElbowAngle: 160,
+      leftWristHeight: -20, // Slightly above/at shoulder
+      // right arm can be anywhere (guard or resting)
+    },
+    tolerances: {
+      angleTolerance: 30,
+      heightTolerance: 50,
       stanceTolerance: 40
     }
   },
-  high_block: {
+  right_reach: {
     keyAngles: {
-      leftElbowAngle: 120,
       rightElbowAngle: 160,
-      leftWristHeight: -80,
-      rightWristHeight: 20,
-      leftKneeAngle: 150,
-      rightKneeAngle: 150
+      rightWristHeight: -20,
     },
     tolerances: {
       angleTolerance: 30,
-      heightTolerance: 40,
-      stanceTolerance: 30
+      heightTolerance: 50,
+      stanceTolerance: 40
     }
   },
-  low_block: {
-    keyAngles: {
-      leftElbowAngle: 140,
-      rightElbowAngle: 160,
-      leftWristHeight: 60,
-      rightWristHeight: 20,
-      leftKneeAngle: 150,
-      rightKneeAngle: 150
-    },
-    tolerances: {
-      angleTolerance: 30,
-      heightTolerance: 40,
-      stanceTolerance: 30
-    }
-  },
-  punch: {
-    keyAngles: {
-      leftElbowAngle: 160,
-      rightElbowAngle: 90,
-      leftWristHeight: -20,
-      rightWristHeight: 10,
-      leftKneeAngle: 150,
-      rightKneeAngle: 150
-    },
-    tolerances: {
-      angleTolerance: 25,
-      heightTolerance: 35,
-      stanceTolerance: 30
-    }
+  disco_point_left: {
+      keyAngles: {
+          leftElbowAngle: 160,
+          leftWristHeight: -100, // Up and across usually, but let's just say Up for now
+          rightElbowAngle: 90, // Hand on hip/bent
+      },
+      tolerances: {
+          angleTolerance: 40,
+          heightTolerance: 60,
+          stanceTolerance: 40
+      }
   }
 };
 
@@ -353,9 +311,9 @@ export function comparePoseWithReference(
 }
 
 /**
- * Detect martial arts pose from user keypoints
+ * Detect dance pose from user keypoints
  */
-export function detectMartialArtsPoseAdvanced(keypoints: JointPosition[]): {
+export function detectDancePoseAdvanced(keypoints: JointPosition[]): {
   pose: string | null;
   confidence: number;
   allResults: Array<{ pose: string; confidence: number }>;
@@ -424,4 +382,74 @@ export function getAvailablePoses(): string[] {
  */
 export function getReferencePose(poseName: string): PoseSignature | null {
   return poseReferences[poseName] || null;
-} 
+}
+
+/**
+ * Generate English feedback based on pose analysis
+ */
+export function getFeedbackForPose(
+  poseName: string, 
+  analysis: { 
+    match: boolean; 
+    confidence: number; 
+    details: Record<string, { expected: number; actual: number; withinTolerance: boolean }> 
+  }
+): string[] {
+  const feedback: string[] = [];
+  const details = analysis.details;
+
+  if (analysis.match) {
+    feedback.push("Excellent form!");
+    return feedback;
+  }
+
+  // Generate specific feedback based on the biggest deviations
+  Object.entries(details).forEach(([key, detail]) => {
+    if (!detail.withinTolerance) {
+      const diff = detail.actual - detail.expected;
+      const absDiff = Math.abs(diff);
+
+      if (key.includes('ElbowAngle')) {
+        const arm = key.includes('left') ? 'Left' : 'Right';
+        if (detail.expected > 150) { // Expecting straight arm
+           if (detail.actual < detail.expected) {
+             feedback.push(`Straighten your ${arm} arm more.`);
+           }
+        } else if (detail.expected < 100) { // Expecting bent arm
+           if (detail.actual > detail.expected) {
+             feedback.push(`Bend your ${arm} elbow more.`);
+           }
+        }
+      } else if (key.includes('KneeAngle')) {
+        const leg = key.includes('left') ? 'Left' : 'Right';
+        if (detail.expected > 150) { // Expecting straight leg
+           if (detail.actual < detail.expected) {
+             feedback.push(`Straighten your ${leg} leg.`);
+           }
+        } else if (detail.expected < 100) { // Expecting bent leg
+           if (detail.actual > detail.expected) {
+             feedback.push(`Bend your ${leg} knee deeper.`);
+           }
+        }
+      } else if (key.includes('WristHeight')) {
+        const arm = key.includes('left') ? 'Left' : 'Right';
+        // Height is relative to shoulder (negative is above)
+        if (diff > 0) { // Actual is higher number (lower visually) than expected
+          feedback.push(`Raise your ${arm} hand higher.`);
+        } else {
+          feedback.push(`Lower your ${arm} hand slightly.`);
+        }
+      } else if (key.includes('stanceWidth')) {
+        if (diff < 0) { // Actual < Expected
+          feedback.push("Widen your stance.");
+        } else {
+          feedback.push("Bring your feet closer.");
+        }
+      }
+    }
+  });
+
+  // Limit feedback to top 2 most important corrections to avoid overwhelming
+  return feedback.slice(0, 2);
+}
+ 

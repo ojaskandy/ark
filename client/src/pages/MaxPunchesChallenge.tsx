@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { initPoseDetection, detectPoses, getJointConnections } from '@/lib/poseDetection';
+import { comparePoseWithReference, getFeedbackForPose } from '@/lib/poseAnalysis';
 import DraggableControls from '@/components/DraggableControls';
 import { ArrowLeft } from 'lucide-react';
 import { useLocation } from 'wouter';
@@ -47,6 +48,10 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
   const paddleHeight = 80; // Diameter of the ball (kept for hitbox consistency)
   const HIT_COOLDOWN_MS = 50;
   const [targetImage, setTargetImage] = useState<HTMLImageElement | null>(null);
+  
+  // Feedback State
+  const [feedback, setFeedback] = useState<string[]>([]);
+  const feedbackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // New state for preparation phase
   const [prepTimer, setPrepTimer] = useState(0);
@@ -286,6 +291,21 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
                         setHitCount(prevCount => prevCount + 1);
                         lastHitTimeRef.current[name as 'left' | 'right'] = now;
                         setIsPaddleHit(true);
+                        
+                        // --- FORM ANALYSIS & FEEDBACK ---
+                        // Determine which punch type based on hand used
+                        const punchType = name === 'left' ? 'left_reach' : 'right_reach';
+                        // Cast keypoints to the type expected by analysis tools
+                        const analysis = comparePoseWithReference(keypoints as any, punchType);
+                        const newFeedback = getFeedbackForPose(punchType, analysis);
+                        
+                        if (newFeedback.length > 0) {
+                          setFeedback(newFeedback);
+                          // Clear feedback after 2 seconds
+                          if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+                          feedbackTimeoutRef.current = setTimeout(() => setFeedback([]), 2000);
+                        }
+
                         if (hitSound) {
                           hitSound.currentTime = 0;
                           hitSound.play().catch(e => console.error("Error playing hit sound:", e));
@@ -368,6 +388,7 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
     setIsActive(false);           // Ensure main game is not active yet
     setPrepTimer(3);              // Start prep countdown from 3
     setIsPreparing(true);         // Enter preparation mode
+    setFeedback([]);              // Clear feedback
     
     console.log('Start button clicked, entering preparation phase...');
     // Pose detection for initial paddle placement will occur when prepTimer ends.
@@ -458,7 +479,7 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
           <ArrowLeft className="h-5 w-5 mr-1" />
           <span>Back</span>
         </button>
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-500 text-center flex-1">Maximum Punches in 30 Seconds</h1>
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-500 text-center flex-1">Beat Striker Challenge</h1>
         <div className="w-10 sm:w-16"></div> {/* Spacer to center the title */}
       </div>
 
@@ -466,12 +487,12 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
       {showInstructionsModal && (
         <div className="absolute inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50 p-2 sm:p-4">
           <div className="bg-gray-900 border border-red-800 rounded-xl p-4 sm:p-6 max-w-md w-full">
-            <h2 className="text-2xl sm:text-3xl text-yellow-400 font-bold mb-4 sm:mb-6">Max Punches Challenge!</h2>
+            <h2 className="text-2xl sm:text-3xl text-yellow-400 font-bold mb-4 sm:mb-6">Beat Striker!</h2>
             <div className="text-sm sm:text-base text-center space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-              <p>Get ready to punch as fast as you can for 30 seconds!</p>
+              <p>Get ready to hit the beat targets as fast as you can!</p>
               <p>When you click "Let's Go!", you'll have <strong className="text-yellow-400">3 seconds</strong> to get in position.</p>
-              <p>Raise your <strong className="text-yellow-400">right arm</strong> out. A <strong className="text-red-500">red target</strong> will appear at your fist.</p>
-              <p>Punch the target as many times as you can before the timer runs out!</p>
+              <p>Raise your <strong className="text-yellow-400">right arm</strong> out. A <strong className="text-red-500">red target</strong> will appear at your hand.</p>
+              <p>Hit the target as many times as you can before the timer runs out!</p>
             </div>
             <button
               onClick={() => setShowInstructionsModal(false)}
@@ -499,6 +520,16 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
             className="absolute inset-0 w-full h-full max-w-full max-h-full" 
           />
         </div>
+        
+        {/* Shifu Feedback Overlay */}
+        {isActive && feedback.length > 0 && (
+          <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 bg-black/80 border border-yellow-500 text-yellow-400 px-4 py-2 rounded-xl text-xl font-bold z-20 shadow-lg text-center animate-bounce">
+            <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">ARK AI Feedback</div>
+            {feedback.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
+          </div>
+        )}
 
         {/* Hit Counter - Fixed Position */}
         {isActive && paddlePosition && (
@@ -575,4 +606,4 @@ const MaxPunchesChallenge: React.FC<MaxPunchesChallengeProps> = ({ skeletonColor
   );
 };
 
-export default MaxPunchesChallenge; 
+export default MaxPunchesChallenge;

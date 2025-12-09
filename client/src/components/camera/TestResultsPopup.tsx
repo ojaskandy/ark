@@ -149,17 +149,17 @@ const TestResultsPopup: React.FC<TestResultsPopupProps> = ({
 }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-4xl border border-red-600/50 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-pink-950/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 rounded-xl shadow-2xl shadow-pink-200/30 w-full max-w-4xl border border-pink-100 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-semibold text-white">Test Results</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <h3 className="text-2xl font-semibold text-gray-800">Test Results</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-pink-50 rounded-full transition-colors">
             <span className="material-icons">close</span>
           </button>
         </div>
         {/* Your Angles Table */}
         <div className="mb-8">
-          <h4 className="text-xl font-semibold text-white mb-4">Your Joint Angles</h4>
+          <h4 className="text-xl font-semibold text-gray-800 mb-4">Your Joint Angles</h4>
           <AngleDataTable
             timestamps={userAngleData.timestamps}
             angles={userAngleData.angles}
@@ -167,7 +167,7 @@ const TestResultsPopup: React.FC<TestResultsPopupProps> = ({
         </div>
         {/* Reference Angles Table */}
         <div className="mb-8">
-          <h4 className="text-xl font-semibold text-white mb-4">Instructor Joint Angles</h4>
+          <h4 className="text-xl font-semibold text-gray-800 mb-4">Instructor Joint Angles</h4>
           <AngleDataTable
             timestamps={referenceAngleData.timestamps}
             angles={referenceAngleData.angles}
@@ -175,8 +175,8 @@ const TestResultsPopup: React.FC<TestResultsPopupProps> = ({
         </div>
         {/* Comparison Section */}
         <div className="mb-8">
-          <h4 className="text-xl font-semibold text-white mb-4">Comparison Analysis (DTW)</h4>
-          <p className="text-gray-300 mb-4">
+          <h4 className="text-xl font-semibold text-gray-800 mb-4">Comparison Analysis (DTW)</h4>
+          <p className="text-gray-600 mb-4">
             This analysis uses Dynamic Time Warping (DTW) to compare your movement with the instructor's, providing a robust score for each joint and overall. Lower DTW cost and higher score means your movement closely matches the instructor.
           </p>
           <AngleComparisonTableDTW
@@ -188,7 +188,7 @@ const TestResultsPopup: React.FC<TestResultsPopupProps> = ({
         <div className="flex justify-end mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium"
+            className="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white rounded-full font-medium shadow-md shadow-pink-200/50 transition-all"
           >
             Close
           </button>

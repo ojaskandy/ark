@@ -86,15 +86,27 @@ export default function Landing() {
 
   return (
     <div className={`min-h-screen flex flex-col overflow-hidden relative ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
-      {/* Animated background shapes */}
-      <div className="absolute w-full h-full overflow-hidden z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-ark-purple/10 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-ark-purple-light/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] rounded-full bg-ark-lavender/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      {/* Beautiful Stage Background Image */}
+      <div className="fixed inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: 'url(/images/ark-stage-bg.jpg)',
+            backgroundPosition: 'center 30%'
+          }}
+        />
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-purple-950/60 to-black/90" />
+        {/* Animated purple glow effects */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/20 blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-pink-600/15 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] rounded-full bg-fuchsia-500/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
       </div>
       
       {/* Header */}
-      <header className={`${isDarkMode ? 'bg-black/50' : 'bg-white/70'} backdrop-blur-sm py-4 border-b ${isDarkMode ? 'border-ark-purple/20' : 'border-ark-lavender/30'} sticky top-0 z-50`}>
+      <header className="bg-black/40 backdrop-blur-md py-4 border-b border-purple-500/20 sticky top-0 z-50">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
             <div className="w-10 h-10 text-ark-purple-light mr-2 animate-bounce" style={{ animationDuration: '3s' }}>
@@ -153,18 +165,18 @@ export default function Landing() {
           
           <div className="flex items-center space-x-4">
             {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-ark-purple-light" />
+              <Loader2 className="h-5 w-5 animate-spin text-pink-400" />
             ) : user ? (
               <>
                 <Link to="/app">
-                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-ark-purple to-ark-purple-light hover:from-ark-purple-dark hover:to-ark-purple text-white transition duration-300 flex items-center space-x-1">
+                  <button className="px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white transition duration-300 flex items-center space-x-1 shadow-lg shadow-pink-500/30">
                     <span className="material-icons text-sm">play_arrow</span>
                     <span>Start Routine</span>
                   </button>
                 </Link>
                 <button 
                   onClick={handleLogout}
-                  className="px-5 py-2 rounded-md border border-ark-purple/50 text-ark-purple-light hover:bg-ark-purple/20 transition duration-300 flex items-center space-x-1"
+                  className="px-5 py-2 rounded-full border border-pink-400/50 text-pink-300 hover:bg-pink-500/20 transition duration-300 flex items-center space-x-1"
                 >
                   <span className="material-icons text-sm">logout</span>
                   <span>Logout</span>
@@ -175,7 +187,7 @@ export default function Landing() {
                 <button 
                   onClick={handleLoginClick}
                   disabled={isLoading}
-                  className="px-5 py-2 rounded-md border border-ark-purple/50 text-ark-purple-light hover:bg-ark-purple/20 transition duration-300 flex items-center space-x-1 disabled:opacity-50"
+                  className="px-5 py-2 rounded-full border border-pink-400/50 text-pink-300 hover:bg-pink-500/20 transition duration-300 flex items-center space-x-1 disabled:opacity-50"
                 >
                   <span className="material-icons text-sm">
                     {isLoading ? 'hourglass_empty' : 'login'}
@@ -183,7 +195,7 @@ export default function Landing() {
                   <span>{isLoading ? 'Opening...' : 'Login'}</span>
                 </button>
                 <Link to="/auth?tab=register">
-                  <button className="px-5 py-2 rounded-md bg-gradient-to-r from-ark-purple to-ark-purple-light hover:from-ark-purple-dark hover:to-ark-purple text-white transition duration-300 flex items-center space-x-1">
+                  <button className="px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white transition duration-300 flex items-center space-x-1 shadow-lg shadow-pink-500/30">
                     <span className="material-icons text-sm">person_add</span>
                     <span>Register</span>
                   </button>
@@ -205,14 +217,13 @@ export default function Landing() {
           <div className="container mx-auto px-4 py-8">
             <UserProfileCard />
             
-            <div className="mt-8 w-full bg-black/30 border border-ark-purple/30 rounded-lg p-4 animate-fade-in">
+            <div className="mt-8 w-full bg-black/40 backdrop-blur-sm border border-purple-500/30 rounded-xl p-4 animate-fade-in">
               <div className="flex items-center mb-3">
-                <span className="material-icons text-ark-purple-light mr-2">edit_note</span>
-                <h3 className="text-lg font-medium text-ark-lavender">Routine Notes</h3>
+                <span className="material-icons text-pink-400 mr-2">edit_note</span>
+                <h3 className="text-lg font-medium text-purple-200">Routine Notes</h3>
               </div>
               <textarea 
-                className="w-full h-32 bg-black/70 border border-red-900/40 rounded p-3 text-white placeholder-red-200/50
-                  focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                className="w-full h-32 bg-black/50 border border-purple-500/30 rounded-lg p-3 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 transition-all"
                 placeholder="Write your notes for this training session here..."
                 value={routineNotes}
                 onChange={(e) => setRoutineNotes(e.target.value)}
@@ -222,14 +233,14 @@ export default function Landing() {
             <div className="mt-8 flex justify-center">
               <Link to="/app">
                 <div className="inline-block relative group animate-fade-in">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-red-400 rounded-lg blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
-                  <div className="relative px-12 py-6 bg-black border border-red-800/50 rounded-lg leading-none flex items-center">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 rounded-xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
+                  <div className="relative px-12 py-6 bg-black/60 backdrop-blur-sm border border-pink-500/40 rounded-xl leading-none flex items-center hover:bg-black/80 transition-all">
                     <span className="flex items-center space-x-5">
-                      <span className="pr-6 text-gray-100 text-2xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-                        START TRAINING
+                      <span className="pr-6 text-2xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        START DANCING
                       </span>
                     </span>
-                    <span className="material-icons text-ark-purple-light text-xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+                    <span className="material-icons text-pink-400 text-xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
                   </div>
                 </div>
               </Link>
@@ -238,17 +249,13 @@ export default function Landing() {
         ) : (
           // Show landing page for non-logged in users
           <div className="min-h-[90vh] flex flex-col items-center justify-center relative">
-            {/* Animated floating martial arts icons */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-              <div className="absolute top-[10%] left-[10%] text-red-900/20 animate-float" style={{ animationDuration: '15s' }}>
-                <span className="material-icons text-[120px]">sports_martial_arts</span>
-              </div>
-              <div className="absolute top-[30%] right-[15%] text-red-900/20 animate-float" style={{ animationDuration: '20s', animationDelay: '2s' }}>
-                <span className="material-icons text-[80px]">sports_kabaddi</span>
-              </div>
-              <div className="absolute bottom-[20%] left-[20%] text-red-900/20 animate-float" style={{ animationDuration: '18s', animationDelay: '1s' }}>
-                <span className="material-icons text-[100px]">fitness_center</span>
-              </div>
+            {/* Decorative sparkles/lights effect */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-[15%] left-[15%] w-2 h-2 bg-purple-400/60 rounded-full animate-pulse shadow-lg shadow-purple-400/50" style={{ animationDuration: '2s' }}></div>
+              <div className="absolute top-[25%] right-[20%] w-3 h-3 bg-pink-400/50 rounded-full animate-pulse shadow-lg shadow-pink-400/50" style={{ animationDuration: '3s', animationDelay: '0.5s' }}></div>
+              <div className="absolute bottom-[30%] left-[25%] w-2 h-2 bg-fuchsia-400/60 rounded-full animate-pulse shadow-lg shadow-fuchsia-400/50" style={{ animationDuration: '2.5s', animationDelay: '1s' }}></div>
+              <div className="absolute top-[40%] right-[10%] w-2 h-2 bg-purple-300/50 rounded-full animate-pulse shadow-lg shadow-purple-300/50" style={{ animationDuration: '4s', animationDelay: '1.5s' }}></div>
+              <div className="absolute bottom-[20%] right-[30%] w-3 h-3 bg-pink-300/40 rounded-full animate-pulse shadow-lg shadow-pink-300/50" style={{ animationDuration: '3.5s', animationDelay: '2s' }}></div>
             </div>
             
             {/* Main hero content */}
@@ -261,30 +268,14 @@ export default function Landing() {
             >
               <div className="animate-fade-in">
                 <div className="relative mb-6">
-                  {isDarkMode ? (
-                    <>
-                      <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-dark absolute inset-0">
-                        ARK
-                      </h2>
-                      <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-dark-glow absolute inset-0">
-                        ARK
-                      </h2>
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-light absolute inset-0">
-                        ARK
-                      </h2>
-                      <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold logo-light-glow absolute inset-0">
-                        ARK
-                      </h2>
-                    </>
-                  )}
-                  <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold invisible">
+                  <h2 className="text-7xl sm:text-8xl md:text-9xl font-serif font-bold bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 bg-clip-text text-transparent drop-shadow-2xl">
                     ARK
                   </h2>
+                  <p className="text-lg md:text-xl text-purple-200/80 font-medium tracking-widest uppercase mt-2">
+                    Dance Studios
+                  </p>
                 </div>
-                <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>
+                <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-white/90 font-light">
                   AI-powered dance technique perfection.
                 </p>
               </div>
@@ -292,40 +283,35 @@ export default function Landing() {
               {/* Feature icons */}
               <div className="flex justify-center gap-8 md:gap-16 mb-16 flex-wrap">
                 <div className="feature-icon-container animate-float" style={{animationDelay: '0.2s'}}>
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-red-800 to-red-600 flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-red-500/30 transition-all duration-300 hover:scale-110">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/40 hover:shadow-pink-500/50 transition-all duration-300 hover:scale-110 border border-white/20">
                     <span className="material-icons text-white text-3xl md:text-4xl">motion_photos_on</span>
                   </div>
-                  <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Real-time tracking</p>
+                  <p className="text-sm mt-2 text-purple-100/80">Real-time tracking</p>
                 </div>
                 
                 <div className="feature-icon-container animate-float" style={{animationDelay: '0.4s'}}>
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-red-800 to-red-600 flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-red-500/30 transition-all duration-300 hover:scale-110">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-pink-600 to-purple-500 flex items-center justify-center shadow-lg shadow-pink-500/40 hover:shadow-purple-500/50 transition-all duration-300 hover:scale-110 border border-white/20">
                     <span className="material-icons text-white text-3xl md:text-4xl">auto_fix_high</span>
                   </div>
-                  <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Form analysis</p>
+                  <p className="text-sm mt-2 text-purple-100/80">Form analysis</p>
                 </div>
                 
                 <div className="feature-icon-container animate-float" style={{animationDelay: '0.6s'}}>  
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-red-800 to-red-600 flex items-center justify-center shadow-lg shadow-red-900/30 hover:shadow-red-500/30 transition-all duration-300 hover:scale-110">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-fuchsia-600 to-pink-500 flex items-center justify-center shadow-lg shadow-fuchsia-500/40 hover:shadow-pink-500/50 transition-all duration-300 hover:scale-110 border border-white/20">
                     <span className="material-icons text-white text-3xl md:text-4xl">compare</span>
                   </div>
-                  <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Video comparison</p>
+                  <p className="text-sm mt-2 text-purple-100/80">Video comparison</p>
                 </div>
               </div>
               
               {/* Routine Notes Section */}
-              <div className={`w-full max-w-lg mx-auto mb-10 ${isDarkMode ? 'bg-black/30 border-red-900/30' : 'bg-white/70 border-red-300/40'} border rounded-lg p-4 animate-fade-in`}>
+              <div className="w-full max-w-lg mx-auto mb-10 bg-black/40 backdrop-blur-sm border border-purple-500/30 rounded-xl p-4 animate-fade-in">
                 <div className="flex items-center mb-3">
-                  <span className="material-icons text-ark-purple-light mr-2">edit_note</span>
-                  <h3 className={`text-lg font-medium ${isDarkMode ? 'text-ark-lavender' : 'text-ark-purple'}`}>Routine Notes</h3>
+                  <span className="material-icons text-pink-400 mr-2">edit_note</span>
+                  <h3 className="text-lg font-medium text-purple-200">Routine Notes</h3>
                 </div>
                 <textarea 
-                  className={`w-full h-32 rounded p-3 ${
-                    isDarkMode 
-                      ? 'bg-black/70 border-red-900/40 text-white placeholder-red-200/50' 
-                      : 'bg-white/80 border-red-300/40 text-gray-800 placeholder-red-300'
-                  } border
-                    focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500`}
+                  className="w-full h-32 rounded-lg p-3 bg-black/50 border border-purple-500/30 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 transition-all"
                   placeholder="Write your notes for this training session here..."
                   value={routineNotes}
                   onChange={(e) => setRoutineNotes(e.target.value)}
@@ -334,14 +320,14 @@ export default function Landing() {
 
               {/* Launch button with advanced animation */}
               <button onClick={handleLoginClick} disabled={isLoading} className="inline-block relative group animate-fade-in mt-6 disabled:opacity-50">
-                <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-red-400 rounded-lg blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
-                <div className={`relative px-12 py-6 ${isDarkMode ? 'bg-black border-red-800/50' : 'bg-white border-red-300/50'} border rounded-lg leading-none flex items-center`}>
+                <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 rounded-xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
+                <div className="relative px-12 py-6 bg-black/60 backdrop-blur-sm border border-pink-500/40 rounded-xl leading-none flex items-center hover:bg-black/80 transition-all">
                   <span className="flex items-center space-x-5">
-                    <span className="pr-6 text-2xl font-bold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
-                      {isLoading ? 'OPENING...' : 'LAUNCH APP'}
+                    <span className="pr-6 text-2xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {isLoading ? 'OPENING...' : 'START DANCING'}
                     </span>
                   </span>
-                  <span className="material-icons text-red-500 text-xl group-hover:translate-x-2 transition-transform">
+                  <span className="material-icons text-pink-400 text-xl group-hover:translate-x-2 transition-transform">
                     {isLoading ? 'hourglass_empty' : 'arrow_forward'}
                   </span>
                 </div>
@@ -352,15 +338,11 @@ export default function Landing() {
       </main>
       
       {/* Footer */}
-      <footer className={`mt-auto backdrop-blur-sm py-6 border-t relative z-10 ${
-        isDarkMode 
-          ? 'bg-black/80 border-red-900/20' 
-          : 'bg-white/80 border-red-300/20'
-      }`}>
+      <footer className="mt-auto backdrop-blur-md py-6 border-t border-purple-500/20 relative z-10 bg-black/50">
         <div className="container mx-auto px-4 text-center">
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>© 2025 ARK Dance Studios</p>
-          <p className={`${isDarkMode ? 'text-gray-600' : 'text-gray-500'} text-sm mt-1`}>
-            Powered by TensorFlow.js
+          <p className="text-purple-200/80">© 2025 ARK Dance Studios</p>
+          <p className="text-purple-300/50 text-sm mt-1">
+            Powered by AI & TensorFlow.js
           </p>
         </div>
       </footer>

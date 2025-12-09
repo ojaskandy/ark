@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trophy, TrendingUp, Target, Lightbulb, BarChart3, MessageCircle, X, Sparkles, CheckCircle, Copy, Check, Volume2, VolumeX, Loader2, Home, ArrowLeft, Settings, User, MessageSquare } from 'lucide-react';
+import { Trophy, TrendingUp, Target, Lightbulb, BarChart3, MessageCircle, X, Sparkles, CheckCircle, Copy, Check, Volume2, VolumeX, Loader2, Home, ArrowLeft, Settings, User, MessageSquare, Star, Zap } from 'lucide-react';
 
 interface JointScore {
   joint: string;
@@ -28,7 +28,13 @@ interface PerformanceData {
 interface NaturalLanguageAnalysis {
   feedback: string;
   techniqueTips: string;
+  breakdown?: {
+    start?: { observation: string; tip: string };
+    middle?: { observation: string; tip: string };
+    end?: { observation: string; tip: string };
+  };
   performanceData: PerformanceData[];
+  overallScore?: number;
   timestamp: string;
 }
 
@@ -57,7 +63,10 @@ interface ResultsModalProps {
   };
   fastDtwResults?: {
     overallScore: number;
-    detailedJointScores: Array<{ name: string; score: number; cost: number }>;
+    perFrameScores?: number[];
+    jointErrors?: number[];
+    jointNames?: string[];
+    detailedJointScores?: Array<{ name: string; score: number; cost: number }>;
   };
 }
 
@@ -84,8 +93,59 @@ export default function ResultsModal({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
 
-  // Calculate performance metrics - ensure score is capped at 100
-  const rawScore = fastDtwResults?.overallScore || overallScore || 0;
+  // Calculate performance metrics from available data sources
+  const calculateScore = (): number => {
+    // Priority 1: FastDTW results
+    if (fastDtwResults?.overallScore && fastDtwResults.overallScore > 0) {
+      return fastDtwResults.overallScore;
+    }
+    
+    // Priority 2: Passed overallScore prop
+    if (overallScore && overallScore > 0) {
+      return overallScore;
+    }
+    
+    // Priority 3: Calculate from angle data if available
+    if (userAngleTable?.angles && instructorAngleTable?.angles) {
+      const userJoints = Object.keys(userAngleTable.angles);
+      const instructorJoints = Object.keys(instructorAngleTable.angles);
+      const commonJoints = userJoints.filter(j => instructorJoints.includes(j));
+      
+      if (commonJoints.length > 0) {
+        let totalScore = 0;
+        let validJoints = 0;
+        
+        commonJoints.forEach(joint => {
+          const userAngles = userAngleTable.angles[joint];
+          const instructorAngles = instructorAngleTable.angles[joint];
+          
+          if (userAngles?.length > 0 && instructorAngles?.length > 0) {
+            const userAvg = userAngles.reduce((a, b) => a + b, 0) / userAngles.length;
+            const instructorAvg = instructorAngles.reduce((a, b) => a + b, 0) / instructorAngles.length;
+            const difference = Math.abs(userAvg - instructorAvg);
+            // Score based on angle difference (lower difference = higher score)
+            const jointScore = Math.max(0, 100 - (difference * 1.5));
+            totalScore += jointScore;
+            validJoints++;
+          }
+        });
+        
+        if (validJoints > 0) {
+          return Math.round(totalScore / validJoints);
+        }
+      }
+    }
+    
+    // Priority 4: Calculate from scores array
+    if (scores && scores.length > 0) {
+      const avgScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
+      return Math.round(avgScore);
+    }
+    
+    return 0;
+  };
+
+  const rawScore = calculateScore();
   const performanceScore = Math.min(100, Math.max(0, Math.round(rawScore)));
   const performanceLevel = performanceScore >= 85 ? 'excellent' : 
                           performanceScore >= 70 ? 'good' : 
@@ -211,17 +271,24 @@ export default function ResultsModal({
   if (!isOpen) return null;
 
   const getScoreColor = (score: number) => {
-    if (score >= 85) return 'text-green-500';
-    if (score >= 70) return 'text-blue-500';
-    if (score >= 50) return 'text-yellow-500';
-    return 'text-red-500';
+    if (score >= 85) return 'text-emerald-500';
+    if (score >= 70) return 'text-pink-500';
+    if (score >= 50) return 'text-amber-500';
+    return 'text-rose-400';
   };
 
   const getScoreGradient = (score: number) => {
-    if (score >= 85) return 'from-green-500 to-green-600';
-    if (score >= 70) return 'from-blue-500 to-blue-600';
-    if (score >= 50) return 'from-yellow-500 to-yellow-600';
-    return 'from-red-500 to-red-600';
+    if (score >= 85) return 'from-emerald-400 to-emerald-500';
+    if (score >= 70) return 'from-pink-400 to-pink-500';
+    if (score >= 50) return 'from-amber-400 to-amber-500';
+    return 'from-rose-400 to-rose-500';
+  };
+
+  const getScoreBg = (score: number) => {
+    if (score >= 85) return 'bg-emerald-50 border-emerald-200';
+    if (score >= 70) return 'bg-pink-50 border-pink-200';
+    if (score >= 50) return 'bg-amber-50 border-amber-200';
+    return 'bg-rose-50 border-rose-200';
   };
 
   const parseTechniqueTips = (tipsString: string): string[] => {
@@ -255,7 +322,7 @@ export default function ResultsModal({
       instructorData += `${joint}: [${instructorAngleTable.angles[joint].join(', ')}]\n`;
     });
     
-    const fullData = `CoachT Technical Analysis\n\nOverall Score: ${performanceScore}%\nTimestamps: ${userAngleTable.timestamps.length}\n\n${userData}${instructorData}`;
+    const fullData = `ARK AI Technical Analysis\n\nOverall Score: ${performanceScore}%\nTimestamps: ${userAngleTable.timestamps.length}\n\n${userData}${instructorData}`;
     
     navigator.clipboard.writeText(fullData).then(() => {
       setCopied(true);
@@ -268,27 +335,27 @@ export default function ResultsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-pink-950/40 backdrop-blur-md">
       {/* Celebration animation */}
       {showCelebration && (
         <div className="absolute inset-0 pointer-events-none z-60">
           <div className="absolute top-1/4 left-1/4 animate-bounce">
-            <Sparkles className="h-8 w-8 text-yellow-400" />
+            <Sparkles className="h-8 w-8 text-pink-400" />
           </div>
           <div className="absolute top-1/3 right-1/3 animate-bounce delay-150">
-            <Trophy className="h-6 w-6 text-gold-500" />
+            <Trophy className="h-6 w-6 text-amber-400" />
           </div>
           <div className="absolute bottom-1/3 left-1/3 animate-bounce delay-300">
-            <CheckCircle className="h-7 w-7 text-green-400" />
+            <Star className="h-7 w-7 text-pink-300" />
           </div>
         </div>
       )}
 
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 border-gray-800 text-white">
-        <CardHeader className="bg-gradient-to-r from-pink-400 to-orange-400 text-white relative">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-pink-100 shadow-2xl shadow-pink-200/30">
+        <CardHeader className="bg-gradient-to-r from-pink-500 via-rose-400 to-pink-400 text-white relative rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-white/20 rounded-full">
+              <div className="p-2 bg-white/20 rounded-full backdrop-blur-sm">
                 <Trophy className="h-6 w-6" />
               </div>
               <div>
@@ -303,7 +370,7 @@ export default function ResultsModal({
                 variant="ghost"
                 size="sm"
                 onClick={navigateToHomepage}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-white/20 rounded-full"
               >
                 <Home className="h-4 w-4 mr-2" />
                 Home
@@ -312,7 +379,7 @@ export default function ResultsModal({
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-white/20 rounded-full"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -322,17 +389,17 @@ export default function ResultsModal({
           {/* Overall Score Display */}
           <div className="mt-6 flex items-center justify-center">
             <div className="relative">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center border-4 border-white/30">
+              <div className="w-36 h-36 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center border-4 border-white shadow-lg">
                 <div className="text-center">
-                  <div className={`text-4xl font-bold ${getScoreColor(performanceScore)}`}>
+                  <div className={`text-5xl font-bold ${getScoreColor(performanceScore)}`}>
                     {performanceScore}
                   </div>
-                  <div className="text-sm text-white/80">Overall Score</div>
+                  <div className="text-sm text-gray-500 font-medium">Overall Score</div>
                 </div>
               </div>
               <div className="absolute -top-2 -right-2">
-                <Badge className={`bg-gradient-to-r ${getScoreGradient(performanceScore)} text-white border-0`}>
-                  {performanceLevel.charAt(0).toUpperCase() + performanceLevel.slice(1)}
+                <Badge className={`bg-gradient-to-r ${getScoreGradient(performanceScore)} text-white border-0 shadow-md px-3 py-1`}>
+                  {performanceLevel === 'needs-improvement' ? 'Keep Going!' : performanceLevel.charAt(0).toUpperCase() + performanceLevel.slice(1)}
                 </Badge>
               </div>
             </div>
@@ -340,22 +407,22 @@ export default function ResultsModal({
 
           <Progress 
             value={performanceScore} 
-            className="mt-4 h-2 bg-white/20"
+            className="mt-4 h-2.5 bg-white/30 rounded-full"
           />
         </CardHeader>
 
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-gradient-to-b from-pink-50/50 to-white">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-800">
-              <TabsTrigger value="overview" className="flex items-center space-x-2">
+            <TabsList className="grid w-full grid-cols-3 bg-white border border-pink-100 rounded-xl p-1 shadow-sm">
+              <TabsTrigger value="overview" className="flex items-center space-x-2 data-[state=active]:bg-pink-500 data-[state=active]:text-white rounded-lg transition-all">
                 <Target className="h-4 w-4" />
                 <span>Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="insights" className="flex items-center space-x-2">
+              <TabsTrigger value="insights" className="flex items-center space-x-2 data-[state=active]:bg-pink-500 data-[state=active]:text-white rounded-lg transition-all">
                 <MessageCircle className="h-4 w-4" />
                 <span>AI Insights</span>
               </TabsTrigger>
-              <TabsTrigger value="technical" className="flex items-center space-x-2">
+              <TabsTrigger value="technical" className="flex items-center space-x-2 data-[state=active]:bg-pink-500 data-[state=active]:text-white rounded-lg transition-all">
                 <BarChart3 className="h-4 w-4" />
                 <span>Technical</span>
               </TabsTrigger>
@@ -364,66 +431,105 @@ export default function ResultsModal({
             <TabsContent value="overview" className="space-y-6 mt-6">
               {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-4 text-center">
-                    <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{performanceScore}%</div>
-                    <div className="text-sm text-gray-400">Accuracy</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-4 text-center">
-                    <Target className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">
-                      {fastDtwResults?.detailedJointScores?.length || 0}
+                <Card className="bg-white border-pink-100 shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-5 text-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                      <TrendingUp className="h-6 w-6 text-white" />
                     </div>
-                    <div className="text-sm text-gray-400">Joints Analyzed</div>
+                    <div className="text-3xl font-bold text-gray-800">{performanceScore}%</div>
+                    <div className="text-sm text-gray-500 font-medium">Accuracy</div>
                   </CardContent>
                 </Card>
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-4 text-center">
-                    <BarChart3 className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">
+                <Card className="bg-white border-pink-100 shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-5 text-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                      <Target className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-3xl font-bold text-gray-800">
+                      {fastDtwResults?.jointNames?.length || fastDtwResults?.detailedJointScores?.length || Object.keys(userAngleTable?.angles || {}).length || 0}
+                    </div>
+                    <div className="text-sm text-gray-500 font-medium">Joints Analyzed</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white border-pink-100 shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-5 text-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-violet-400 to-violet-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                      <BarChart3 className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-3xl font-bold text-gray-800">
                       {userAngleTable?.timestamps?.length || 0}
                     </div>
-                    <div className="text-sm text-gray-400">Data Points</div>
+                    <div className="text-sm text-gray-500 font-medium">Data Points</div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Performance Breakdown */}
-              {fastDtwResults && (
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center space-x-2">
-                      <BarChart3 className="h-5 w-5" />
+              {/* Performance Breakdown - Show even without fastDtwResults if we have angle data */}
+              {(fastDtwResults?.detailedJointScores || (userAngleTable?.angles && instructorAngleTable?.angles)) && (
+                <Card className="bg-white border-pink-100 shadow-sm">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-gray-800 flex items-center space-x-2">
+                      <Zap className="h-5 w-5 text-pink-500" />
                       <span>Joint Performance</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {fastDtwResults.detailedJointScores.map((joint, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            <span className="text-white font-medium">
-                              {joint.name.replace(/_/g, ' ')}
-                            </span>
+                      {fastDtwResults?.detailedJointScores ? (
+                        fastDtwResults.detailedJointScores.map((joint, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-pink-50/50 hover:bg-pink-50 rounded-xl transition-colors border border-pink-100/50">
+                            <div className="flex items-center space-x-3">
+                              <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${getScoreGradient(joint.score)}`}></div>
+                              <span className="text-gray-700 font-medium capitalize">
+                                {joint.name.replace(/_/g, ' ')}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <div className="w-28 bg-pink-100 rounded-full h-2.5 overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full bg-gradient-to-r ${getScoreGradient(joint.score)} transition-all duration-500`}
+                                  style={{ width: `${joint.score}%` }}
+                                />
+                              </div>
+                              <span className={`font-bold min-w-[3rem] text-right ${getScoreColor(joint.score)}`}>
+                                {joint.score}%
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-3">
-                            <div className="w-24 bg-gray-600 rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full bg-gradient-to-r ${getScoreGradient(joint.score)}`}
-                                style={{ width: `${joint.score}%` }}
-                              />
-                  </div>
-                            <span className={`font-bold ${getScoreColor(joint.score)}`}>
-                              {joint.score}%
-                    </span>
-                          </div>
-                        </div>
-                      ))}
-                </div>
+                        ))
+                      ) : (
+                        // Fallback: show angle comparison data
+                        Object.entries(userAngleTable?.angles || {}).slice(0, 6).map(([joint, userAngles], index) => {
+                          const instructorAngles = instructorAngleTable?.angles?.[joint] || [];
+                          const userAvg = userAngles.reduce((a, b) => a + b, 0) / (userAngles.length || 1);
+                          const instructorAvg = instructorAngles.reduce((a, b) => a + b, 0) / (instructorAngles.length || 1);
+                          const diff = Math.abs(userAvg - instructorAvg);
+                          const jointScore = Math.max(0, Math.min(100, Math.round(100 - diff * 1.5)));
+                          
+                          return (
+                            <div key={index} className="flex items-center justify-between p-3 bg-pink-50/50 hover:bg-pink-50 rounded-xl transition-colors border border-pink-100/50">
+                              <div className="flex items-center space-x-3">
+                                <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${getScoreGradient(jointScore)}`}></div>
+                                <span className="text-gray-700 font-medium capitalize">
+                                  {joint.replace(/_/g, ' ')}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-3">
+                                <div className="w-28 bg-pink-100 rounded-full h-2.5 overflow-hidden">
+                                  <div 
+                                    className={`h-full rounded-full bg-gradient-to-r ${getScoreGradient(jointScore)} transition-all duration-500`}
+                                    style={{ width: `${jointScore}%` }}
+                                  />
+                                </div>
+                                <span className={`font-bold min-w-[3rem] text-right ${getScoreColor(jointScore)}`}>
+                                  {jointScore}%
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               )}
@@ -431,28 +537,34 @@ export default function ResultsModal({
 
             <TabsContent value="insights" className="space-y-6 mt-6">
               {isAnalyzing ? (
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-8 text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-                    <div className="text-white font-medium">Analyzing your performance...</div>
-                    <div className="text-gray-400 text-sm mt-2">Our AI is reviewing your technique</div>
+                <Card className="bg-white border-pink-100 shadow-sm">
+                  <CardContent className="p-10 text-center">
+                    <div className="relative w-16 h-16 mx-auto mb-5">
+                      <div className="absolute inset-0 rounded-full border-4 border-pink-100"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-pink-500 border-t-transparent animate-spin"></div>
+                      <Sparkles className="absolute inset-0 m-auto h-6 w-6 text-pink-400" />
+                    </div>
+                    <div className="text-gray-800 font-semibold text-lg">Analyzing your performance...</div>
+                    <div className="text-gray-500 text-sm mt-2">ARK AI is reviewing your technique ✨</div>
                   </CardContent>
                 </Card>
               ) : naturalLanguageAnalysis ? (
-                <div className="space-y-6">
-                  {/* Coach Feedback */}
-                  <Card className="bg-gradient-to-br from-pink-500/80 to-orange-500/80 border-pink-400">
-                    <CardHeader>
+                <div className="space-y-5">
+                  {/* Coach Feedback - Hero Card */}
+                  <Card className="bg-gradient-to-br from-pink-500 via-rose-400 to-pink-400 border-0 shadow-lg shadow-pink-200/50 overflow-hidden">
+                    <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-white flex items-center space-x-2">
-                          <MessageCircle className="h-5 w-5" />
-                          <span>Coach Feedback</span>
+                          <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
+                            <MessageCircle className="h-5 w-5" />
+                          </div>
+                          <span>ARK AI Coach Feedback</span>
                         </CardTitle>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => isPlayingAudio ? stopAudio() : handlePlayAudio(naturalLanguageAnalysis.feedback)}
-                          className="bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40"
+                          className="bg-white/20 hover:bg-white/30 text-white rounded-full px-4"
                           disabled={!naturalLanguageAnalysis.feedback}
                         >
                           {isPlayingAudio ? (
@@ -469,42 +581,99 @@ export default function ResultsModal({
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <div className="text-gray-100 leading-relaxed whitespace-pre-line">
-                        {naturalLanguageAnalysis.feedback}
+                    <CardContent className="pt-0">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                        <p className="text-white leading-relaxed whitespace-pre-line text-[15px]">
+                          {naturalLanguageAnalysis.feedback}
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
 
                   {/* Technique Tips */}
-                  <Card className="bg-gray-800 border-gray-700">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center space-x-2">
-                        <Lightbulb className="h-5 w-5" />
+                  <Card className="bg-white border-pink-100 shadow-sm">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-gray-800 flex items-center space-x-2">
+                        <div className="p-1.5 bg-amber-100 rounded-lg">
+                          <Lightbulb className="h-5 w-5 text-amber-500" />
+                        </div>
                         <span>Technique Tips</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
                         {parseTechniqueTips(naturalLanguageAnalysis.techniqueTips).map((tip, index) => (
-                          <Alert key={index} className="bg-gray-700 border-gray-600">
-                            <Lightbulb className="h-4 w-4 text-yellow-500" />
-                            <AlertDescription className="text-gray-200">
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100">
+                            <div className="flex-shrink-0 w-6 h-6 bg-amber-400 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                              {index + 1}
+                            </div>
+                            <p className="text-gray-700 leading-relaxed flex-1">
                               {tip}
-                            </AlertDescription>
-                          </Alert>
+                            </p>
+                          </div>
                         ))}
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* Breakdown sections if available */}
+                  {naturalLanguageAnalysis.breakdown && (
+                    <Card className="bg-white border-pink-100 shadow-sm">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-gray-800 flex items-center space-x-2">
+                          <div className="p-1.5 bg-violet-100 rounded-lg">
+                            <BarChart3 className="h-5 w-5 text-violet-500" />
+                          </div>
+                          <span>Performance Breakdown</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {naturalLanguageAnalysis.breakdown.start && (
+                            <div className="p-4 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-100">
+                              <div className="text-emerald-600 font-semibold text-sm uppercase tracking-wide mb-2">🎬 Start</div>
+                              <p className="text-gray-600 text-sm mb-2">{naturalLanguageAnalysis.breakdown.start.observation}</p>
+                              <p className="text-emerald-700 text-sm font-medium">💡 {naturalLanguageAnalysis.breakdown.start.tip}</p>
+                            </div>
+                          )}
+                          {naturalLanguageAnalysis.breakdown.middle && (
+                            <div className="p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border border-pink-100">
+                              <div className="text-pink-600 font-semibold text-sm uppercase tracking-wide mb-2">🎭 Middle</div>
+                              <p className="text-gray-600 text-sm mb-2">{naturalLanguageAnalysis.breakdown.middle.observation}</p>
+                              <p className="text-pink-700 text-sm font-medium">💡 {naturalLanguageAnalysis.breakdown.middle.tip}</p>
+                            </div>
+                          )}
+                          {naturalLanguageAnalysis.breakdown.end && (
+                            <div className="p-4 bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl border border-violet-100">
+                              <div className="text-violet-600 font-semibold text-sm uppercase tracking-wide mb-2">🌟 End</div>
+                              <p className="text-gray-600 text-sm mb-2">{naturalLanguageAnalysis.breakdown.end.observation}</p>
+                              <p className="text-violet-700 text-sm font-medium">💡 {naturalLanguageAnalysis.breakdown.end.tip}</p>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               ) : (
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-8 text-center">
-                    <MessageCircle className="h-12 w-12 text-gray-500 mx-auto mb-4" />
-                    <div className="text-white font-medium">No analysis available</div>
-                    <div className="text-gray-400 text-sm mt-2">
-                      Complete a routine with instructor data to get AI insights
+                <Card className="bg-white border-pink-100 shadow-sm">
+                  <CardContent className="p-10 text-center">
+                    <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <MessageCircle className="h-8 w-8 text-pink-400" />
+                    </div>
+                    <div className="text-gray-800 font-semibold text-lg">Getting AI Analysis...</div>
+                    <div className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
+                      {userAngleTable && instructorAngleTable ? (
+                        <Button 
+                          onClick={getIntelligentAnalysis}
+                          className="mt-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white hover:from-pink-600 hover:to-rose-500"
+                        >
+                          <Sparkles className="h-4 w-4 mr-2" />
+                          Generate AI Insights
+                        </Button>
+                      ) : (
+                        "Complete a routine with instructor data to get AI insights"
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -514,24 +683,29 @@ export default function ResultsModal({
             <TabsContent value="technical" className="space-y-6 mt-6">
               {/* Technical Data */}
               {userAngleTable && instructorAngleTable && (
-                <div className="space-y-6">
-                  <Card className="bg-gray-800 border-gray-700">
-                    <CardHeader>
+                <div className="space-y-5">
+                  <Card className="bg-white border-pink-100 shadow-sm">
+                    <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-white">Technical Analysis</CardTitle>
+                        <CardTitle className="text-gray-800 flex items-center space-x-2">
+                          <div className="p-1.5 bg-pink-100 rounded-lg">
+                            <BarChart3 className="h-5 w-5 text-pink-500" />
+                          </div>
+                          <span>ARK AI Technical Analysis</span>
+                        </CardTitle>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={copyTechnicalData}
-                          className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                          className="bg-white border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300 rounded-full px-4"
                         >
                           {copied ? (
                             <>
-                              <Check className="h-4 w-4 mr-2" />
+                              <Check className="h-4 w-4 mr-2 text-emerald-500" />
                               Copied!
                             </>
-                ) : (
-                  <>
+                          ) : (
+                            <>
                               <Copy className="h-4 w-4 mr-2" />
                               Copy Data
                             </>
@@ -540,53 +714,58 @@ export default function ResultsModal({
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="bg-gray-700 p-4 rounded-lg">
-                          <div className="text-sm text-gray-400">Overall Score</div>
-                          <div className="text-2xl font-bold text-white">{performanceScore}%</div>
-            </div>
-                        <div className="bg-gray-700 p-4 rounded-lg">
-                          <div className="text-sm text-gray-400">Data Points</div>
-                          <div className="text-2xl font-bold text-white">{userAngleTable.timestamps.length}</div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-gradient-to-br from-pink-50 to-rose-50 p-4 rounded-xl border border-pink-100">
+                          <div className="text-sm text-gray-500 font-medium">Overall Score</div>
+                          <div className="text-3xl font-bold text-gray-800">{performanceScore}%</div>
                         </div>
-                        <div className="bg-gray-700 p-4 rounded-lg">
-                          <div className="text-sm text-gray-400">Joints Tracked</div>
-                          <div className="text-2xl font-bold text-white">{Object.keys(userAngleTable.angles).length}</div>
+                        <div className="bg-gradient-to-br from-violet-50 to-purple-50 p-4 rounded-xl border border-violet-100">
+                          <div className="text-sm text-gray-500 font-medium">Data Points</div>
+                          <div className="text-3xl font-bold text-gray-800">{userAngleTable.timestamps.length}</div>
+                        </div>
+                        <div className="bg-gradient-to-br from-emerald-50 to-green-50 p-4 rounded-xl border border-emerald-100">
+                          <div className="text-sm text-gray-500 font-medium">Joints Tracked</div>
+                          <div className="text-3xl font-bold text-gray-800">{Object.keys(userAngleTable.angles).length}</div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
                   {/* User Angle Data Table */}
-                  <Card className="bg-gray-800 border-gray-700">
-                    <CardHeader>
-                      <CardTitle className="text-white">Your Joint Angles</CardTitle>
+                  <Card className="bg-white border-pink-100 shadow-sm">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-gray-800 flex items-center space-x-2">
+                        <div className="p-1.5 bg-emerald-100 rounded-lg">
+                          <User className="h-5 w-5 text-emerald-500" />
+                        </div>
+                        <span>Your Joint Angles</span>
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="max-h-80 overflow-y-auto">
-                        <table className="w-full text-sm text-left text-gray-300">
-                          <thead className="text-xs text-gray-400 uppercase bg-gray-700 sticky top-0">
+                      <div className="max-h-72 overflow-y-auto rounded-xl border border-pink-100">
+                        <table className="w-full text-sm">
+                          <thead className="text-xs text-gray-500 uppercase bg-pink-50 sticky top-0">
                             <tr>
-                              <th className="px-4 py-2">Joint</th>
-                              <th className="px-4 py-2">Avg Angle</th>
-                              <th className="px-4 py-2">Min</th>
-                              <th className="px-4 py-2">Max</th>
-                              <th className="px-4 py-2">Range</th>
+                              <th className="px-4 py-3 text-left font-semibold">Joint</th>
+                              <th className="px-4 py-3 text-left font-semibold">Avg Angle</th>
+                              <th className="px-4 py-3 text-left font-semibold">Min</th>
+                              <th className="px-4 py-3 text-left font-semibold">Max</th>
+                              <th className="px-4 py-3 text-left font-semibold">Range</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {Object.entries(userAngleTable.angles).map(([joint, angles]) => {
+                            {Object.entries(userAngleTable.angles).map(([joint, angles], index) => {
                               const avg = (angles.reduce((a, b) => a + b, 0) / angles.length).toFixed(1);
                               const min = Math.min(...angles).toFixed(1);
                               const max = Math.max(...angles).toFixed(1);
                               const range = (Math.max(...angles) - Math.min(...angles)).toFixed(1);
                               return (
-                                <tr key={joint} className="border-b border-gray-700">
-                                  <td className="px-4 py-2 font-medium text-white">{joint.replace(/_/g, ' ')}</td>
-                                  <td className="px-4 py-2">{avg}°</td>
-                                  <td className="px-4 py-2">{min}°</td>
-                                  <td className="px-4 py-2">{max}°</td>
-                                  <td className="px-4 py-2">{range}°</td>
+                                <tr key={joint} className={`border-b border-pink-50 hover:bg-pink-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-pink-25'}`}>
+                                  <td className="px-4 py-3 font-medium text-gray-800 capitalize">{joint.replace(/_/g, ' ')}</td>
+                                  <td className="px-4 py-3 text-gray-600">{avg}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{min}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{max}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{range}°</td>
                                 </tr>
                               );
                             })}
@@ -597,35 +776,40 @@ export default function ResultsModal({
                   </Card>
 
                   {/* Instructor Angle Data Table */}
-                  <Card className="bg-gray-800 border-gray-700">
-                    <CardHeader>
-                      <CardTitle className="text-white">Instructor Joint Angles</CardTitle>
+                  <Card className="bg-white border-pink-100 shadow-sm">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-gray-800 flex items-center space-x-2">
+                        <div className="p-1.5 bg-violet-100 rounded-lg">
+                          <Trophy className="h-5 w-5 text-violet-500" />
+                        </div>
+                        <span>Instructor Joint Angles</span>
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="max-h-80 overflow-y-auto">
-                        <table className="w-full text-sm text-left text-gray-300">
-                          <thead className="text-xs text-gray-400 uppercase bg-gray-700 sticky top-0">
+                      <div className="max-h-72 overflow-y-auto rounded-xl border border-violet-100">
+                        <table className="w-full text-sm">
+                          <thead className="text-xs text-gray-500 uppercase bg-violet-50 sticky top-0">
                             <tr>
-                              <th className="px-4 py-2">Joint</th>
-                              <th className="px-4 py-2">Avg Angle</th>
-                              <th className="px-4 py-2">Min</th>
-                              <th className="px-4 py-2">Max</th>
-                              <th className="px-4 py-2">Range</th>
+                              <th className="px-4 py-3 text-left font-semibold">Joint</th>
+                              <th className="px-4 py-3 text-left font-semibold">Avg Angle</th>
+                              <th className="px-4 py-3 text-left font-semibold">Min</th>
+                              <th className="px-4 py-3 text-left font-semibold">Max</th>
+                              <th className="px-4 py-3 text-left font-semibold">Range</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {Object.entries(instructorAngleTable.angles).map(([joint, angles]) => {
+                            {Object.entries(instructorAngleTable.angles).map(([joint, angles], index) => {
                               const avg = (angles.reduce((a, b) => a + b, 0) / angles.length).toFixed(1);
                               const min = Math.min(...angles).toFixed(1);
                               const max = Math.max(...angles).toFixed(1);
                               const range = (Math.max(...angles) - Math.min(...angles)).toFixed(1);
                               return (
-                                <tr key={joint} className="border-b border-gray-700">
-                                  <td className="px-4 py-2 font-medium text-white">{joint.replace(/_/g, ' ')}</td>
-                                  <td className="px-4 py-2">{avg}°</td>
-                                  <td className="px-4 py-2">{min}°</td>
-                                  <td className="px-4 py-2">{max}°</td>
-                                  <td className="px-4 py-2">{range}°</td>
+                                <tr key={joint} className={`border-b border-violet-50 hover:bg-violet-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-violet-25'}`}>
+                                  <td className="px-4 py-3 font-medium text-gray-800 capitalize">{joint.replace(/_/g, ' ')}</td>
+                                  <td className="px-4 py-3 text-gray-600">{avg}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{min}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{max}°</td>
+                                  <td className="px-4 py-3 text-gray-600">{range}°</td>
                                 </tr>
                               );
                             })}
@@ -639,28 +823,27 @@ export default function ResultsModal({
             </TabsContent>
           </Tabs>
 
-          <Separator className="my-6 bg-gray-700" />
+          <Separator className="my-6 bg-pink-100" />
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3">
             <Button 
               variant="outline" 
               onClick={onClose}
-              className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+              className="bg-white border-pink-200 text-gray-700 hover:bg-pink-50 hover:border-pink-300 rounded-full px-6"
             >
               Close
             </Button>
             <Button
               onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:from-pink-500 hover:to-orange-500"
+              className="bg-gradient-to-r from-pink-500 to-rose-400 text-white hover:from-pink-600 hover:to-rose-500 rounded-full px-6 shadow-md shadow-pink-200/50"
             >
+              <Sparkles className="h-4 w-4 mr-2" />
               Try Again
             </Button>
           </div>
         </CardContent>
       </Card>
-
-
     </div>
   );
 }

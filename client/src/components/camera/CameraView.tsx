@@ -680,7 +680,7 @@ export default function CameraView({
     <div className="m-0 p-0">
       <RecordingControls onRecordingComplete={(url: string) => { /* url is string */ }} />
 
-      <div id="cameraContainer" className={`${isFullscreenMode ? 'border-0 rounded-none shadow-none h-[calc(100vh-72px)] w-screen' : 'border-0 border-red-900 overflow-hidden relative h-[calc(80vh-100px)]'}`}>
+      <div id="cameraContainer" className={`${isFullscreenMode ? 'border-0 rounded-none shadow-none h-[calc(100vh-72px)] w-screen' : 'border-0 border-pink-200 overflow-hidden relative h-[calc(80vh-100px)]'}`}>
         <div className={`relative w-full ${isFullscreenMode ? 'h-full' : ''} flex flex-col`}>
           <div className={`flex ${isSplitView ? 'md:flex-row flex-col' : ''} ${isFullscreenMode ? 'h-full' : ''} h-full gap-0`}>
             <div className={`camera-container relative ${isSplitView ? 'md:w-1/2 w-full' : 'w-full'} ${isFullscreenMode ? 'h-full' : isSplitView ? '' : 'aspect-[16/12]'}`}>
@@ -689,7 +689,7 @@ export default function CameraView({
            {!isSplitView && (
             <button
               onClick={toggleSplitView}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-red-700 to-red-600 text-white p-2 rounded-full shadow-lg hover:from-red-800 hover:to-red-700 z-20"
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-pink-500 to-rose-500 text-white p-2 rounded-full shadow-lg hover:from-pink-600 hover:to-rose-600 z-20"
               title="Add reference media"
             >
               <span className="material-icons">add</span>

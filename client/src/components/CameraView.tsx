@@ -44,6 +44,8 @@ interface CameraViewProps {
   routineNotes?: string;
   setRoutineNotes?: (notes: string) => void;
   customBackground?: string | null;
+  initialSplitView?: boolean;
+  autoStart?: boolean;
 }
 
 // Update the TestResults type (add this where other interfaces/types are defined)
@@ -100,7 +102,9 @@ export default function CameraView({
   onRecordClick,
   routineNotes = '',
   setRoutineNotes,
-  customBackground
+  customBackground,
+  initialSplitView = false,
+  autoStart = false
 }: CameraViewProps) {
   const toggleTracking = externalToggleTracking || (() => {
     console.log("Toggle tracking clicked, but no handler was provided");
@@ -117,7 +121,7 @@ export default function CameraView({
   const animationRef = useRef<number | null>(null);
   const referenceVideoRef = useRef<HTMLVideoElement | null>(null);
   const [mediaLoaded, setMediaLoaded] = useState<boolean>(false);
-  const [isSplitView, setIsSplitView] = useState<boolean>(false);
+  const [isSplitView, setIsSplitView] = useState<boolean>(initialSplitView);
   const [isVideoPaused, setIsVideoPaused] = useState<boolean>(false);
   const [showMediaSelector, setShowMediaSelector] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
@@ -163,12 +167,43 @@ export default function CameraView({
   // State variables for pose detection
   const [userPose, setUserPose] = useState<any>(null);
   const [referencePose, setReferencePose] = useState<any>(null);
+  // Refs to hold latest pose data for the interval
+  const userPoseRef = useRef<any>(null);
+  const referencePoseRef = useRef<any>(null);
+
+  // Update refs whenever state changes
+  useEffect(() => {
+    userPoseRef.current = userPose;
+  }, [userPose]);
+
+  useEffect(() => {
+    referencePoseRef.current = referencePose;
+  }, [referencePose]);
   const [userPoseHistory, setUserPoseHistory] = useState<Array<{pose: any, timestamp: number}>>([]);
   const [referencePoseHistory, setReferencePoseHistory] = useState<Array<{pose: any, timestamp: number}>>([]);
   const [referenceMovementSequence, setReferenceMovementSequence] = useState<string[]>([]);
   const [userMovementSequence, setUserMovementSequence] = useState<string[]>([]);
   const [priorityJoints, setPriorityJoints] = useState<string[]>([]);
   
+  // Effect to handle autoStart
+  useEffect(() => {
+    if (autoStart && stream && mediaUrl && !testResults.isRunning && !testResults.feedback) {
+      // Ensure we are in split view if needed (already handled by initialSplitView, but good to be safe)
+      if (initialSplitView && !isSplitView) {
+        setIsSplitView(true);
+      }
+      // Skip countdown, go straight to execution
+      executeStartTest();
+    }
+  }, [autoStart, stream, mediaUrl]);
+
+  // Log media URL for debugging
+  useEffect(() => {
+    console.log('CameraView mediaUrl:', mediaUrl);
+    console.log('CameraView isSplitView:', isSplitView);
+    console.log('CameraView showMediaSelector:', showMediaSelector);
+  }, [mediaUrl, isSplitView, showMediaSelector]);
+
   // Performance optimization variables
   const frameCountRef = useRef(0);
   const frameSkipRate = 3; // Skip frames to improve performance
@@ -2333,8 +2368,8 @@ export default function CameraView({
     
     setUserAngleHistory(initialUserHistory);
     setReferenceAngleHistory(initialRefHistory);
-    
-    // Start a new interval for recording
+
+    // Start a new interval for recording - INCREASE FREQUENCY to 50ms
     const interval = setInterval(() => {
       // Immediately exit if recording has been stopped
       if (isAngleRecordingStoppedRef.current) { // Check ref here
@@ -2345,9 +2380,16 @@ export default function CameraView({
       const currentTime = Date.now();
       const timeString = new Date(currentTime).toISOString().substr(11, 8); // HH:MM:SS
       
+      const currentRefPose = referencePoseRef.current;
+      const currentUserPose = userPoseRef.current;
+
+      // DEBUG: Log if poses are missing
+      if (!currentUserPose?.keypoints) console.log("⚠️ Missing user pose for recording");
+      if (!currentRefPose?.keypoints) console.log("⚠️ Missing reference pose for recording");
+
       // Record user angles if user pose is available
-      if (userPose?.keypoints) {
-        const userAngles = calculateJointAngles(userPose);
+      if (currentUserPose?.keypoints) {
+        const userAngles = calculateJointAngles(currentUserPose);
         
         // Store in user angle history
         Object.entries(userAngles).forEach(([jointName, angle]) => {
@@ -2380,8 +2422,8 @@ export default function CameraView({
       }
       
       // Record instructor angles if reference pose is available
-      if (!isAngleRecordingStoppedRef.current && referencePose?.keypoints) { // Check ref here
-        const refAngles = calculateJointAngles(referencePose);
+      if (!isAngleRecordingStoppedRef.current && currentRefPose?.keypoints) { // Check ref here
+        const refAngles = calculateJointAngles(currentRefPose);
         
         // Store in reference angle history
         Object.entries(refAngles).forEach(([jointName, angle]) => {
@@ -2412,7 +2454,7 @@ export default function CameraView({
           };
         });
       }
-    }, 100); // Record every 100ms
+    }, 50); // Record every 50ms (20fps) for better resolution
     
     setAngleRecordingInterval(interval);
   };
@@ -2710,14 +2752,13 @@ export default function CameraView({
     />
   )}
 
-  // Execute the test start logic after countdown
+  // Execute the test start logic - NO COUNTDOWN
   const executeStartTest = () => {
     setIsCountingDown(false);
     
     // 1. Validate reference media is available
-    if (!isSplitView || (!mediaUrl && !referenceVideoRef.current)) {
-      alert('Please select a reference video in split view first.');
-      if (!isSplitView) toggleSplitView(); // Open split view if not already open
+    if (!mediaUrl && !referenceVideoRef.current) {
+      alert('Please select a reference video first.');
       return;
     }
     
@@ -2768,10 +2809,23 @@ export default function CameraView({
       startRecording(); 
       
       refVideo.onended = () => {
-        console.log('Reference video ended. Test angle recording will continue until explicitly stopped.');
+        console.log('Reference video ended. Auto-stopping test.');
+        // Auto-stop everything when reference video ends
         if (isRecording && mediaRecorder && mediaRecorder.state === "recording") {
-          console.log('Reference video ended. Screen recording will continue until test is explicitly stopped.');
+          mediaRecorder.stop();
         }
+        stopAngleRecording();
+        setIsRecordingReference(false);
+        setTestResults(prev => ({
+          ...prev,
+          isRunning: false,
+          processing: false
+        }));
+        setHasCompletedTest(true);
+        // Jump straight to results
+        setTimeout(() => {
+          proceedToResultsModal();
+        }, 500);
       };
     } else if (sourceType === 'image' && (mediaUrl || imageElement)) {
       startRecording(); 
@@ -2791,13 +2845,9 @@ export default function CameraView({
 
   return (
     <div className="m-0 p-0 relative">
-      <CountdownOverlay 
-        isActive={isCountingDown} 
-        onComplete={executeStartTest} 
-      />
       <RecordingControls onRecordingComplete={(url) => setRecordedVideo(url)} />
 
-      <div id="cameraContainer" className={`${isFullscreenMode ? 'border-0 rounded-none shadow-none h-[calc(100vh-72px)] w-screen' : 'border-0 border-red-900 overflow-hidden relative h-[calc(80vh-100px)]'}`}>
+      <div id="cameraContainer" className={`${isFullscreenMode ? 'border-0 rounded-none shadow-none h-[calc(100vh-72px)] w-screen' : 'border-0 border-pink-200 overflow-hidden relative h-[calc(80vh-100px)]'}`}>
         <div className={`relative w-full ${isFullscreenMode ? 'h-full' : ''} flex flex-col`}>
           <div className={`flex ${isSplitView ? 'md:flex-row flex-col' : ''} ${isFullscreenMode ? 'h-full' : ''} h-full gap-0`}>
             <div className={`camera-container relative ${isSplitView ? 'md:w-1/2 w-full' : 'w-full'} ${isFullscreenMode ? 'h-full' : isSplitView ? '' : 'aspect-[16/12]'}`}>
@@ -2842,7 +2892,7 @@ export default function CameraView({
 
 
               {false && distanceInfo.showMeter && userPose && referencePose && !testResults.isRunning && (
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-lg bg-black/80 border border-red-900/40 shadow-lg">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-lg bg-white/90 border border-pink-200 shadow-lg">
                   <div className="flex flex-col items-center space-y-2">
                     <div className="text-white text-sm font-medium">Position yourself at proper distance</div>
 
@@ -2880,7 +2930,7 @@ export default function CameraView({
                 </div>
               )}
 
-              {!mediaLoaded && (
+              {!mediaLoaded && !isSplitView && (
                 <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/70">
                   <div className="text-center p-4 bg-white/80 rounded-2xl border border-rose-200">
                     <div className="loader mx-auto mb-3 border-t-rose-400"></div>
@@ -2899,7 +2949,7 @@ export default function CameraView({
               )}
 
               {isTracking && !testResults.isRunning && (
-                <div className="absolute top-2 right-2 bg-gradient-to-r from-rose-500 to-rose-400 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
+                <div className="absolute top-2 right-2 bg-gradient-to-r from-pink-500 to-pink-400 text-white px-3 py-1.5 rounded-full text-xs font-medium flex items-center shadow-lg">
                   <span className="inline-block w-2 h-2 rounded-full bg-white animate-pulse mr-1.5"></span>
                   tracking active
                 </div>
@@ -2914,22 +2964,22 @@ export default function CameraView({
 
 
 
-              <div className="absolute top-2 left-2 bg-black/70 border border-red-900/50 text-red-100 px-2 py-1 rounded-md text-xs font-medium shadow-md">
+              <div className="absolute top-2 left-2 bg-white/90 border border-pink-200 text-gray-700 px-2 py-1 rounded-md text-xs font-medium shadow-md">
                 {(isSplitView || sourceType === 'camera') && (
                   <span className="flex items-center">
-                    <span className="material-icons text-xs mr-1 text-red-500">videocam</span>
+                    <span className="material-icons text-xs mr-1 text-pink-500">videocam</span>
                     Camera Feed
                   </span>
                 )}
                 {!isSplitView && sourceType === 'image' && (
                   <span className="flex items-center">
-                    <span className="material-icons text-xs mr-1 text-red-500">image</span>
+                    <span className="material-icons text-xs mr-1 text-pink-500">image</span>
                     Image
                   </span>
                 )}
                 {!isSplitView && sourceType === 'video' && (
                   <span className="flex items-center">
-                    <span className="material-icons text-xs mr-1 text-red-500">movie</span>
+                    <span className="material-icons text-xs mr-1 text-pink-500">movie</span>
                     Video
                   </span>
                 )}
@@ -2941,7 +2991,7 @@ export default function CameraView({
                 isSplitView
                   ? 'md:w-1/2 w-full'
                   : isFullscreenMode
-                    ? 'fixed bottom-14 right-2 w-40 h-40 rounded-lg border border-red-900/50 shadow-lg z-40'
+                    ? 'fixed bottom-14 right-2 w-40 h-40 rounded-lg border border-pink-300 shadow-lg z-40'
                     : 'hidden'
               }`}>
                 {isVideoUrl(mediaUrl) && (
@@ -2949,9 +2999,8 @@ export default function CameraView({
                     ref={referenceVideoRef}
                     className="w-full h-full object-cover reference-video"
                     playsInline
+                    preload="auto"
                     src={mediaUrl.split('#')[0]} // Remove our #video flag if present
-                    // autoPlay={!isVideoPaused} // Removed to prevent autoplay
-                    // loop // Removed default looping
                     muted
                     onError={(e) => console.error("Video error:", e)}
                     onLoadedData={() => {
@@ -2979,11 +3028,11 @@ export default function CameraView({
                   className="absolute top-0 left-0 w-full h-full pointer-events-none z-10"
                 />
 
-                <div className={`absolute bottom-0 left-0 right-0 ${isFullscreenMode ? 'p-1' : 'p-2'} flex justify-between items-center bg-black/90 border-t border-red-900/30`}>
+                <div className={`absolute bottom-0 left-0 right-0 ${isFullscreenMode ? 'p-1' : 'p-2'} flex justify-between items-center bg-white/90 border-t border-pink-200`}>
                   {!isFullscreenMode && (
-                    <div className="bg-red-900/40 text-white px-2 py-1 rounded-md text-xs font-medium shadow-md border border-red-900/30">
+                    <div className="bg-pink-100 text-gray-700 px-2 py-1 rounded-md text-xs font-medium shadow-md border border-pink-200">
                       <span className="flex items-center">
-                        <span className="material-icons text-xs mr-1 text-red-500">compare</span>
+                        <span className="material-icons text-xs mr-1 text-pink-500">compare</span>
                         Reference
                       </span>
                     </div>
@@ -2994,7 +3043,7 @@ export default function CameraView({
                       <>
                       <button
                         onClick={togglePlayPause}
-                        className={`bg-red-600 hover:bg-red-700 text-white rounded shadow-md ${
+                        className={`bg-pink-500 hover:bg-pink-600 text-white rounded shadow-md ${
                           isFullscreenMode ? 'px-1 py-0.5 text-[10px]' : 'px-2 py-1 text-xs font-medium'
                         }`}
                       >
@@ -3050,8 +3099,8 @@ export default function CameraView({
                       onClick={toggleReferenceOverlay}
                       className={`text-white rounded shadow-md ${
                         showReferenceOverlay
-                          ? 'bg-red-600 hover:bg-red-700'
-                          : 'bg-gray-900 hover:bg-gray-800'
+                          ? 'bg-pink-500 hover:bg-pink-600'
+                          : 'bg-gray-600 hover:bg-gray-700'
                       } ${
                         isFullscreenMode ? 'px-1 py-0.5 text-[10px]' : 'px-2 py-1 text-xs font-medium'
                       }`}
@@ -3166,7 +3215,7 @@ export default function CameraView({
           {!isSplitView && (
             <button
               onClick={toggleSplitView}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-red-700 to-red-600 text-white p-2 rounded-full shadow-lg hover:from-red-800 hover:to-red-700 z-20"
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-pink-500 to-rose-500 text-white p-2 rounded-full shadow-lg hover:from-pink-600 hover:to-rose-600 z-20"
               title="Add reference media"
             >
               <span className="material-icons">add</span>
@@ -3189,7 +3238,7 @@ export default function CameraView({
           toggleTracking();
         }}
         onStopRoutine={stopRoutine}
-        onStartTest={() => setIsCountingDown(true)}
+        onStartTest={() => executeStartTest()}
         onStopTest={() => {
           if (testResults.isRunning) {
             // Stop screen recording if active
@@ -3286,8 +3335,8 @@ export default function CameraView({
 
       {/* Recording Popup */}
       {showRecordingPopup && recordedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-3xl border border-red-700/50">
+        <div className="fixed inset-0 bg-pink-950/40 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-xl shadow-2xl shadow-pink-200/30 w-full max-w-3xl border border-pink-100">
             <h3 className="text-xl font-semibold text-white mb-4 text-center">Screen Recording Complete</h3>
             <video 
               src={recordedVideo} 
@@ -3311,7 +3360,7 @@ export default function CameraView({
               </button>
               <button
                 onClick={closeRecordingPopup}
-                className="px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-colors shadow-md"
+                className="px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-rose-600 transition-colors shadow-md"
               >
                 Close
               </button>

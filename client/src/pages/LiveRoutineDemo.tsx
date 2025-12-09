@@ -112,6 +112,8 @@ const LiveRoutineDemo: React.FC = () => {
             imageElement={selectedImage?.image}
             mediaUrl={selectedVideo?.url || selectedImage?.url}
             showReferenceOverlay
+            initialSplitView={true}
+            autoStart={false}
             isFullscreenMode={false}
             onScreenshot={(dataUrl) => console.log('Screenshot:', dataUrl)}
             toggleTracking={() => setIsTracking(!isTracking)}

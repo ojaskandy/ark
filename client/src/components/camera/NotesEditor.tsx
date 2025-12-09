@@ -130,85 +130,29 @@ export default function NotesEditor({
         </div>
       )}
 
-      {/* Action Buttons */}
-      <div className="flex justify-center space-x-2 sm:space-x-4 mt-3 mb-1 flex-wrap">
+      {/* Action Buttons - SIMPLIFIED */}
+      <div className="flex justify-center mt-3 mb-1">
         {isTestRunning ? (
           <button
             onClick={onStopTest}
-            className="px-6 py-3 rounded-full font-medium shadow-lg flex items-center justify-center transition-all text-sm bg-gradient-to-r from-orange-400 to-red-400 text-white hover:from-orange-500 hover:to-red-500 animate-pulse"
+            className="px-8 py-4 rounded-full font-bold shadow-xl flex items-center justify-center transition-all text-lg bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600"
           >
             <span className="mr-2">⏹️</span>
-            Stop Routine
+            STOP
           </button>
         ) : (
-          <>
-            {!isTracking ? (
-              <button
-                onClick={onStartRoutine}
-                className="px-4 py-2 rounded-full font-medium shadow-lg flex items-center justify-center transition-all text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-300"
-              >
-                <span className="mr-2">▶️</span>
-                Start Tracking
-              </button>
-            ) : (
-              <button
-                onClick={onStopRoutine}
-                className="px-4 py-2 rounded-full font-medium shadow-lg flex items-center justify-center transition-all text-sm bg-orange-100 text-orange-600 hover:bg-orange-200 border border-orange-300"
-              >
-                <span className="mr-2">⏹️</span>
-                Stop Tracking
-              </button>
-            )}
-
-            {/* Record Button */}
-            {onRecord && (
-              <button
-                onClick={onRecord}
-                className={`px-4 py-2 rounded-full font-medium shadow-lg flex items-center justify-center transition-all text-sm ${
-                  isRecording
-                    ? 'bg-red-100 text-red-600 border border-red-300 animate-pulse'
-                    : 'bg-purple-100 text-purple-600 hover:bg-purple-200 border border-purple-300'
-                }`}
-                title={isRecording ? 'Stop Recording' : 'Record Camera'}
-              >
-                <span className="mr-2">{isRecording ? '⏹️' : '🎥'}</span>
-                {isRecording ? 'Stop' : 'Record'}
-              </button>
-            )}
-
-            {/* Start Button - Main CTA */}
-            <button
-              onClick={onStartTest}
-              className={`px-6 py-3 rounded-full font-medium shadow-lg flex items-center justify-center transition-all text-sm ${
-                !hasReferenceMedia
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-pink-400 to-orange-400 text-white hover:from-pink-500 hover:to-orange-500 shadow-lg shadow-pink-200/50'
-              }`}
-              disabled={!hasReferenceMedia || isRecording || isScreenRecording}
-              title={
-                !hasReferenceMedia
-                  ? 'Add reference media first'
-                  : isRecording || isScreenRecording
-                    ? 'Recording in progress'
-                    : 'Start practice with countdown'
-              }
-            >
-              <span className="mr-2">🚀</span>
-              Start
-            </button>
-
-            {hasCompletedTest && (
-              <button
-                onClick={onShowResults}
-                className="px-4 py-2 rounded-full font-medium shadow-lg flex items-center justify-center transition-all bg-green-100 text-green-600 hover:bg-green-200 border border-green-300 text-sm"
-                title="View your test results"
-                disabled={isRecording || isScreenRecording}
-              >
-                <span className="mr-2">📊</span>
-                Results
-              </button>
-            )}
-          </>
+          <button
+            onClick={onStartTest}
+            className={`px-8 py-4 rounded-full font-bold shadow-xl flex items-center justify-center transition-all text-lg ${
+              !hasReferenceMedia
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-pink-500 to-orange-500 text-white hover:from-pink-600 hover:to-orange-600 shadow-lg shadow-pink-300/50'
+            }`}
+            disabled={!hasReferenceMedia}
+          >
+            <span className="mr-2">▶️</span>
+            START
+          </button>
         )}
       </div>
     </div>

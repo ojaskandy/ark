@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { initPoseDetection, detectPoses, getJointConnections } from '@/lib/poseDetection';
-import { detectMartialArtsPoseAdvanced, analyzePoseFromKeypoints, updateReferencePose } from '@/lib/poseAnalysis';
+import { detectDancePoseAdvanced, analyzePoseFromKeypoints, updateReferencePose } from '@/lib/poseAnalysis';
 import PoseAnalyzer from '@/components/PoseAnalyzer';
 
 // Game interfaces removed - will be rebuilt
@@ -17,7 +17,7 @@ const ShifuSaysChallenge: React.FC = () => {
   const [gameState, setGameState] = useState<'waiting' | 'countdown' | 'playing' | 'gameover'>('waiting');
   const [countdown, setCountdown] = useState<number | null>(null);
   const [currentMove, setCurrentMove] = useState<string | null>(null);
-  const [isShifuSays, setIsShifuSays] = useState<boolean>(false);
+  const [isArkSays, setIsArkSays] = useState<boolean>(false);
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [moveMatched, setMoveMatched] = useState(false);
   const [score, setScore] = useState<number>(0);
@@ -264,39 +264,33 @@ const ShifuSaysChallenge: React.FC = () => {
 
   // Available moves for the game
   const availableMoves = [
-    'Left High Block',
-    'Right High Block', 
-    'Left Mid Block',
-    'Right Mid Block',
-    'Left Punch', 
-    'Right Punch',
-    'Left Kick',
-    'Right Kick',
-    'X Block'
+    'high_v',
+    'low_v', 
+    't_pose',
+    'left_l',
+    'right_l'
   ];
 
   // Audio file mapping
-  const getAudioFile = (move: string, isShifuSays: boolean): string => {
-    const baseFolder = isShifuSays ? 'shifu_says' : 'normal';
-    const prefix = isShifuSays ? 'Shifu Says' : 'LMNT Shifu';
-    return `/sounds/${baseFolder}/${prefix} ${move}.mp3`;
+  const getAudioFile = (move: string, isArkSays: boolean): string => {
+    // Note: Audio files might not exist for new dance moves yet. 
+    // Ideally this should use TTS or mapped audio.
+    const baseFolder = isArkSays ? 'shifu_says' : 'normal';
+    // Keeping logic but moves have changed
+    return `/sounds/${baseFolder}/${move.toLowerCase().replace(' ', '_')}.mp3`;
   };
 
   // Pose image file mapping - matches actual filenames in /poses/ directory
   const getPoseImageFile = (move: string): string => {
     const imageMap: { [key: string]: string } = {
-      'Left High Block': 'ctlefthighblock.png',
-      'Right High Block': 'ctrighthighblock.png',
-      'Left Mid Block': 'ctleftmidblock.png',
-      'Right Mid Block': 'ctrightmidblock.png',
-      'Left Punch': 'ctleftpunch.png',
-      'Right Punch': 'ctrightpunch.png',
-      'Left Kick': 'ctleftkick.png',
-      'Right Kick': 'ctrightkick.png',
-      'X Block': 'ctxblock.png'
+      'high_v': 'high_v.png', // Placeholder
+      'low_v': 'low_v.png',
+      't_pose': 't_pose.png',
+      'left_l': 'left_l.png',
+      'right_l': 'right_l.png'
     };
     
-    const filename = imageMap[move];
+    const filename = imageMap[move] || 't_pose.png';
     const fullPath = `/poses/${filename}`;
     console.log(`🖼️ Pose image mapping: "${move}" -> ${fullPath}`);
     return fullPath;

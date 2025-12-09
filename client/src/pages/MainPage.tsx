@@ -14,6 +14,12 @@ const menuItems = [
     target: '/challenges',
     icon: '⚡',
     description: 'Quick Drills',
+  },
+  {
+    label: 'ARK AI',
+    target: '/ark-ai',
+    icon: '🤖',
+    description: 'Your Personal Dance Coach',
   }
 ];
 

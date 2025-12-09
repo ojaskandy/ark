@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import Welcome from "@/pages/Welcome";
 import MainPage from "@/pages/MainPage";
 import LiveRoutineDemo from "@/pages/LiveRoutineDemo";
+import ArkAIPage from "@/pages/ArkAIPage";
 import Challenges from "@/pages/Challenges";
 import About from "@/pages/About";
 import ClassSchedule from "@/pages/ClassSchedule";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/app" component={MainPage} />
         <Route path="/live-routine" component={LiveRoutineDemo} />
         <Route path="/challenges" component={Challenges} />
+        <Route path="/ark-ai" component={ArkAIPage} />
       </Switch>
     </QueryClientProvider>
   );
