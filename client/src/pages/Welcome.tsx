@@ -112,10 +112,17 @@ export default function Welcome() {
             transition={{ duration: 1, delay: 0.2 }}
             className="space-y-6"
           >
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-none tracking-tight drop-shadow-[0_0_30px_rgba(236,72,153,0.5)]">
-              <span className="bg-gradient-to-r from-pink-300 via-white to-fuchsia-300 bg-clip-text text-transparent">
-                ARK Dance Studio
-              </span>
+            <h1 
+              className="text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight"
+              style={{
+                background: 'linear-gradient(to right, #f9a8d4, #ffffff, #e879f9)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 30px rgba(236,72,153,0.5))'
+              }}
+            >
+              ARK Dance Studio
             </h1>
             <p className="text-2xl md:text-3xl text-pink-200 font-light tracking-wide drop-shadow-lg">
               The Leading AI Dance Studio
