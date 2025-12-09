@@ -454,24 +454,24 @@ export default function Welcome() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-gradient-to-r from-purple-900/70 via-fuchsia-900/60 to-purple-900/70 backdrop-blur-lg border border-purple-400/30 rounded-3xl p-8 shadow-xl shadow-purple-500/30"
+            className="bg-white/95 backdrop-blur-lg border border-pink-200 rounded-3xl p-8 shadow-xl shadow-purple-500/20"
           >
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
-                <div className="text-4xl font-bold text-pink-300 mb-2">1,000+</div>
-                <div className="text-purple-100">Active Dancers</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">1,000+</div>
+                <div className="text-gray-600">Active Dancers</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-300 mb-2">500+</div>
-                <div className="text-purple-100">Happy Parents</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">500+</div>
+                <div className="text-gray-600">Happy Parents</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-300 mb-2">4.9★</div>
-                <div className="text-purple-100">Average Rating</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">4.9★</div>
+                <div className="text-gray-600">Average Rating</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-pink-300 mb-2">💯</div>
-                <div className="text-purple-100">Money-Back Guarantee</div>
+                <div className="text-4xl font-bold mb-2">💯</div>
+                <div className="text-gray-600">Money-Back Guarantee</div>
               </div>
             </div>
           </motion.div>
@@ -486,26 +486,26 @@ export default function Welcome() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-center bg-gradient-to-br from-fuchsia-500/90 to-purple-600/90 backdrop-blur-lg border border-pink-400/50 rounded-3xl p-12 md:p-16 shadow-2xl shadow-purple-500/40"
+            className="text-center bg-white/95 backdrop-blur-lg border border-pink-200 rounded-3xl p-12 md:p-16 shadow-xl shadow-purple-500/20"
           >
-            <h2 className="text-4xl md:text-5xl font-medium text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Ready To Start?
             </h2>
-            <p className="text-xl text-pink-300 mb-8">
+            <p className="text-xl bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent font-medium mb-8">
               Be Seen. Be Understood. Be Better.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
                 onClick={() => navigate('/registration')}
-                className="px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-lg font-medium shadow-lg shadow-pink-500/40"
-                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(236, 72, 153, 0.4)' }}
+                className="px-10 py-4 bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 text-white rounded-full text-lg font-semibold shadow-xl shadow-pink-500/40"
+                whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(236, 72, 153, 0.5)' }}
                 whileTap={{ scale: 0.95 }}
               >
                 Start Free Trial
               </motion.button>
               <motion.a
                 href="mailto:arshia.x.kathpalia@gmail.com"
-                className="inline-block px-10 py-4 border border-pink-400/50 text-white bg-black/30 backdrop-blur-sm rounded-full text-lg font-medium hover:bg-pink-500/20 transition-all"
+                className="inline-block px-10 py-4 border-2 border-purple-300 text-purple-600 bg-white rounded-full text-lg font-semibold hover:bg-purple-50 hover:border-purple-400 transition-all"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
