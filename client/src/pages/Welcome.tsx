@@ -458,15 +458,15 @@ export default function Welcome() {
           >
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">1,000+</div>
+                <div className="text-4xl font-bold text-pink-500 mb-2">1,000+</div>
                 <div className="text-gray-600">Active Dancers</div>
               </div>
               <div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">500+</div>
+                <div className="text-4xl font-bold text-purple-600 mb-2">500+</div>
                 <div className="text-gray-600">Happy Parents</div>
               </div>
               <div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent mb-2">4.9★</div>
+                <div className="text-4xl font-bold text-fuchsia-500 mb-2">4.9★</div>
                 <div className="text-gray-600">Average Rating</div>
               </div>
               <div>
@@ -491,7 +491,7 @@ export default function Welcome() {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Ready To Start?
             </h2>
-            <p className="text-xl bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent font-medium mb-8">
+            <p className="text-xl text-pink-500 font-medium mb-8">
               Be Seen. Be Understood. Be Better.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
