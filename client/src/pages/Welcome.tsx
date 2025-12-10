@@ -41,12 +41,13 @@ export default function Welcome() {
   return (
     <div className="min-h-screen bg-black overflow-x-hidden">
       {/* Stage Background Image */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center scale-105"
           style={{ 
             backgroundImage: 'url(/images/ark-stage-bg.png)',
-            backgroundPosition: 'center 40%'
+            backgroundPosition: 'center 40%',
+            transform: 'scale(1.05)'
           }}
         />
         {/* Vibrant purple/pink overlay for aesthetic look */}
