@@ -43,11 +43,16 @@ export default function Welcome() {
       {/* Stage Background Image */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center scale-105"
+          className="absolute bg-cover bg-center"
           style={{ 
             backgroundImage: 'url(/images/ark-stage-bg.png)',
             backgroundPosition: 'center 40%',
-            transform: 'scale(1.05)'
+            top: '-2.5%',
+            left: '-2.5%',
+            right: '-2.5%',
+            bottom: '-2.5%',
+            width: '105%',
+            height: '105%'
           }}
         />
         {/* Vibrant purple/pink overlay for aesthetic look */}
