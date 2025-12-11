@@ -34,6 +34,7 @@ export default function ClassSchedule() {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
+    { label: 'Pricing', path: '/pricing' },
     { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 

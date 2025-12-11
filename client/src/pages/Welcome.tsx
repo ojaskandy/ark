@@ -34,6 +34,7 @@ export default function Welcome() {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
+    { label: 'Pricing', path: '/pricing' },
     { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 
@@ -110,18 +111,20 @@ export default function Welcome() {
             transition={{ duration: 1, delay: 0.2 }}
             className="space-y-6"
           >
-            <h1 
-              className="text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
-            >
-              ARK Dance Studio
-            </h1>
+            {/* Title with dark background for contrast */}
+            <div className="inline-block bg-black/60 backdrop-blur-sm px-8 py-6 rounded-2xl">
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight text-white">
+                ARK Dance Studio
+              </h1>
+            </div>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-lg"
+            className="text-xl md:text-2xl text-white max-w-3xl mx-auto font-light leading-relaxed"
+            style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}
           >
             AI-Powered Dance Training. Upload A Routine. Practice Live. Perfect Your Technique.
           </motion.p>
@@ -162,10 +165,13 @@ export default function Welcome() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-              Your Studio. Everywhere.
-            </h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+            {/* White title with dark background for contrast */}
+            <div className="inline-block bg-black/60 backdrop-blur-sm px-8 py-4 rounded-xl mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-white">
+                Your Studio. Everywhere.
+              </h2>
+            </div>
+            <p className="text-xl text-white max-w-2xl mx-auto" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
               Practice Anytime. Get Instant Feedback. Track Every Improvement.
             </p>
           </motion.div>
@@ -265,65 +271,6 @@ export default function Welcome() {
               </div>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Why Parents Choose ARK */}
-      <section className="relative z-10 py-24 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-              Why Parents Choose ARK
-            </h2>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Safe, Professional, Results-Driven Dance Education
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: '📊',
-                title: 'Track Progress',
-                description: 'Visual reports show improvement over time'
-              },
-              {
-                icon: '🔒',
-                title: 'Safe & Secure',
-                description: 'Privacy-first design with parent controls'
-              },
-              {
-                icon: '💪',
-                title: 'Build Confidence',
-                description: 'Practice without judgment, improve at your pace'
-              },
-              {
-                icon: '🎓',
-                title: 'Expert-Led',
-                description: 'Created by dance instructor Arshia Kathpalia'
-              }
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-6 shadow-xl text-center"
-              >
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 

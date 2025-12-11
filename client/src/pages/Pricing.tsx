@@ -38,73 +38,25 @@ export default function Pricing() {
     { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 
-  const plans = [
-    {
-      name: 'Free Trial',
-      price: '$0',
-      period: '7 days',
-      description: 'Try ARK AI risk-free',
-      features: [
-        'Full access to ARK AI',
-        'Real-time pose analysis',
-        'Up to 10 practice sessions',
-        'Basic progress tracking',
-        'Email support'
-      ],
-      cta: 'Start Free Trial',
-      popular: false,
-      highlight: false
-    },
-    {
-      name: 'Individual',
-      price: '$29',
-      period: 'per month',
-      description: 'Perfect for dedicated dancers',
-      features: [
-        'Unlimited practice sessions',
-        'Advanced AI feedback',
-        'Detailed progress analytics',
-        'Custom routine uploads',
-        'Priority support',
-        'Achievement badges',
-        'Downloadable reports'
-      ],
-      cta: 'Get Started',
-      popular: true,
-      highlight: true
-    },
-    {
-      name: 'Family',
-      price: '$49',
-      period: 'per month',
-      description: 'Best value for families',
-      features: [
-        'Up to 3 student accounts',
-        'Everything in Individual',
-        'Family progress dashboard',
-        'Parent controls',
-        'Multi-device access',
-        'Dedicated support',
-        'Save 44% per student'
-      ],
-      cta: 'Get Started',
-      popular: false,
-      highlight: false
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen bg-black overflow-x-hidden">
+      {/* Stage Background Image - Consistent with other pages */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-90"
+          className="absolute bg-cover bg-center"
           style={{ 
-            backgroundImage: 'url(/images/dance-studio.png)',
-            filter: 'blur(0px)'
+            backgroundImage: 'url(/images/ark-stage-bg.png)',
+            backgroundPosition: 'center 40%',
+            top: '-2.5%',
+            left: '-2.5%',
+            right: '-2.5%',
+            bottom: '-2.5%',
+            width: '105%',
+            height: '105%'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
       </div>
 
       {/* Header with Logo and Navigation */}
@@ -128,13 +80,13 @@ export default function Pricing() {
             />
           </motion.div>
 
-          {/* Navigation */}
+          {/* Navigation - Light themed buttons */}
           <nav className="flex flex-wrap items-center justify-center gap-3">
             {navItems.map((item, idx) => (
               <motion.button
                 key={item.label}
                 onClick={item.onClick || (() => navigate(item.path!))}
-                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                className="px-6 py-2.5 text-sm font-semibold text-gray-800 hover:text-pink-600 bg-white/90 backdrop-blur-md rounded-full border border-pink-200 hover:border-pink-400 hover:bg-white shadow-lg transition-all"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
@@ -152,189 +104,176 @@ export default function Pricing() {
       <motion.section
         className="relative z-10 py-20 px-6 md:px-12"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h1 className="text-6xl md:text-7xl font-medium text-gray-800 mb-6">
-              Simple, Transparent Pricing
-            </h1>
-            <p className="text-2xl text-royal-purple font-light mb-4">
-              Choose The Perfect Plan For Your Dance Journey
-            </p>
-            <p className="text-lg text-gray-600">
-              All plans include 7-day free trial • Cancel anytime • No hidden fees
+            <div className="inline-block bg-black/60 backdrop-blur-sm px-8 py-4 rounded-xl mb-4">
+              <h1 className="text-5xl md:text-6xl font-bold text-white">
+                Simple Pricing
+              </h1>
+            </div>
+            <p className="text-xl text-white max-w-2xl mx-auto" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+              Start your dance journey today. No hidden fees. Cancel anytime.
             </p>
           </motion.div>
 
           {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {plans.map((plan, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className={`relative bg-white/70 backdrop-blur-md border ${
-                  plan.highlight 
-                    ? 'border-royal-purple shadow-2xl shadow-royal-purple/30 scale-105' 
-                    : 'border-royal-purple-light/30 shadow-lg'
-                } rounded-3xl p-8 ${plan.highlight ? 'md:scale-105' : ''}`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-royal-purple to-royal-purple-light text-white px-6 py-1 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-medium text-gray-800 mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-5xl font-bold text-royal-purple">{plan.price}</span>
-                    <span className="text-gray-500">/ {plan.period}</span>
-                  </div>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="flex items-start gap-3">
-                      <span className="text-royal-purple mt-1 text-xl">✓</span>
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <motion.button
-                  onClick={() => navigate('/registration')}
-                  className={`w-full py-4 rounded-2xl text-lg font-medium transition-all ${
-                    plan.highlight
-                      ? 'bg-gradient-to-r from-royal-purple to-royal-purple-light text-white shadow-lg shadow-royal-purple/50 hover:shadow-xl'
-                      : 'bg-white border-2 border-royal-purple text-royal-purple hover:bg-royal-purple hover:text-white'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {plan.cta}
-                </motion.button>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Annual Savings Banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-3xl p-8 text-center mb-16"
-          >
-            <h3 className="text-3xl font-medium mb-3">Save 20% with Annual Billing</h3>
-            <p className="text-xl mb-4 opacity-90">
-              Pay yearly and save up to $70 per year
-            </p>
-            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-white underline hover:no-underline">
-              Contact us for annual pricing
-            </a>
-          </motion.div>
-
-          {/* FAQ Section */}
-          <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Drop-in Class */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-center mb-12"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-8 shadow-xl"
             >
-              <h2 className="text-4xl font-medium text-gray-800 mb-4">
-                Frequently Asked Questions
-              </h2>
+              <div className="text-center">
+                <div className="text-4xl mb-4">💃</div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Drop-In Class</h2>
+                <p className="text-gray-600 mb-6">Perfect for trying us out or flexible schedules</p>
+                
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-gray-900">$20</span>
+                  <span className="text-gray-500 text-lg">/class</span>
+                </div>
+
+                <ul className="space-y-3 text-left mb-8">
+                  <li className="flex items-center gap-3 text-gray-700">
+                    <span className="text-pink-500 font-bold">✓</span>
+                    <span>Single class access</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-700">
+                    <span className="text-pink-500 font-bold">✓</span>
+                    <span>Full AI coaching during class</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-700">
+                    <span className="text-pink-500 font-bold">✓</span>
+                    <span>No commitment required</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-gray-700">
+                    <span className="text-pink-500 font-bold">✓</span>
+                    <span>Great way to try ARK</span>
+                  </li>
+                </ul>
+
+                <motion.a
+                  href="mailto:arshia.x.kathpalia@gmail.com?subject=Drop-In Class Inquiry"
+                  className="block w-full py-4 border-2 border-pink-500 text-pink-600 rounded-2xl font-semibold hover:bg-pink-50 transition-all text-center"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Book a Drop-In
+                </motion.a>
+              </div>
             </motion.div>
 
-            <div className="space-y-4">
-              {[
-                {
-                  q: 'Can I try before I buy?',
-                  a: 'Absolutely! All plans include a 7-day free trial with full access to ARK AI. No credit card required.'
-                },
-                {
-                  q: 'Can I cancel anytime?',
-                  a: 'Yes! Cancel your subscription anytime with no penalties or hidden fees. Your access continues until the end of your billing period.'
-                },
-                {
-                  q: 'What equipment do I need?',
-                  a: 'Just a device with a camera (phone, tablet, or computer) and enough space to move. That\'s it!'
-                },
-                {
-                  q: 'Is the Family plan per household?',
-                  a: 'Yes! The Family plan covers up to 3 students in your household with separate accounts and progress tracking.'
-                },
-                {
-                  q: 'Do you offer refunds?',
-                  a: 'We offer a 30-day money-back guarantee if you\'re not satisfied with ARK Dance Studio.'
-                }
-              ].map((faq, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 + idx * 0.1 }}
-                  className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-2xl p-6 shadow-lg"
+            {/* Monthly Membership - Featured */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="relative bg-gradient-to-br from-pink-500 to-purple-600 rounded-3xl p-8 shadow-2xl text-white overflow-hidden"
+            >
+              {/* Popular badge */}
+              <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                ⭐ Best Value
+              </div>
+
+              <div className="text-center">
+                <div className="text-4xl mb-4">🌟</div>
+                <h2 className="text-2xl font-bold mb-2">Monthly Membership</h2>
+                <p className="text-white/80 mb-6">4 classes per month — the perfect routine</p>
+                
+                <div className="mb-2">
+                  <span className="text-5xl font-bold">$60</span>
+                  <span className="text-white/70 text-lg">/month</span>
+                </div>
+                <p className="text-white/60 text-sm mb-6">That's only $15 per class!</p>
+
+                <ul className="space-y-3 text-left mb-8">
+                  <li className="flex items-center gap-3">
+                    <span className="font-bold">✓</span>
+                    <span>4 classes every month</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="font-bold">✓</span>
+                    <span>Unlimited AI practice at home</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="font-bold">✓</span>
+                    <span>Progress tracking & reports</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="font-bold">✓</span>
+                    <span>Priority booking</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="font-bold">✓</span>
+                    <span>Save $20 vs drop-in rates</span>
+                  </li>
+                </ul>
+
+                <motion.a
+                  href="mailto:arshia.x.kathpalia@gmail.com?subject=Monthly Membership Inquiry"
+                  className="block w-full py-4 bg-white text-pink-600 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all text-center"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <h4 className="text-lg font-medium text-gray-800 mb-2">{faq.q}</h4>
-                  <p className="text-gray-600">{faq.a}</p>
-                </motion.div>
-              ))}
-            </div>
+                  Start Monthly Membership
+                </motion.a>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Final CTA */}
+          {/* Contact Section */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="mt-16 text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 shadow-xl"
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-16 text-center bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-10 shadow-xl max-w-2xl mx-auto"
           >
-            <h3 className="text-3xl font-medium text-gray-800 mb-4">
-              Still Have Questions?
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Questions? Let's Talk!
             </h3>
-            <p className="text-lg text-gray-600 mb-6">
-              We're here to help! Contact us and we'll get back to you within 24 hours.
+            <p className="text-gray-600 mb-6">
+              Have questions about our classes, pricing, or special offers? We'd love to hear from you. 
+              Reach out anytime — we're here to help you find the perfect fit for your dance journey.
             </p>
             <motion.a
-              href="mailto:arshia.x.kathpalia@gmail.com"
-              className="inline-block px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
+              href="mailto:arshia.x.kathpalia@gmail.com?subject=ARK Dance Studio Inquiry"
+              className="inline-block px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-lg font-semibold shadow-xl"
+              whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(236, 72, 153, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
-              Contact Us
+              📧 Contact Us
             </motion.a>
           </motion.div>
         </div>
       </motion.section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-royal-purple-light/30 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
+      <footer className="relative z-10 border-t border-white/10 py-12 px-6 md:px-12 bg-black/30 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
+          <div className="text-white/70 text-sm">© 2025 ARK Dance Studio</div>
           <div className="flex gap-6">
-            <button onClick={() => navigate('/about')} className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
-            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</a>
+            <button onClick={() => navigate('/about')} className="text-white/70 hover:text-white text-sm transition-colors">About</button>
+            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-white/70 hover:text-white text-sm transition-colors">Contact</a>
           </div>
         </div>
       </footer>
 
-      {/* Login Modal */}
+      {/* Login Modal - Light themed */}
       {showLogin && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-royal-purple/20 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowLogin(false);
             setPassword('');
@@ -347,17 +286,17 @@ export default function Pricing() {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", duration: 0.5 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white/90 backdrop-blur-xl border border-royal-purple-light/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-royal-purple/30"
+            className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-200"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-medium text-royal-purple">Student Portal</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Student Portal</h2>
               <button
                 onClick={() => {
                   setShowLogin(false);
                   setPassword('');
                   setError('');
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
               >
                 ✕
               </button>
@@ -365,24 +304,24 @@ export default function Pricing() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm text-royal-purple mb-2">Password</label>
+                <label className="block text-sm text-gray-600 mb-2 font-medium">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-royal-purple-light text-gray-800 rounded-2xl focus:outline-none focus:border-royal-purple transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-colors placeholder-gray-400"
                   placeholder="Enter Password"
                   autoFocus
                 />
               </div>
 
               {error && (
-                <p className="text-sm text-gray-500">{error}</p>
+                <p className="text-sm text-red-500">{error}</p>
               )}
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-royal-purple/50 transition-all"
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Log In
               </button>
@@ -393,7 +332,3 @@ export default function Pricing() {
     </div>
   );
 }
-
-
-
-
