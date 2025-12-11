@@ -34,7 +34,6 @@ export default function ClassSchedule() {
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
     { label: 'Class Schedule', path: '/class-schedule' },
-    { label: 'Pricing', path: '/pricing' },
     { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
   ];
 
@@ -49,17 +48,24 @@ export default function ClassSchedule() {
   ];
 
   return (
-    <div className="min-h-screen bg-purple-50/30 overflow-x-hidden">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen bg-black overflow-x-hidden">
+      {/* Stage Background Image - Consistent with Welcome page */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-90"
+          className="absolute bg-cover bg-center"
           style={{ 
-            backgroundImage: 'url(/images/dance-studio.png)',
-            filter: 'blur(0px)'
+            backgroundImage: 'url(/images/ark-stage-bg.png)',
+            backgroundPosition: 'center 40%',
+            top: '-2.5%',
+            left: '-2.5%',
+            right: '-2.5%',
+            bottom: '-2.5%',
+            width: '105%',
+            height: '105%'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/40 via-royal-purple/10 to-pink-50/40" />
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
       </div>
 
       {/* Header with Logo and Navigation */}
@@ -83,13 +89,13 @@ export default function ClassSchedule() {
             />
           </motion.div>
 
-          {/* Navigation */}
+          {/* Navigation - Light themed buttons */}
           <nav className="flex flex-wrap items-center justify-center gap-3">
             {navItems.map((item, idx) => (
               <motion.button
                 key={item.label}
                 onClick={item.onClick || (() => navigate(item.path!))}
-                className="px-6 py-2.5 text-sm font-medium text-royal-purple-dark hover:text-white hover:bg-royal-purple transition-all rounded-full border border-royal-purple-light hover:border-royal-purple bg-white/60 backdrop-blur-sm shadow-sm"
+                className="px-6 py-2.5 text-sm font-semibold text-gray-800 hover:text-pink-600 bg-white/90 backdrop-blur-md rounded-full border border-pink-200 hover:border-pink-400 hover:bg-white shadow-lg transition-all"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
@@ -114,10 +120,10 @@ export default function ClassSchedule() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h1 className="text-6xl md:text-7xl font-medium text-gray-800 mb-6">
+            <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">
               Class Schedule
             </h1>
-            <p className="text-2xl text-royal-purple font-light">
+            <p className="text-2xl text-white/80 font-light">
               Find Your Perfect Class
             </p>
           </motion.div>
@@ -131,17 +137,17 @@ export default function ClassSchedule() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="bg-white/70 backdrop-blur-md border border-royal-purple-light/30 rounded-3xl p-8 shadow-lg shadow-royal-purple/10"
+                className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-8 shadow-xl"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-medium text-royal-purple">{item.day}</span>
-                    <span className="text-sm px-3 py-1 bg-royal-purple/10 text-royal-purple-dark rounded-full">
+                    <span className="text-2xl font-bold text-gray-900">{item.day}</span>
+                    <span className="text-sm px-3 py-1 bg-pink-100 text-pink-600 rounded-full font-medium">
                       {item.level}
                     </span>
                   </div>
-                  <div className="text-lg text-gray-600">{item.time}</div>
-                  <div className="text-xl font-medium text-gray-800">{item.class}</div>
+                  <div className="text-lg text-gray-500">{item.time}</div>
+                  <div className="text-xl font-semibold text-gray-800">{item.class}</div>
                 </div>
               </motion.div>
             ))}
@@ -152,44 +158,44 @@ export default function ClassSchedule() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-16 text-center bg-white/70 backdrop-blur-md border border-royal-purple-light/50 rounded-3xl p-12 shadow-xl shadow-royal-purple/20"
+            className="mt-16 text-center bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-12 shadow-xl"
           >
-            <h2 className="text-3xl font-medium text-gray-800 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Ready To Join?
             </h2>
             <p className="text-lg text-gray-600 mb-8">
               Register for classes today and start your dance journey with ARK.
             </p>
             <motion.button
-              onClick={() => navigate('/registration')}
-              className="px-10 py-4 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-full text-lg font-medium shadow-lg shadow-royal-purple/50"
-              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(120, 81, 169, 0.4)' }}
+              onClick={() => setShowLogin(true)}
+              className="px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-lg font-semibold shadow-xl"
+              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(236, 72, 153, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
-              Register Now
+              Get Started
             </motion.button>
           </motion.div>
         </div>
       </motion.section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-royal-purple-light/30 py-12 px-6 md:px-12 bg-white/50 backdrop-blur-sm">
+      <footer className="relative z-10 border-t border-white/10 py-12 px-6 md:px-12 bg-black/30 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div className="text-gray-500 text-sm">© 2025 ARK Dance Studio</div>
+          <div className="text-white/70 text-sm">© 2025 ARK Dance Studio</div>
           <div className="flex gap-6">
-            <button onClick={() => navigate('/about')} className="text-gray-500 hover:text-royal-purple text-sm transition-colors">About</button>
-            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-gray-500 hover:text-royal-purple text-sm transition-colors">Contact</a>
+            <button onClick={() => navigate('/about')} className="text-white/70 hover:text-white text-sm transition-colors">About</button>
+            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-white/70 hover:text-white text-sm transition-colors">Contact</a>
           </div>
         </div>
       </footer>
 
-      {/* Login Modal */}
+      {/* Login Modal - Light themed */}
       {showLogin && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-royal-purple/20 backdrop-blur-lg flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowLogin(false);
             setPassword('');
@@ -202,17 +208,17 @@ export default function ClassSchedule() {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", duration: 0.5 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white/90 backdrop-blur-xl border border-royal-purple-light/50 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-royal-purple/30"
+            className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-200"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-medium text-royal-purple">Student Portal</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Student Portal</h2>
               <button
                 onClick={() => {
                   setShowLogin(false);
                   setPassword('');
                   setError('');
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
               >
                 ✕
               </button>
@@ -220,24 +226,24 @@ export default function ClassSchedule() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm text-royal-purple mb-2">Password</label>
+                <label className="block text-sm text-gray-600 mb-2 font-medium">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-royal-purple-light text-gray-800 rounded-2xl focus:outline-none focus:border-royal-purple transition-colors"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-colors placeholder-gray-400"
                   placeholder="Enter Password"
                   autoFocus
                 />
               </div>
 
               {error && (
-                <p className="text-sm text-gray-500">{error}</p>
+                <p className="text-sm text-red-500">{error}</p>
               )}
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-royal-purple to-royal-purple-light text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-royal-purple/50 transition-all"
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
               >
                 Log In
               </button>
