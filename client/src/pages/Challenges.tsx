@@ -34,27 +34,37 @@ const Challenges: React.FC = () => {
   const [, navigate] = useLocation();
 
   return (
-    <div className="min-h-screen bg-rose-50/30">
-      {/* Background */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen bg-black overflow-x-hidden">
+      {/* Stage Background Image - Consistent with other pages */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-85"
-          style={{ backgroundImage: 'url(/images/dance-studio.png)' }}
+          className="absolute bg-cover bg-center"
+          style={{ 
+            backgroundImage: 'url(/images/ark-stage-bg.png)',
+            backgroundPosition: 'center 40%',
+            top: '-2.5%',
+            left: '-2.5%',
+            right: '-2.5%',
+            bottom: '-2.5%',
+            width: '105%',
+            height: '105%'
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-rose-50/20 to-orange-50/30" />
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
       </div>
 
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 border-b border-gray-200/50 bg-white/70 backdrop-blur px-6 py-4 flex items-center"
+        className="relative z-10 px-6 py-4 flex items-center"
       >
         <button
-          onClick={() => navigate('/app')}
-          className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+          onClick={() => navigate('/')}
+          className="flex items-center text-white/80 hover:text-white transition-colors bg-white/10 backdrop-blur-md px-4 py-2 rounded-full"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" /> back
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back
         </button>
       </motion.div>
 
@@ -64,10 +74,10 @@ const Challenges: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-4"
+            className="space-y-4 text-center"
           >
-            <h1 className="text-5xl md:text-6xl font-medium text-gray-800">challenges</h1>
-            <p className="text-xl text-gray-600">quick drills when you have 10 minutes</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">Challenges</h1>
+            <p className="text-xl text-white/80">Quick drills when you have 10 minutes</p>
           </motion.header>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -78,13 +88,13 @@ const Challenges: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
                 whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="group relative bg-white/70 backdrop-blur-xl border border-gray-200/50 hover:border-pink-200 rounded-3xl p-8 cursor-pointer shadow-lg shadow-pink-100/20"
+                className="group relative bg-white/95 backdrop-blur-lg border border-gray-200 hover:border-pink-300 rounded-3xl p-8 cursor-pointer shadow-xl"
               >
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-5xl">{challenge.icon}</div>
                   </div>
-                  <h3 className="text-2xl font-medium text-gray-800 mb-3">{challenge.title}</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{challenge.title}</h3>
                   <p className="text-gray-600">{challenge.description}</p>
                 </div>
               </motion.div>

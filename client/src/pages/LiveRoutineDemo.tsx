@@ -83,15 +83,15 @@ const LiveRoutineDemo: React.FC = () => {
 
   if (viewMode === 'comparison') {
     return (
-      <div className="min-h-screen bg-rose-50/30">
-        <div className="border-b border-gray-200/50 bg-white/70 backdrop-blur px-6 py-4 flex items-center justify-between">
+      <div className="min-h-screen bg-gray-100">
+        <div className="border-b border-gray-200 bg-white/90 backdrop-blur px-6 py-4 flex items-center justify-between">
           <button
             onClick={handleBackToSelect}
             className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> back
           </button>
-          <div className="text-gray-800 font-medium">live routine</div>
+          <div className="text-gray-800 font-semibold">Live Routine</div>
         </div>
 
         <div className="p-6">
@@ -125,27 +125,37 @@ const LiveRoutineDemo: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-rose-50/30">
-      {/* Background */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen bg-black overflow-x-hidden">
+      {/* Stage Background Image - Consistent with other pages */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-85"
-          style={{ backgroundImage: 'url(/images/dance-studio.png)' }}
+          className="absolute bg-cover bg-center"
+          style={{ 
+            backgroundImage: 'url(/images/ark-stage-bg.png)',
+            backgroundPosition: 'center 40%',
+            top: '-2.5%',
+            left: '-2.5%',
+            right: '-2.5%',
+            bottom: '-2.5%',
+            width: '105%',
+            height: '105%'
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-rose-50/20 to-orange-50/30" />
+        {/* Subtle dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
       </div>
 
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 border-b border-gray-200/50 bg-white/70 backdrop-blur px-6 py-4 flex items-center"
+        className="relative z-10 px-6 py-4 flex items-center"
       >
         <button
-          onClick={() => navigate('/app')}
-          className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+          onClick={() => navigate('/')}
+          className="flex items-center text-white/80 hover:text-white transition-colors bg-white/10 backdrop-blur-md px-4 py-2 rounded-full"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" /> back
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back
         </button>
       </motion.div>
 
@@ -155,11 +165,11 @@ const LiveRoutineDemo: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-4"
+            className="space-y-4 text-center"
           >
-            <h1 className="text-5xl md:text-6xl font-medium text-gray-800">live routine</h1>
-            <p className="text-xl text-gray-600">
-              upload a reference or choose from our library
+            <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">Live Routine</h1>
+            <p className="text-xl text-white/80">
+              Upload a reference or choose from our library
             </p>
           </motion.header>
 
@@ -169,7 +179,7 @@ const LiveRoutineDemo: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               onClick={() => setShowSelector(true)}
-              className="group relative bg-white/70 backdrop-blur-xl border border-gray-200/50 hover:border-pink-200 rounded-3xl p-20 text-center cursor-pointer shadow-lg shadow-pink-100/20"
+              className="group relative bg-white/95 backdrop-blur-lg border border-gray-200 hover:border-pink-300 rounded-3xl p-20 text-center cursor-pointer shadow-xl"
               whileHover={{ y: -4, scale: 1.01 }}
             >
               <motion.div
@@ -179,8 +189,8 @@ const LiveRoutineDemo: React.FC = () => {
               >
                 🎥
               </motion.div>
-              <h3 className="text-2xl font-medium mb-3 text-gray-800">select reference</h3>
-              <p className="text-gray-600">click to choose a video or image</p>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">Select Reference</h3>
+              <p className="text-gray-600">Click to choose a video or image</p>
             </motion.div>
           )}
 
@@ -188,15 +198,15 @@ const LiveRoutineDemo: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-6 shadow-lg shadow-pink-100/20"
+              className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-6 shadow-xl"
             >
-              <h3 className="text-xl font-medium mb-4 text-gray-800">selected routine</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Selected Routine</h3>
               <div className="mb-4">
                 <video src={selectedVideo.url} controls className="w-full rounded-2xl" style={{ maxHeight: '400px' }} />
               </div>
               {selectedVideo.data && (
                 <div className="space-y-2 mb-6">
-                  <h4 className="font-medium text-gray-800">{selectedVideo.data.name}</h4>
+                  <h4 className="font-semibold text-gray-900">{selectedVideo.data.name}</h4>
                   <p className="text-gray-600 text-sm">{selectedVideo.data.description}</p>
                 </div>
               )}
@@ -204,19 +214,19 @@ const LiveRoutineDemo: React.FC = () => {
                 <motion.button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-full font-medium disabled:opacity-40 shadow-lg shadow-pink-200/50"
+                  className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full font-semibold disabled:opacity-40 shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isInitializing ? 'starting...' : 'start'}
+                  {isInitializing ? 'Starting...' : 'Start'}
                 </motion.button>
                 <motion.button
                   onClick={() => setSelectedVideo(null)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-white/80"
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  remove
+                  Remove
                 </motion.button>
               </div>
             </motion.div>
@@ -226,9 +236,9 @@ const LiveRoutineDemo: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-6 shadow-lg shadow-pink-100/20"
+              className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-6 shadow-xl"
             >
-              <h3 className="text-xl font-medium mb-4 text-gray-800">selected image</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Selected Image</h3>
               <div className="mb-4">
                 <img
                   src={selectedImage.url}
@@ -241,19 +251,19 @@ const LiveRoutineDemo: React.FC = () => {
                 <motion.button
                   onClick={handleStartComparison}
                   disabled={isInitializing}
-                  className="px-6 py-3 bg-gradient-to-r from-pink-300 to-orange-300 text-white rounded-full font-medium disabled:opacity-40 shadow-lg shadow-pink-200/50"
+                  className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full font-semibold disabled:opacity-40 shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isInitializing ? 'starting...' : 'start'}
+                  {isInitializing ? 'Starting...' : 'Start'}
                 </motion.button>
                 <motion.button
                   onClick={() => setSelectedImage(null)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-white/80"
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  remove
+                  Remove
                 </motion.button>
               </div>
             </motion.div>
@@ -266,7 +276,7 @@ const LiveRoutineDemo: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-pink-100/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
         >
           <ReferenceMediaSelector
             onImageUpload={handleImageUpload}
