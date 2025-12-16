@@ -1344,11 +1344,12 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
 
   // Signup form endpoint - sends email to Arshia
   app.post("/api/signup", async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, phone, age, pastExperience, message } = req.body;
+    try {
+      const { name, email, phone, age, pastExperience, message } = req.body;
 
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and email are required" });
-    }
+      if (!name || !email) {
+        return res.status(400).json({ message: "Name and email are required" });
+      }
 
     // Save the signup request to the database
     try {
@@ -1356,7 +1357,7 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
         email,
         status: 'requested',
         source: 'signup',
-        responseData: { timestamp: new Date().toISOString(), name, phone, message }
+        responseData: { timestamp: new Date().toISOString(), name, phone, age, pastExperience, message }
       });
     } catch (dbErr) {
       console.error("Failed to save signup record to database:", dbErr);
@@ -1379,6 +1380,8 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
           ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+          ${age ? `<p><strong>Age:</strong> ${age}</p>` : ''}
+          ${pastExperience ? `<p><strong>Past Experience:</strong><br>${pastExperience.replace(/\n/g, '<br>')}</p>` : ''}
           ${message ? `<p><strong>Message:</strong><br>${message.replace(/\n/g, '<br>')}</p>` : ''}
           
           <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
@@ -1422,7 +1425,7 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
           email,
           status: 'error',
           source: 'signup',
-          responseData: { error: err.message, name, phone, message }
+          responseData: { error: err.message, name, phone, age, pastExperience, message }
         });
       } catch (dbErr) {
         console.error("Failed to save email error to database:", dbErr);

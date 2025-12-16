@@ -216,27 +216,46 @@ export default function Welcome() {
         }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSignupStatus("success");
-        setSignupName("");
-        setSignupEmail("");
-        setSignupPhone("");
-        setSignupAge("");
-        setSignupExperience("");
-        setSignupMessage("");
-        setTimeout(() => {
-          setShowSignup(false);
-          setSignupStatus("idle");
-        }, 3000);
-      } else {
-        setSignupError(data.message || "Something went wrong. Please try again.");
+      // Check if response is ok
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { message: `Server error: ${response.status}` };
+        }
+        setSignupError(errorData.message || "Something went wrong. Please try again.");
         setSignupStatus("error");
+        return;
       }
+
+      // Parse JSON response
+      let data;
+      try {
+        const text = await response.text();
+        data = text ? JSON.parse(text) : { message: "Thank you! We'll be in touch soon." };
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        // Even if JSON parsing fails, consider it a success if status is 200
+        data = { message: "Thank you! We'll be in touch soon." };
+      }
+
+      // Success!
+      setSignupStatus("success");
+      setSignupName("");
+      setSignupEmail("");
+      setSignupPhone("");
+      setSignupAge("");
+      setSignupExperience("");
+      setSignupMessage("");
+      setTimeout(() => {
+        setShowSignup(false);
+        setSignupStatus("idle");
+      }, 3000);
     } catch (err) {
       console.error("Signup error:", err);
-      setSignupError("Failed to submit. Please try again.");
+      setSignupError("Network error. Please check your connection and try again.");
       setSignupStatus("error");
     }
   };
@@ -402,12 +421,12 @@ export default function Welcome() {
       {/* Main content with curved rectangle card */}
       <main className="relative z-10">
         <section className="flex items-center justify-center px-2 md:px-4 py-12 md:py-14">
-          {/* Curved rectangle card with video background - extended to corners */}
+          {/* Curved rectangle card with video background - extended to corners, taller */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-[98vw] h-[65vh] max-h-[700px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
+            className="relative w-full max-w-[98vw] h-[75vh] max-h-[800px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
             {/* Video background */}
             <video
