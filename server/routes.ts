@@ -1354,27 +1354,27 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
         return res.status(400).json({ message: "Name and email are required" });
       }
 
-    // Save the signup request to the database
-    try {
-      await storage.saveEmailRecord({
-        email,
-        status: 'requested',
-        source: 'signup',
-        responseData: { timestamp: new Date().toISOString(), name, phone, age, pastExperience, message }
-      });
-    } catch (dbErr) {
-      console.error("Failed to save signup record to database:", dbErr);
-    }
+      // Save the signup request to the database
+      try {
+        await storage.saveEmailRecord({
+          email,
+          status: 'requested',
+          source: 'signup',
+          responseData: { timestamp: new Date().toISOString(), name, phone, age, pastExperience, message }
+        });
+      } catch (dbErr) {
+        console.error("Failed to save signup record to database:", dbErr);
+      }
 
-    // If Resend API is not configured, return a successful response
-    if (!resend) {
-      console.log("Email sending skipped - Resend API not configured");
-      return res.status(200).json({ 
-        message: "Thank you! We'll be in touch soon."
-      });
-    }
+      // If Resend API is not configured, return a successful response
+      if (!resend) {
+        console.log("Email sending skipped - Resend API not configured");
+        return res.status(200).json({ 
+          message: "Thank you! We'll be in touch soon."
+        });
+      }
 
-    try {
+      try {
       // Format the email content
       const emailContent = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
