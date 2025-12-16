@@ -3,6 +3,66 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import arshiaImage from "../assets/arshia.png";
 
+// Video component that plays when near center
+function ReelVideo({ 
+  src, 
+  poster, 
+  onError 
+}: { 
+  src: string; 
+  poster?: string; 
+  onError: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [shouldPlay, setShouldPlay] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Play when video is 40% visible (near center)
+          if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+            setShouldPlay(true);
+            video.play().catch(() => {
+              // Ignore autoplay errors
+            });
+          } else {
+            setShouldPlay(false);
+            video.pause();
+          }
+        });
+      },
+      {
+        threshold: [0, 0.4, 0.6, 1],
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      className="absolute inset-0 h-full w-full object-cover"
+      src={src}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onError={onError}
+    />
+  );
+}
+
 type ReelItem =
   | {
       id: string;
@@ -285,13 +345,13 @@ export default function Welcome() {
 
       {/* Main content with curved rectangle card */}
       <main className="relative z-10">
-        <section className="flex items-center justify-center px-6 md:px-10 py-10 md:py-12">
-          {/* Curved rectangle card with video background - more compact */}
+        <section className="flex items-center justify-center px-6 md:px-10 py-12 md:py-14">
+          {/* Curved rectangle card with video background - 1.2x spacing */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-7xl h-[60vh] max-h-[650px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
+            className="relative w-full max-w-7xl h-[72vh] max-h-[780px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
             {/* Video background */}
             <video
@@ -309,12 +369,12 @@ export default function Welcome() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
             
             {/* Content with white background for ARK Dance Studios */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center p-8 md:p-12">
-              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-8 md:px-12 py-6 md:py-8 shadow-2xl border border-white/50">
-                <h1 className="text-4xl md:text-6xl font-semibold text-slate-900 mb-3 leading-tight text-center">
+            <div className="relative z-10 h-full flex flex-col items-center justify-center p-10 md:p-14">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-10 md:px-14 py-7 md:py-10 shadow-2xl border border-white/50">
+                <h1 className="text-5xl md:text-7xl font-semibold text-slate-900 mb-4 leading-tight text-center">
                   ARK Dance Studios
                 </h1>
-                <p className="text-lg md:text-xl text-slate-700 text-center">
+                <p className="text-xl md:text-2xl text-slate-700 text-center">
                   Indian Classical Dance
                 </p>
               </div>
@@ -323,16 +383,16 @@ export default function Welcome() {
         </section>
 
         {/* Tagline and Horizontal scrolling reel - visible together */}
-        <section className="px-6 md:px-10 -mt-6 pb-12">
+        <section className="px-6 md:px-10 -mt-7 pb-14">
           {/* Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto text-center mb-6"
+            className="max-w-4xl mx-auto text-center mb-7"
           >
-            <p className="text-xl md:text-2xl font-semibold text-slate-900">
+            <p className="text-2xl md:text-3xl font-semibold text-slate-900">
               The Leading AI Dance Studio — 100x with Cutting Edge Tech
             </p>
           </motion.div>
@@ -359,15 +419,9 @@ export default function Welcome() {
                           onError={() => markFailed(item.id)}
                         />
                       ) : (
-                        <video
-                          className="absolute inset-0 h-full w-full object-cover"
+                        <ReelVideo
                           src={item.src}
                           poster={item.poster}
-                          muted
-                          autoPlay
-                          loop
-                          playsInline
-                          preload="metadata"
                           onError={() => markFailed(item.id)}
                         />
                       )}
@@ -381,7 +435,7 @@ export default function Welcome() {
         </section>
 
         {/* Meet Arshia Section */}
-        <section className="px-6 md:px-10 py-16 bg-gradient-to-b from-white to-slate-50">
+        <section className="px-6 md:px-10 py-19 bg-gradient-to-b from-white to-slate-50">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
