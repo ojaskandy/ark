@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
+import arshiaImage from "../assets/arshia.png";
 
 type ReelItem =
   | {
@@ -281,7 +282,7 @@ export default function Welcome() {
               <div className="relative">
                 <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-200">
                   <img
-                    src="/src/assets/arshia.png"
+                    src={arshiaImage}
                     alt="Arshia Kathpalia"
                     className="w-full h-auto object-cover"
                   />
