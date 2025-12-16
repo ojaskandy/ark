@@ -1437,23 +1437,6 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
       return res.status(200).json({ 
         message: "Thank you! We'll be in touch soon."
       });
-    } catch (innerErr: any) {
-      console.error("Server Error sending signup email:", innerErr);
-      
-      try {
-        await storage.saveEmailRecord({
-          email,
-          status: 'error',
-          source: 'signup',
-          responseData: { error: innerErr.message, name, phone, age, pastExperience, message }
-        });
-      } catch (dbErr) {
-        console.error("Failed to save email error to database:", dbErr);
-      }
-      
-      return res.status(200).json({ 
-        message: "Thank you! We'll be in touch soon."
-      });
     }
   } catch (err: any) {
     console.error("Unexpected error in signup endpoint:", err);
