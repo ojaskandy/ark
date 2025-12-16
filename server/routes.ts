@@ -1344,10 +1344,13 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
 
   // Signup form endpoint - sends email to Arshia
   app.post("/api/signup", async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Signup endpoint called");
     try {
       const { name, email, phone, age, pastExperience, message } = req.body;
+      console.log("Signup data received:", { name, email, phone, age, pastExperience: pastExperience ? "provided" : "none", message: message ? "provided" : "none" });
 
       if (!name || !email) {
+        console.log("Validation failed: missing name or email");
         return res.status(400).json({ message: "Name and email are required" });
       }
 
@@ -1431,6 +1434,12 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
         console.error("Failed to save email error to database:", dbErr);
       }
       
+      return res.status(200).json({ 
+        message: "Thank you! We'll be in touch soon."
+      });
+    } catch (err: any) {
+      console.error("Unexpected error in signup endpoint:", err);
+      // Always return success to user, but log the error
       return res.status(200).json({ 
         message: "Thank you! We'll be in touch soon."
       });
