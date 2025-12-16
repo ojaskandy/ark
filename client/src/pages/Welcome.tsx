@@ -127,16 +127,6 @@ export default function Welcome() {
   const [error, setError] = useState("");
   const [failedMedia, setFailedMedia] = useState<Record<string, true>>({});
   
-  // Signup form state
-  const [signupName, setSignupName] = useState("");
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPhone, setSignupPhone] = useState("");
-  const [signupAge, setSignupAge] = useState("");
-  const [signupExperience, setSignupExperience] = useState("");
-  const [signupMessage, setSignupMessage] = useState("");
-  const [signupStatus, setSignupStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [signupError, setSignupError] = useState("");
-  
   const signupDropdownRef = useRef<HTMLDivElement>(null);
 
   const markFailed = (id: string) => {
