@@ -21,34 +21,24 @@ type ReelItem =
 
 const REEL_ITEMS: ReelItem[] = [
   {
-    id: "studio-1",
-    kind: "image",
-    src: "/images/dance-studio.jpg",
-    alt: "ARK Dance Studios — studio space",
-  },
-  {
-    id: "clip-1",
+    id: "asset-1",
     kind: "video",
-    src: "/videos/ark_test.mov",
-    poster: "/images/dance-studio.jpg",
+    src: "/videos/ark_asset1.mov",
   },
   {
-    id: "studio-2",
-    kind: "image",
-    src: "/images/dance-studio.png",
-    alt: "ARK Dance Studios — mirrors and floor",
-  },
-  {
-    id: "clip-2",
+    id: "asset-2",
     kind: "video",
-    src: "/videos/reel/ark-dance-01.mp4",
-    poster: "/images/dance-studio.jpg",
+    src: "/videos/ark_asset2.mov",
   },
   {
-    id: "clip-3",
+    id: "asset-3",
     kind: "video",
-    src: "/videos/reel/ark-dance-02.mp4",
-    poster: "/images/dance-studio.jpg",
+    src: "/videos/ark_asset3.mov",
+  },
+  {
+    id: "asset-4",
+    kind: "video",
+    src: "/videos/ark_asset4.mov",
   },
 ];
 
@@ -146,13 +136,13 @@ export default function Welcome() {
 
       {/* Main content with curved rectangle card */}
       <main className="relative z-10">
-        <section className="flex items-center justify-center px-6 md:px-10 py-20">
+        <section className="flex items-center justify-center px-6 md:px-10 py-16 md:py-20">
           {/* Curved rectangle card with video background - expanded */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-7xl h-[85vh] max-h-[900px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
+            className="relative w-full max-w-7xl h-[75vh] max-h-[800px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
             {/* Video background */}
             <video
@@ -183,29 +173,28 @@ export default function Welcome() {
           </motion.div>
         </section>
 
-        {/* Tagline between curved rectangle and reel */}
-        <section className="px-6 md:px-10 py-12">
+        {/* Tagline and Horizontal scrolling reel - visible together */}
+        <section className="px-6 md:px-10 -mt-8 pb-16">
+          {/* Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto text-center"
+            className="max-w-4xl mx-auto text-center mb-8"
           >
             <p className="text-2xl md:text-3xl font-semibold text-slate-900">
               The Leading AI Dance Studio — 100x with Cutting Edge Tech
             </p>
           </motion.div>
-        </section>
 
-        {/* Horizontal scrolling reel */}
-        <section className="px-6 md:px-10 pb-16">
+          {/* Horizontal scrolling reel */}
           <div className="max-w-7xl mx-auto">
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-lg [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
               <div className="group">
                 <div
-                  className="flex w-max gap-4 px-6 py-6 animate-scroll-right motion-reduce:animate-none group-hover:[animation-play-state:paused]"
-                  style={{ animationDuration: "55s" }}
+                  className="flex w-max gap-5 px-6 py-6 animate-scroll-right motion-reduce:animate-none group-hover:[animation-play-state:paused]"
+                  style={{ animationDuration: "60s" }}
                 >
                   {reelItems.map((item, idx) => (
                     <div
