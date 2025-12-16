@@ -14,34 +14,40 @@ function ReelVideo({
   onError: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [shouldPlay, setShouldPlay] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const container = containerRef.current;
+    if (!video || !container) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Play when video is 40% visible (near center)
-          if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
-            setShouldPlay(true);
+          // Only play when video is significantly visible and near center (50%+ intersection)
+          // Also check if it's in the center portion of the viewport
+          const rect = entry.boundingClientRect;
+          const viewportCenter = window.innerWidth / 2;
+          const elementCenter = rect.left + rect.width / 2;
+          const distanceFromCenter = Math.abs(viewportCenter - elementCenter);
+          const isNearCenter = distanceFromCenter < rect.width * 0.6; // Within 60% of element width from center
+          
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5 && isNearCenter) {
             video.play().catch(() => {
               // Ignore autoplay errors
             });
           } else {
-            setShouldPlay(false);
             video.pause();
           }
         });
       },
       {
-        threshold: [0, 0.4, 0.6, 1],
-        rootMargin: "0px",
+        threshold: [0, 0.3, 0.5, 0.7, 1],
+        rootMargin: "-20% 0px -20% 0px", // Only trigger when in center 60% of viewport
       }
     );
 
-    observer.observe(video);
+    observer.observe(container);
 
     return () => {
       observer.disconnect();
@@ -49,17 +55,19 @@ function ReelVideo({
   }, []);
 
   return (
-    <video
-      ref={videoRef}
-      className="absolute inset-0 h-full w-full object-cover"
-      src={src}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      onError={onError}
-    />
+    <div ref={containerRef} className="absolute inset-0">
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover"
+        src={src}
+        poster={poster}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        onError={onError}
+      />
+    </div>
   );
 }
 
