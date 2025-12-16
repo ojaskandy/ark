@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import arshiaImage from "../assets/arshia.png";
 
-// Video component that plays when near center
+// Video component that plays when fully in frame and pauses when starting to disappear
 function ReelVideo({ 
   src, 
   poster, 
@@ -15,6 +15,7 @@ function ReelVideo({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const wasPlayingRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -24,26 +25,34 @@ function ReelVideo({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Only play when video is significantly visible and near center (50%+ intersection)
-          // Also check if it's in the center portion of the viewport
-          const rect = entry.boundingClientRect;
-          const viewportCenter = window.innerWidth / 2;
-          const elementCenter = rect.left + rect.width / 2;
-          const distanceFromCenter = Math.abs(viewportCenter - elementCenter);
-          const isNearCenter = distanceFromCenter < rect.width * 0.6; // Within 60% of element width from center
-          
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5 && isNearCenter) {
-            video.play().catch(() => {
-              // Ignore autoplay errors
-            });
+          // Play when video is fully in frame (100% visible or very close)
+          // Pause when it starts to disappear (less than 90% visible)
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
+            // Video is fully in frame - play or resume
+            if (video.paused) {
+              video.play().catch(() => {
+                // Ignore autoplay errors
+              });
+            }
+            wasPlayingRef.current = true;
+          } else if (entry.isIntersecting && entry.intersectionRatio < 0.9) {
+            // Video is starting to disappear - pause but remember it was playing
+            if (!video.paused) {
+              wasPlayingRef.current = true;
+              video.pause();
+            }
           } else {
-            video.pause();
+            // Video is out of view - pause
+            if (!video.paused) {
+              wasPlayingRef.current = true;
+              video.pause();
+            }
           }
         });
       },
       {
-        threshold: [0, 0.3, 0.5, 0.7, 1],
-        rootMargin: "-20% 0px -20% 0px", // Only trigger when in center 60% of viewport
+        threshold: [0, 0.5, 0.7, 0.9, 1.0], // Multiple thresholds to detect when fully visible
+        rootMargin: "0px",
       }
     );
 
@@ -392,13 +401,13 @@ export default function Welcome() {
 
       {/* Main content with curved rectangle card */}
       <main className="relative z-10">
-        <section className="flex items-center justify-center px-6 md:px-10 py-12 md:py-14">
-          {/* Curved rectangle card with video background - 1.2x spacing */}
+        <section className="flex items-center justify-center px-2 md:px-4 py-12 md:py-14">
+          {/* Curved rectangle card with video background - extended to corners */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-7xl h-[72vh] max-h-[780px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
+            className="relative w-full max-w-[98vw] h-[65vh] max-h-[700px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
             {/* Video background */}
             <video
@@ -415,9 +424,9 @@ export default function Welcome() {
             {/* Overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
             
-            {/* Content with white background for ARK Dance Studios */}
+            {/* Content with translucent white background for ARK Dance Studios - liquid glass effect */}
             <div className="relative z-10 h-full flex flex-col items-center justify-center p-10 md:p-14">
-              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-10 md:px-14 py-7 md:py-10 shadow-2xl border border-white/50">
+              <div className="bg-white/60 backdrop-blur-md rounded-3xl px-10 md:px-14 py-7 md:py-10 shadow-2xl border border-white/30">
                 <h1 className="text-5xl md:text-7xl font-semibold mb-4 leading-tight text-center bg-gradient-to-b from-amber-600 via-yellow-600 to-amber-700 bg-clip-text text-transparent drop-shadow-lg">
                   ARK Dance Studios
                 </h1>
