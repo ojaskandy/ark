@@ -14,11 +14,11 @@ type ThemeContextType = {
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Initialize state with dark mode as default, or stored theme preference
+  // Initialize state with light mode as default, or stored theme preference
   const [theme, setThemeState] = useState<Theme>(() => {
     const storedTheme = localStorage.getItem('theme') as Theme | null;
-    // Default to dark mode if no stored preference
-    return storedTheme || 'dark';
+    // Default to light mode if no stored preference (matches marketing/landing pages)
+    return storedTheme || 'light';
   });
   
   // Helper for setting theme in state and storage

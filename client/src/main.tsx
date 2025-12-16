@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './hooks/use-auth';
+import { ThemeProvider } from "./hooks/use-theme";
 import "./index.css";
 
 // —————————— OVERRIDE window.open + HANDLE DEEP-LINK ——————————
@@ -69,7 +70,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>

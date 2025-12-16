@@ -1,358 +1,330 @@
-import { useState } from 'react';
-import { useLocation } from 'wouter';
-import { motion } from 'framer-motion';
+import { useMemo, useState } from "react";
+import { useLocation } from "wouter";
+import { motion } from "framer-motion";
+
+type ReelItem =
+  | {
+      id: string;
+      kind: "image";
+      src: string;
+      alt: string;
+      label?: string;
+    }
+  | {
+      id: string;
+      kind: "video";
+      src: string;
+      poster?: string;
+      label?: string;
+    };
+
+const REEL_ITEMS: ReelItem[] = [
+  {
+    id: "studio-1",
+    kind: "image",
+    src: "/images/dance-studio.jpg",
+    alt: "ARK Dance Studios — studio space",
+  },
+  {
+    id: "clip-1",
+    kind: "video",
+    src: "/videos/ark_test.mov",
+    poster: "/images/dance-studio.jpg",
+  },
+  {
+    id: "studio-2",
+    kind: "image",
+    src: "/images/dance-studio.png",
+    alt: "ARK Dance Studios — mirrors and floor",
+  },
+  {
+    id: "clip-2",
+    kind: "video",
+    src: "/videos/reel/ark-dance-01.mp4",
+    poster: "/images/dance-studio.jpg",
+  },
+  {
+    id: "clip-3",
+    kind: "video",
+    src: "/videos/reel/ark-dance-02.mp4",
+    poster: "/images/dance-studio.jpg",
+  },
+];
 
 export default function Welcome() {
   const [, navigate] = useLocation();
   const [showLogin, setShowLogin] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [failedMedia, setFailedMedia] = useState<Record<string, true>>({});
+
+  const markFailed = (id: string) => {
+    setFailedMedia((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+  };
+
+  const reelItems = useMemo(() => {
+    const usable = REEL_ITEMS.filter((it) => !failedMedia[it.id]);
+    const base = usable.length ? usable : REEL_ITEMS;
+    return [...base, ...base];
+  }, [failedMedia]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username: 'student', password: password.toLowerCase().trim() }),
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          username: "student",
+          password: password.toLowerCase().trim(),
+        }),
       });
 
       if (response.ok) {
-        window.location.href = '/app';
+        window.location.href = "/app";
       } else {
-        setError('incorrect password');
+        setError("incorrect password");
       }
-    } catch (err) {
-      setError('login failed');
+    } catch {
+      setError("login failed");
     }
   };
 
-  const navItems = [
-    { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Class Schedule', path: '/class-schedule' },
-    { label: 'Pricing', path: '/pricing' },
-    { label: 'Student Portal', path: null, onClick: () => setShowLogin(true) }
-  ];
-
   return (
-    <div className="min-h-screen bg-black overflow-x-hidden">
-      {/* Stage Background Image */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <div 
-          className="absolute bg-cover bg-center"
-          style={{ 
-            backgroundImage: 'url(/images/ark-stage-bg.png)',
-            backgroundPosition: 'center 40%',
-            top: '-2.5%',
-            left: '-2.5%',
-            right: '-2.5%',
-            bottom: '-2.5%',
-            width: '105%',
-            height: '105%'
-          }}
-        />
-        {/* Subtle dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
-      </div>
-
-      {/* Header with Logo and Navigation */}
+    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
+      {/* Header */}
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-20 w-full px-6 md:px-12 py-6"
+        transition={{ duration: 0.5 }}
+        className="relative z-40 sticky top-0 border-b border-slate-200/50 bg-white/60 backdrop-blur-sm"
       >
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="cursor-pointer"
-            onClick={() => navigate('/')}
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-4 flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="flex items-center"
           >
-            <img 
-              src="/images/ark_logo.png" 
-              alt="ARK Dance Studio" 
-              className="h-20 md:h-28 w-auto"
+            <img
+              src="/images/ark_logo.png"
+              alt="ARK Dance Studios"
+              className="h-16 w-auto"
             />
-          </motion.div>
+          </button>
 
-          {/* Navigation - Light themed buttons */}
-          <nav className="flex flex-wrap items-center justify-center gap-3">
-            {navItems.map((item, idx) => (
-              <motion.button
-                key={item.label}
-                onClick={item.onClick || (() => navigate(item.path!))}
-                className="px-6 py-2.5 text-sm font-semibold text-gray-800 hover:text-pink-600 bg-white/90 backdrop-blur-md rounded-full border border-pink-200 hover:border-pink-400 hover:bg-white shadow-lg transition-all"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {item.label}
-              </motion.button>
-            ))}
-          </nav>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate("/registration")}
+              className="hidden sm:inline-flex h-10 items-center rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+            >
+              Book a Free Trial
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/live-routine")}
+              className="inline-flex h-10 items-center rounded-full bg-purple-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-purple-700"
+            >
+              Start Now
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowLogin(true)}
+              className="inline-flex h-10 items-center rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+            >
+              Student Portal
+            </button>
+          </div>
         </div>
       </motion.header>
 
-      {/* Hero Section */}
-      <motion.section
-        className="relative z-10 min-h-[85vh] flex items-center justify-center px-6 md:px-12"
-      >
-        <div className="max-w-5xl mx-auto text-center space-y-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="space-y-6"
-          >
-            {/* Title with dark background for contrast */}
-            <div className="inline-block bg-black/60 backdrop-blur-sm px-8 py-6 rounded-2xl">
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight text-white">
-                ARK Dance Studio
-              </h1>
-            </div>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="text-xl md:text-2xl text-white max-w-3xl mx-auto font-light leading-relaxed"
-            style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}
-          >
-            AI-Powered Dance Training. Upload A Routine. Practice Live. Perfect Your Technique.
-          </motion.p>
-
+      {/* Main content with curved rectangle card */}
+      <main className="relative z-10">
+        <section className="flex items-center justify-center px-6 md:px-10 py-20">
+          {/* Curved rectangle card with video background - expanded */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="flex gap-4 justify-center pt-6 flex-wrap"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative w-full max-w-7xl h-[85vh] max-h-[900px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
-            <motion.button
-              onClick={() => setShowLogin(true)}
-              className="group relative px-10 py-4 bg-white text-gray-900 rounded-full text-lg font-semibold overflow-hidden shadow-xl"
-              whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)' }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10">✨ Start Practicing</span>
-            </motion.button>
-            <motion.button
-              onClick={() => navigate('/challenges')}
-              className="px-10 py-4 border-2 border-white/80 text-white bg-white/10 backdrop-blur-md rounded-full text-lg font-semibold hover:bg-white/20 transition-all shadow-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              🎯 View Challenges
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Features Section */}
-      <section className="relative z-10 py-24 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            {/* White title with dark background for contrast */}
-            <div className="inline-block bg-black/60 backdrop-blur-sm px-8 py-4 rounded-xl mb-4">
-              <h2 className="text-4xl md:text-5xl font-bold text-white">
-                Your Studio. Everywhere.
-              </h2>
-            </div>
-            <p className="text-xl text-white max-w-2xl mx-auto" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
-              Practice Anytime. Get Instant Feedback. Track Every Improvement.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: '🎥',
-                title: 'Live Analysis',
-                description: 'Real-Time Pose Tracking That Follows Every Movement With Precision'
-              },
-              {
-                icon: '✨',
-                title: 'AI Feedback',
-                description: 'Intelligent Coaching That Adapts To Your Style And Highlights Improvements'
-              },
-              {
-                icon: '🎯',
-                title: 'Perfect Practice',
-                description: 'Upload References, Compare Your Form, Refine Your Technique Frame By Frame'
-              }
-            ].map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.2 }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="group relative bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-8 overflow-hidden shadow-xl"
-              >
-                <div className="relative z-10">
-                  <div className="text-5xl mb-4">{feature.icon}</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ARK AI Section - Simplified */}
-      <section className="relative z-10 py-24 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-10 shadow-xl"
-          >
-            <div className="text-center mb-8">
-              <div className="text-5xl mb-4">🤖</div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet ARK AI</h2>
-              <p className="text-xl text-gray-600">Your Personal AI Dance Coach</p>
-            </div>
+            {/* Video background */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              src="/videos/ark_studio_bg.mov"
+              poster="/images/ark-studio-bg.png"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+            />
             
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-900">Advanced Pose Analysis</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  ARK AI uses cutting-edge computer vision to track every movement in real-time. 
-                  Get instant, precise feedback on your form, posture, and technique.
-                </p>
-                <ul className="space-y-3 text-gray-700">
-                  <li className="flex items-start gap-3">
-                    <span className="text-pink-500 font-bold">✓</span>
-                    <span>Real-time joint angle tracking</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-pink-500 font-bold">✓</span>
-                    <span>Personalized improvement suggestions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-pink-500 font-bold">✓</span>
-                    <span>Progress tracking over time</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-900">Why It Works</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-pink-50 rounded-2xl p-4 text-center border border-pink-100">
-                    <div className="text-3xl font-bold text-pink-600">95%</div>
-                    <div className="text-sm text-gray-600">Accuracy</div>
-                  </div>
-                  <div className="bg-purple-50 rounded-2xl p-4 text-center border border-purple-100">
-                    <div className="text-3xl font-bold text-purple-600">24/7</div>
-                    <div className="text-sm text-gray-600">Available</div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm">
-                  Our AI coach provides encouraging, age-appropriate feedback for dancers of all levels.
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
+            
+            {/* Content with white background for ARK Dance Studios */}
+            <div className="relative z-10 h-full flex flex-col items-center justify-center p-12 md:p-16">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-10 md:px-16 py-8 md:py-12 shadow-2xl border border-white/50">
+                <h1 className="text-5xl md:text-7xl font-semibold text-slate-900 mb-4 leading-tight text-center">
+                  ARK Dance Studios
+                </h1>
+                <p className="text-xl md:text-2xl text-slate-700 text-center">
+                  Indian Classical Dance
                 </p>
               </div>
             </div>
           </motion.div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact Us Section */}
-      <section className="relative z-10 py-24 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+        {/* Tagline between curved rectangle and reel */}
+        <section className="px-6 md:px-10 py-12">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center bg-white/95 backdrop-blur-lg border border-gray-200 rounded-3xl p-12 md:p-16 shadow-xl"
+            transition={{ duration: 0.6 }}
+            className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Ready To Start?
-            </h2>
-            <p className="text-xl text-gray-600 font-medium mb-8">
-              Be Seen. Be Understood. Be Better.
+            <p className="text-2xl md:text-3xl font-semibold text-slate-900">
+              The Leading AI Dance Studio — 100x with Cutting Edge Tech
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                onClick={() => setShowLogin(true)}
-                className="px-10 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-lg font-semibold shadow-xl"
-                whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(236, 72, 153, 0.4)' }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Get Started
-              </motion.button>
-              <motion.a
-                href="mailto:arshia.x.kathpalia@gmail.com"
-                className="inline-block px-10 py-4 border-2 border-gray-300 text-gray-700 bg-white rounded-full text-lg font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Contact Us
-              </motion.a>
-            </div>
           </motion.div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 py-12 px-6 md:px-12 bg-black/30 backdrop-blur-sm">
-        <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <div className="text-white/70 text-sm">© 2025 ARK Dance Studio</div>
-          <div className="flex gap-6">
-            <button onClick={() => navigate('/about')} className="text-white/70 hover:text-white text-sm transition-colors">About</button>
-            <a href="mailto:arshia.x.kathpalia@gmail.com" className="text-white/70 hover:text-white text-sm transition-colors">Contact</a>
+        {/* Horizontal scrolling reel */}
+        <section className="px-6 md:px-10 pb-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+              <div className="group">
+                <div
+                  className="flex w-max gap-4 px-6 py-6 animate-scroll-right motion-reduce:animate-none group-hover:[animation-play-state:paused]"
+                  style={{ animationDuration: "55s" }}
+                >
+                  {reelItems.map((item, idx) => (
+                    <div
+                      key={`${item.id}-${idx}`}
+                      className="relative w-[280px] sm:w-[320px] md:w-[380px] aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-sm"
+                    >
+                      {item.kind === "image" ? (
+                        <img
+                          src={item.src}
+                          alt={item.alt}
+                          className="absolute inset-0 h-full w-full object-cover"
+                          loading="lazy"
+                          onError={() => markFailed(item.id)}
+                        />
+                      ) : (
+                        <video
+                          className="absolute inset-0 h-full w-full object-cover"
+                          src={item.src}
+                          poster={item.poster}
+                          muted
+                          autoPlay
+                          loop
+                          playsInline
+                          preload="metadata"
+                          onError={() => markFailed(item.id)}
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </section>
 
-      {/* Login Modal - Light themed */}
+        {/* Meet Arshia Section */}
+        <section className="px-6 md:px-10 py-20 bg-gradient-to-b from-white to-slate-50">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+            >
+              <div>
+                <h2 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-6">
+                  Meet Arshia
+                </h2>
+                <div className="space-y-4 text-lg text-slate-700 leading-relaxed">
+                  <p>
+                    Hey! I'm Arshia, and I've been dancing since I could walk. 
+                    Indian classical dance isn't just movement to me — it's storytelling, 
+                    culture, and pure expression.
+                  </p>
+                  <p>
+                    After competing and performing for years, I realized something: 
+                    traditional dance training is amazing, but what if we could make it 
+                    even better? What if you could practice at 3am and still get real-time 
+                    feedback on your form?
+                  </p>
+                  <p>
+                    That's why I built ARK Dance Studios. We combine the beauty of 
+                    Indian classical dance with cutting-edge AI tech that helps you 
+                    perfect every move, anytime, anywhere.
+                  </p>
+                  <p className="font-medium text-slate-900">
+                    Whether you're just starting or you've been dancing for years, 
+                    I'm here to help you find your flow. Let's dance! ✨
+                  </p>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-200">
+                  <img
+                    src="/src/assets/arshia.png"
+                    alt="Arshia Kathpalia"
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+
+      {/* Login Modal */}
       {showLogin && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-slate-900/30 backdrop-blur flex items-center justify-center z-50 p-4"
           onClick={() => {
             setShowLogin(false);
-            setPassword('');
-            setError('');
+            setPassword("");
+            setError("");
           }}
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.98, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: "spring", duration: 0.5 }}
+            exit={{ scale: 0.98, opacity: 0 }}
+            transition={{ type: "spring", duration: 0.45 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-200"
+            className="bg-white border border-slate-200 rounded-3xl p-7 max-w-md w-full shadow-xl"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Student Portal</h2>
+              <h2 className="text-xl font-semibold tracking-tight">
+                Student Portal
+              </h2>
               <button
+                type="button"
                 onClick={() => {
                   setShowLogin(false);
-                  setPassword('');
-                  setError('');
+                  setPassword("");
+                  setError("");
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors text-xl"
+                className="text-slate-500 hover:text-slate-800 transition-colors"
               >
                 ✕
               </button>
@@ -360,24 +332,24 @@ export default function Welcome() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-600 mb-2 font-medium">Password</label>
+                <label className="block text-sm text-slate-600 mb-2">
+                  Password
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-colors placeholder-gray-400"
-                  placeholder="Enter Password"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 text-slate-900 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors"
+                  placeholder="Enter password"
                   autoFocus
                 />
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
+              {error && <p className="text-sm text-slate-600">{error}</p>}
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                className="w-full py-3 bg-purple-600 text-white rounded-2xl font-semibold hover:bg-purple-700 transition-colors"
               >
                 Log In
               </button>
