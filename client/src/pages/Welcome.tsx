@@ -114,6 +114,8 @@ export default function Welcome() {
   const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
+  const [signupAge, setSignupAge] = useState("");
+  const [signupExperience, setSignupExperience] = useState("");
   const [signupMessage, setSignupMessage] = useState("");
   const [signupStatus, setSignupStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [signupError, setSignupError] = useState("");

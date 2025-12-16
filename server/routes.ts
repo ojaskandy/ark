@@ -1344,7 +1344,7 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
 
   // Signup form endpoint - sends email to Arshia
   app.post("/api/signup", async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, phone, message } = req.body;
+    const { name, email, phone, age, pastExperience, message } = req.body;
 
     if (!name || !email) {
       return res.status(400).json({ message: "Name and email are required" });
