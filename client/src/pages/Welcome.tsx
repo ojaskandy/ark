@@ -212,7 +212,7 @@ export default function Welcome() {
               Start Now
             </button>
 
-            {/* Signup Dropdown */}
+            {/* Signup Dropdown - Tally Embed */}
             <AnimatePresence>
               {showSignup && (
                 <motion.div
@@ -224,106 +224,18 @@ export default function Welcome() {
                   }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className={`absolute top-full right-0 mt-2 w-80 border border-slate-200 rounded-2xl shadow-xl p-6 z-50 transition-colors duration-300 ${
-                    signupStatus === "success" ? "bg-green-100" : "bg-purple-50"
-                  }`}
+                  className="absolute top-full right-0 mt-2 w-[400px] md:w-[450px] bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden z-50 h-[600px]"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                    Get Started
-                  </h3>
-                  <form onSubmit={handleSignup} className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={signupName}
-                        onChange={(e) => setSignupName(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
-                        placeholder="Your name"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        value={signupEmail}
-                        onChange={(e) => setSignupEmail(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
-                        placeholder="your.email@example.com"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Phone (optional)
-                      </label>
-                      <input
-                        type="tel"
-                        value={signupPhone}
-                        onChange={(e) => setSignupPhone(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Age (optional)
-                      </label>
-                      <input
-                        type="number"
-                        value={signupAge}
-                        onChange={(e) => setSignupAge(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
-                        placeholder="Your age"
-                        min="1"
-                        max="120"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Past Experience (optional)
-                      </label>
-                      <textarea
-                        value={signupExperience}
-                        onChange={(e) => setSignupExperience(e.target.value)}
-                        rows={2}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm resize-none"
-                        placeholder="Tell us about your dance experience..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-600 mb-1.5">
-                        Message (optional)
-                      </label>
-                      <textarea
-                        value={signupMessage}
-                        onChange={(e) => setSignupMessage(e.target.value)}
-                        rows={3}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm resize-none"
-                        placeholder="Tell us about your dance goals..."
-                      />
-                    </div>
-                    {signupError && (
-                      <p className="text-sm text-red-600">{signupError}</p>
-                    )}
-                    {signupStatus === "success" && (
-                      <p className="text-sm text-green-600">
-                        Thank you! We'll be in touch soon.
-                      </p>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={signupStatus === "loading"}
-                      className="w-full py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                    >
-                      {signupStatus === "loading" ? "Submitting..." : "Submit"}
-                    </button>
-                  </form>
+                  <iframe 
+                    src="https://tally.so/r/eqDZvx?transparentBackground=1" 
+                    width="100%" 
+                    height="100%" 
+                    frameBorder="0" 
+                    marginHeight={0} 
+                    marginWidth={0} 
+                    title="ARK Dance Studio"
+                    className="w-full h-full"
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
