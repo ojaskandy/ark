@@ -1342,6 +1342,98 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
     }
   });
 
+  // Signup form endpoint - sends email to Arshia
+  app.post("/api/signup", async (req: Request, res: Response, next: NextFunction) => {
+    const { name, email, phone, message } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Name and email are required" });
+    }
+
+    // Save the signup request to the database
+    try {
+      await storage.saveEmailRecord({
+        email,
+        status: 'requested',
+        source: 'signup',
+        responseData: { timestamp: new Date().toISOString(), name, phone, message }
+      });
+    } catch (dbErr) {
+      console.error("Failed to save signup record to database:", dbErr);
+    }
+
+    // If Resend API is not configured, return a successful response
+    if (!resend) {
+      console.log("Email sending skipped - Resend API not configured");
+      return res.status(200).json({ 
+        message: "Thank you! We'll be in touch soon."
+      });
+    }
+
+    try {
+      // Format the email content
+      const emailContent = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h2>New Signup from ARK Dance Studios</h2>
+          
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+          ${message ? `<p><strong>Message:</strong><br>${message.replace(/\n/g, '<br>')}</p>` : ''}
+          
+          <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+          <p style="color: #666; font-size: 12px;">This signup was submitted from the ARK Dance Studios landing page.</p>
+        </div>
+      `;
+
+      const { data, error } = await resend.emails.send({
+        from: 'ARK Dance Studios <noreply@arkdancestudios.com>',
+        replyTo: [email],
+        to: ['arshia.x.kathpalia@gmail.com'],
+        subject: `New Signup: ${name}`,
+        html: emailContent
+      });
+
+      // Save the response to the database
+      try {
+        await storage.saveEmailRecord({
+          email,
+          status: error ? 'failed' : 'sent',
+          source: 'signup',
+          responseData: error ? { error: error.message, name, phone, message } : { ...data, name, phone, message }
+        });
+      } catch (dbErr) {
+        console.error("Failed to save email response to database:", dbErr);
+      }
+
+      if (error) {
+        console.error("Resend API Error:", error);
+        return res.status(200).json({ 
+          message: "Thank you! We'll be in touch soon."
+        });
+      }
+
+      return res.status(200).json({ message: "Thank you! We'll be in touch soon." });
+    } catch (err: any) {
+      console.error("Server Error sending signup email:", err);
+      
+      try {
+        await storage.saveEmailRecord({
+          email,
+          status: 'error',
+          source: 'signup',
+          responseData: { error: err.message, name, phone, message }
+        });
+      } catch (dbErr) {
+        console.error("Failed to save email error to database:", dbErr);
+      }
+      
+      return res.status(200).json({ 
+        message: "Thank you! We'll be in touch soon."
+      });
+    }
+  });
+
   // Resume upload endpoint
   app.post("/api/upload-resume", upload.single('resume'), async (req: Request, res: Response) => {
     try {
@@ -1711,77 +1803,47 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
         Math.round(performanceData.reduce((acc, joint) => acc + joint.difference, 0) / performanceData.length) : 0
     };
 
-    // LLM prompt for analysis - IMPROVED FOR DETAILED FEEDBACK
-    const prompt = `As ARK AI, a world-class dance coach, analyze this performance based on the provided data.
-    
-    PERFORMANCE DATA:
-    - Overall Match Score: ${reliableScore}%
-    - Joints Analyzed: ${validJoints}/${jointNames.length}
-    - Average Angle Difference: ${analysisData.avgDifference}° (Lower is better)
-    
-    JOINT BREAKDOWN:
-    ${performanceData.slice(0, 5).map(joint => 
-      `- ${joint.joint}: ${joint.difference}° difference (Consistency: ${joint.consistency}%)`
-    ).join('\n')}
+    // LLM prompt for analysis
+    const prompt = `As Master Shifu, analyze this martial arts performance:
 
-    Provide a structured, encouraging, and highly specific analysis in the following JSON format:
-    {
-      "feedback": "A warm, encouraging paragraph summarizing the performance (80-100 words). Start with what went well.",
-      "techniqueTips": "3 specific, bulleted actionable tips for improvement. Focus on the joints with the biggest differences.",
-      "breakdown": {
-        "start": {
-          "observation": "What happened in the beginning",
-          "tip": "Specific tip for the start"
-        },
-        "middle": {
-          "observation": "What happened in the middle",
-          "tip": "Specific tip for the middle"
-        },
-        "end": {
-          "observation": "How they finished",
-          "tip": "Specific tip for the ending"
-        }
-      }
-    }
+Overall Score: ${reliableScore}%
+Joints Analyzed: ${validJoints}/${jointNames.length}
+Average Angle Difference: ${analysisData.avgDifference}°
 
-    Tone: Warm, supportive, professional, and encouraging. Suitable for all ages. Use 1-2 emojis max.`;
+Top Joint Analysis:
+${performanceData.slice(0, 3).map(joint => 
+  `- ${joint.joint}: ${joint.difference}° off, ${joint.consistency}% consistent`
+).join('\n')}
+
+Provide concise feedback in 80-100 words:
+- Overall assessment
+- 2-3 specific improvements
+- Encouraging martial arts wisdom
+
+Format as natural paragraph, no bullet points.`;
 
     const completion = await visionClient.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are ARK AI, an elite dance coach who provides supportive, structured, and highly technical feedback in simple language. You always output valid JSON."
+          content: "You are Master Shifu, a wise martial arts instructor. Provide encouraging yet specific feedback about technique performance."
         },
         {
           role: "user",
           content: prompt
         }
       ],
-      max_tokens: 600,
-      temperature: 0.7,
-      response_format: { type: "json_object" }
+      max_tokens: 200,
+      temperature: 0.7
     });
 
-    const responseContent = completion.choices[0]?.message?.content;
-    let aiAnalysis;
-    
-    try {
-      aiAnalysis = JSON.parse(responseContent || "{}");
-    } catch (e) {
-      console.error("Failed to parse AI analysis JSON", e);
-      aiAnalysis = {
-        feedback: "Great effort! Your movement shows promise. Focus on matching the exact angles of the instructor for better synchronization.",
-        techniqueTips: "Check your arm extension.\nWatch your posture.\nKeep practicing!",
-        breakdown: null
-      };
-    }
+    const feedback = completion.choices[0]?.message?.content || "Your dedication to training shows promise. Continue practicing with focus and patience.";
 
     res.json({
       success: true,
-      feedback: aiAnalysis.feedback,
-      techniqueTips: Array.isArray(aiAnalysis.techniqueTips) ? aiAnalysis.techniqueTips.join('\n') : aiAnalysis.techniqueTips,
-      breakdown: aiAnalysis.breakdown,
+      feedback,
+      techniqueTips: "Focus on consistency and proper form alignment.",
       performanceData,
       overallScore: reliableScore,
       dtwScore: avgDtwScore,
@@ -1796,180 +1858,7 @@ Return ONLY the category name (challenges, start_live_routine, practice_library,
       feedback: "Your effort in training is commendable. Keep practicing with dedication and you will see improvement."
     });
     }
-  });
-
-  // ARK AI Chat Endpoint
-  app.post('/api/ark-ai/chat', async (req, res) => {
-    if (!req.isAuthenticated() || !req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    try {
-      const { message, image, style = "general", history = [] } = req.body;
-
-      if (!message && !image) {
-        return res.status(400).json({ error: 'Message or image is required' });
-      }
-
-      // Unique expert personas for each dance style
-      const STYLE_PERSONAS: Record<string, { name: string; greeting: string; expertise: string; terminology: string; signature: string }> = {
-        bharatanatyam: {
-          name: "Guru Lakshmi",
-          greeting: "Namaste, dear shishya!",
-          expertise: "I have trained in the Kalakshetra and Pandanallur traditions for 40 years. My expertise lies in Nritta (pure dance), Nritya (expressive dance), and the sacred geometry of Aramandi.",
-          terminology: "We use Adavus (basic units), Aramandi (half-seated position), Mudras (hand gestures from Natyashastra), Abhinaya (expression), and the nine Rasas.",
-          signature: "Remember: In Bharatanatyam, the body is a temple. Every angle must be precise, every mudra meaningful. 🙏"
-        },
-        kathak: {
-          name: "Ustad Rehman",
-          greeting: "Aadaab! Welcome to my darbar.",
-          expertise: "I come from the Lucknow Gharana lineage, specializing in the lyrical grace and emotional depth of Kathak. I have performed in royal courts and modern stages alike.",
-          terminology: "In Kathak, we speak of Tatkar (footwork), Chakkar (spins), Tukda/Toda (rhythmic compositions), Gat Bhav (story-telling), and the intricate Layakari (rhythm variations).",
-          signature: "Kathak is poetry in motion - let your ghungroos tell the story! 💃"
-        },
-        odissi: {
-          name: "Guru Madhavi",
-          greeting: "Bandhu! (Greetings, dear one)",
-          expertise: "I am a devoted practitioner of the Odissi tradition from Odisha, trained in the lyrical, sculptural style inspired by the Jagannath temple sculptures.",
-          terminology: "We practice Tribhangi (three bends), Chauka (square position), Bhangis (body positions), and the flowing, wave-like movements unique to Odissi.",
-          signature: "Odissi is like a living temple sculpture - feel the divine grace in every curve! 🌸"
-        },
-        kuchipudi: {
-          name: "Guru Venkatesh",
-          greeting: "Namaskar! Welcome to my stage.",
-          expertise: "I represent the vibrant Kuchipudi tradition from Andhra Pradesh, known for its dramatic storytelling, brisk movements, and the famous Tarangam (dancing on brass plate).",
-          terminology: "In Kuchipudi, we emphasize Jathis (rhythmic patterns), the unique Manduka Shabdam (frog dance), and dramatic Abhinaya with dialogues.",
-          signature: "Kuchipudi demands both athleticism and artistry - dance like you're telling the world's greatest story! 🏺"
-        },
-        kathakali: {
-          name: "Guru Krishnan",
-          greeting: "Namaskaram! Let us begin.",
-          expertise: "I am a master of Kathakali from Kerala - the dance-drama that combines Nritta, Nritya, and Natya. My face alone can express a thousand emotions.",
-          terminology: "Kathakali uses elaborate Mudras, Navarasas (nine emotions), specific eye movements (Netrabhinaya), and the powerful Chuzhippu (body movements).",
-          signature: "In Kathakali, your eyes must speak louder than words. The face is your canvas! 🎭"
-        },
-        manipuri: {
-          name: "Guru Tombi",
-          greeting: "Khurumjari! (Greetings from Manipur)",
-          expertise: "I bring the gentle, devotional art of Manipuri from the valleys of Manipur. Our dance is a prayer, flowing like the waters of the Loktak Lake.",
-          terminology: "We practice Ras Leela (divine dance of Krishna and Radha), the graceful Cholom (drum dance), and the ethereal circular movements.",
-          signature: "Manipuri is meditation in motion - let your body flow like a gentle stream! 🎋"
-        },
-        mohiniyattam: {
-          name: "Guru Lakshmi Amma",
-          greeting: "Namaskaram, dear one.",
-          expertise: "I am a keeper of Mohiniyattam, the enchanting dance of Kerala. Our movements are like swaying palm trees - graceful, hypnotic, feminine.",
-          terminology: "We emphasize Lasya (graceful aspect), circular movements, and the characteristic Sopanam music. Every gesture is soft yet powerful.",
-          signature: "Mohiniyattam is the art of gentle enchantment - move like you're casting a spell! 🥥"
-        },
-        sattriya: {
-          name: "Guru Bhupen",
-          greeting: "Namo Narayan! Blessings to you.",
-          expertise: "I preserve the sacred Sattriya tradition from Assam's monasteries. Our dance was created by the saint Shankaradeva as a form of devotion.",
-          terminology: "We use unique hand gestures, the Borgeet (devotional songs), and movements that combine prayer with performance.",
-          signature: "Sattriya is devotion made visible - dance as an offering to the divine! 📜"
-        },
-        bollywood: {
-          name: "Choreographer Ravi",
-          greeting: "Hey! Ready to groove?",
-          expertise: "I've choreographed for the biggest films in Bollywood. My style fuses classical Indian techniques with modern, high-energy moves that make crowds go wild.",
-          terminology: "We blend Hip-hop, Jazz, contemporary with Filmi expressions. It's all about energy, attitude, and making the camera love you!",
-          signature: "Bollywood is all about emotion and energy - dance like millions are watching! 🎬"
-        },
-        folk: {
-          name: "Guru Devi",
-          greeting: "Jai Ho! Welcome to the village square!",
-          expertise: "I represent the rich folk traditions of India - from Bhangra to Garba, Lavani to Ghoomar. These dances are the heartbeat of our communities.",
-          terminology: "Folk dance is about celebration! We use vigorous movements, community formations, and traditional props like dandiya sticks and pots.",
-          signature: "Folk dance connects us to our roots - let your joy overflow! 🥁"
-        },
-        general: {
-          name: "Guru ARK",
-          greeting: "Namaste!",
-          expertise: "I am versed in all Indian classical and folk dance traditions. Whatever style speaks to your heart, I am here to guide you.",
-          terminology: "Each dance form has its own vocabulary, and I speak them all fluently.",
-          signature: "Dance is the hidden language of the soul - let it speak through you! ✨"
-        }
-      };
-
-      const persona = STYLE_PERSONAS[style] || STYLE_PERSONAS.general;
-
-      const ARC_SYSTEM_PROMPT = `You are ${persona.name}, an elite ${style === 'general' ? 'Indian dance' : style} expert and AI coach. ${persona.expertise}
-
-PERSONA DETAILS:
-- Your greeting style: "${persona.greeting}"
-- Your terminology: ${persona.terminology}
-- Your signature phrase: "${persona.signature}"
-
-Your Responsibilities:
-- Analyze images of dance moves if provided, checking for posture, alignment, and technique specific to ${style}.
-- Provide specific, technical, yet accessible feedback tailored to ${style}.
-- Be encouraging but demanding of excellence (like a strict but loving Guru).
-- If the user asks about something non-dance related, politely steer them back to dance.
-- Use ${style}-specific technical terms and explain them simply when needed.
-- Structure your advice: Observation -> Correction -> Drill/Exercise.
-- Keep responses concise (under 150 words) unless asked for detailed breakdown.
-- Occasionally use your signature phrase or greeting to maintain personality.
-
-Tone: Warm, respectful (Guru-Shishya parampara style), encouraging, and deeply knowledgeable about ${style}.
-
-IMPORTANT: You must ALWAYS return your response in valid JSON format with the following structure:
-{
-  "message": "A warm, conversational summary of your feedback in your unique voice as ${persona.name}.",
-  "analysis": "Technical breakdown of what you see (if image provided) or detailed answer using ${style}-specific terminology.",
-  "correction": "Specific things to fix or focus on (use ${style}-specific terms like appropriate positions and gestures).",
-  "drill": "A specific exercise or drill to improve, relevant to ${style} practice.",
-  "tips": ["${style}-specific tip 1", "${style}-specific tip 2"]
-}
-If the user just says "hi" or asks a general question, fill "message" and "tips", and leave others null or empty strings.`;
-
-      const messages = [
-        { role: 'system', content: ARC_SYSTEM_PROMPT },
-        ...history,
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: message || "Please analyze this image." },
-            ...(image ? [{
-              type: 'image_url',
-              image_url: {
-                url: image.startsWith('data:') ? image : `data:image/jpeg;base64,${image}`,
-                detail: 'high'
-              }
-            }] : [])
-          ]
-        }
-      ];
-
-      const completion = await visionClient.chat.completions.create({
-        model: "gpt-4o",
-        messages: messages as any,
-        max_tokens: 1000,
-        temperature: 0.7,
-        response_format: { type: "json_object" }
-      });
-
-      const responseContent = completion.choices[0].message.content;
-      let responseData;
-      try {
-        responseData = JSON.parse(responseContent || "{}");
-      } catch (e) {
-        responseData = { message: responseContent };
-      }
-
-      res.json({
-        ...responseData,
-        timestamp: new Date().toISOString()
-      });
-
-    } catch (error) {
-      console.error('ARK AI chat error:', error);
-      res.status(500).json({ 
-        error: 'Failed to get response from ARK AI',
-        message: "I'm having trouble connecting to the dance studio server right now. Let's try again in a beat!"
-      });
-    }
-  });
+});
 
   const httpServer = createServer(app);
   return httpServer;

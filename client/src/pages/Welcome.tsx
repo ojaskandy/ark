@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import arshiaImage from "../assets/arshia.png";
 
 type ReelItem =
@@ -45,9 +45,20 @@ const REEL_ITEMS: ReelItem[] = [
 export default function Welcome() {
   const [, navigate] = useLocation();
   const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [failedMedia, setFailedMedia] = useState<Record<string, true>>({});
+  
+  // Signup form state
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPhone, setSignupPhone] = useState("");
+  const [signupMessage, setSignupMessage] = useState("");
+  const [signupStatus, setSignupStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [signupError, setSignupError] = useState("");
+  
+  const signupDropdownRef = useRef<HTMLDivElement>(null);
 
   const markFailed = (id: string) => {
     setFailedMedia((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
@@ -58,6 +69,23 @@ export default function Welcome() {
     const base = usable.length ? usable : REEL_ITEMS;
     return [...base, ...base];
   }, [failedMedia]);
+
+  // Close signup dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (signupDropdownRef.current && !signupDropdownRef.current.contains(event.target as Node)) {
+        setShowSignup(false);
+      }
+    };
+
+    if (showSignup) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSignup]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,6 +112,51 @@ export default function Welcome() {
     }
   };
 
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSignupError("");
+    setSignupStatus("loading");
+
+    if (!signupName.trim() || !signupEmail.trim()) {
+      setSignupError("Name and email are required");
+      setSignupStatus("error");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: signupName.trim(),
+          email: signupEmail.trim(),
+          phone: signupPhone.trim() || undefined,
+          message: signupMessage.trim() || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSignupStatus("success");
+        setSignupName("");
+        setSignupEmail("");
+        setSignupPhone("");
+        setSignupMessage("");
+        setTimeout(() => {
+          setShowSignup(false);
+          setSignupStatus("idle");
+        }, 2000);
+      } else {
+        setSignupError(data.message || "Something went wrong. Please try again.");
+        setSignupStatus("error");
+      }
+    } catch (err) {
+      setSignupError("Failed to submit. Please try again.");
+      setSignupStatus("error");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
       {/* Header */}
@@ -106,22 +179,98 @@ export default function Welcome() {
             />
           </button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative" ref={signupDropdownRef}>
             <button
               type="button"
-              onClick={() => navigate("/registration")}
-              className="hidden sm:inline-flex h-10 items-center rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
-            >
-              Book a Free Trial
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/live-routine")}
-              className="inline-flex h-10 items-center rounded-full bg-purple-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-purple-700"
+              onClick={() => setShowSignup(!showSignup)}
+              className="inline-flex h-10 items-center rounded-full bg-purple-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-purple-700 transition-colors"
             >
               Start Now
             </button>
+
+            {/* Signup Dropdown */}
+            <AnimatePresence>
+              {showSignup && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-6 z-50"
+                >
+                  <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                    Get Started
+                  </h3>
+                  <form onSubmit={handleSignup} className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={signupName}
+                        onChange={(e) => setSignupName(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
+                        placeholder="Your name"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        value={signupEmail}
+                        onChange={(e) => setSignupEmail(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
+                        placeholder="your.email@example.com"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Phone (optional)
+                      </label>
+                      <input
+                        type="tel"
+                        value={signupPhone}
+                        onChange={(e) => setSignupPhone(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Message (optional)
+                      </label>
+                      <textarea
+                        value={signupMessage}
+                        onChange={(e) => setSignupMessage(e.target.value)}
+                        rows={3}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm resize-none"
+                        placeholder="Tell us about your dance goals..."
+                      />
+                    </div>
+                    {signupError && (
+                      <p className="text-sm text-red-600">{signupError}</p>
+                    )}
+                    {signupStatus === "success" && (
+                      <p className="text-sm text-green-600">
+                        Thank you! We'll be in touch soon.
+                      </p>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={signupStatus === "loading"}
+                      className="w-full py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    >
+                      {signupStatus === "loading" ? "Submitting..." : "Submit"}
+                    </button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <button
               type="button"
@@ -136,13 +285,13 @@ export default function Welcome() {
 
       {/* Main content with curved rectangle card */}
       <main className="relative z-10">
-        <section className="flex items-center justify-center px-6 md:px-10 py-16 md:py-20">
-          {/* Curved rectangle card with video background - expanded */}
+        <section className="flex items-center justify-center px-6 md:px-10 py-10 md:py-12">
+          {/* Curved rectangle card with video background - more compact */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-7xl h-[75vh] max-h-[800px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
+            className="relative w-full max-w-7xl h-[60vh] max-h-[650px] rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200/50"
           >
             {/* Video background */}
             <video
@@ -160,12 +309,12 @@ export default function Welcome() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
             
             {/* Content with white background for ARK Dance Studios */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center p-12 md:p-16">
-              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-10 md:px-16 py-8 md:py-12 shadow-2xl border border-white/50">
-                <h1 className="text-5xl md:text-7xl font-semibold text-slate-900 mb-4 leading-tight text-center">
+            <div className="relative z-10 h-full flex flex-col items-center justify-center p-8 md:p-12">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-8 md:px-12 py-6 md:py-8 shadow-2xl border border-white/50">
+                <h1 className="text-4xl md:text-6xl font-semibold text-slate-900 mb-3 leading-tight text-center">
                   ARK Dance Studios
                 </h1>
-                <p className="text-xl md:text-2xl text-slate-700 text-center">
+                <p className="text-lg md:text-xl text-slate-700 text-center">
                   Indian Classical Dance
                 </p>
               </div>
@@ -174,16 +323,16 @@ export default function Welcome() {
         </section>
 
         {/* Tagline and Horizontal scrolling reel - visible together */}
-        <section className="px-6 md:px-10 -mt-8 pb-16">
+        <section className="px-6 md:px-10 -mt-6 pb-12">
           {/* Tagline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto text-center mb-8"
+            className="max-w-4xl mx-auto text-center mb-6"
           >
-            <p className="text-2xl md:text-3xl font-semibold text-slate-900">
+            <p className="text-xl md:text-2xl font-semibold text-slate-900">
               The Leading AI Dance Studio — 100x with Cutting Edge Tech
             </p>
           </motion.div>
@@ -199,7 +348,7 @@ export default function Welcome() {
                   {reelItems.map((item, idx) => (
                     <div
                       key={`${item.id}-${idx}`}
-                      className="relative w-[280px] sm:w-[320px] md:w-[380px] aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-sm"
+                      className="relative w-[300px] sm:w-[360px] md:w-[420px] aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-md hover:shadow-lg transition-shadow"
                     >
                       {item.kind === "image" ? (
                         <img
@@ -222,7 +371,7 @@ export default function Welcome() {
                           onError={() => markFailed(item.id)}
                         />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                     </div>
                   ))}
                 </div>
@@ -232,7 +381,7 @@ export default function Welcome() {
         </section>
 
         {/* Meet Arshia Section */}
-        <section className="px-6 md:px-10 py-20 bg-gradient-to-b from-white to-slate-50">
+        <section className="px-6 md:px-10 py-16 bg-gradient-to-b from-white to-slate-50">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
