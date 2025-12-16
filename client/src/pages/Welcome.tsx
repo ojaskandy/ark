@@ -193,6 +193,8 @@ export default function Welcome() {
           name: signupName.trim(),
           email: signupEmail.trim(),
           phone: signupPhone.trim() || undefined,
+          age: signupAge.trim() || undefined,
+          pastExperience: signupExperience.trim() || undefined,
           message: signupMessage.trim() || undefined,
         }),
       });
@@ -204,16 +206,19 @@ export default function Welcome() {
         setSignupName("");
         setSignupEmail("");
         setSignupPhone("");
+        setSignupAge("");
+        setSignupExperience("");
         setSignupMessage("");
         setTimeout(() => {
           setShowSignup(false);
           setSignupStatus("idle");
-        }, 2000);
+        }, 3000);
       } else {
         setSignupError(data.message || "Something went wrong. Please try again.");
         setSignupStatus("error");
       }
     } catch (err) {
+      console.error("Signup error:", err);
       setSignupError("Failed to submit. Please try again.");
       setSignupStatus("error");
     }
@@ -255,10 +260,16 @@ export default function Welcome() {
               {showSignup && (
                 <motion.div
                   initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1
+                  }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-full right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-6 z-50"
+                  transition={{ duration: 0.3 }}
+                  className={`absolute top-full right-0 mt-2 w-80 border border-slate-200 rounded-2xl shadow-xl p-6 z-50 transition-colors duration-300 ${
+                    signupStatus === "success" ? "bg-green-100" : "bg-purple-50"
+                  }`}
                 >
                   <h3 className="text-lg font-semibold text-slate-900 mb-4">
                     Get Started
@@ -300,6 +311,32 @@ export default function Welcome() {
                         onChange={(e) => setSignupPhone(e.target.value)}
                         className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
                         placeholder="(555) 123-4567"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Age (optional)
+                      </label>
+                      <input
+                        type="number"
+                        value={signupAge}
+                        onChange={(e) => setSignupAge(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm"
+                        placeholder="Your age"
+                        min="1"
+                        max="120"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1.5">
+                        Past Experience (optional)
+                      </label>
+                      <textarea
+                        value={signupExperience}
+                        onChange={(e) => setSignupExperience(e.target.value)}
+                        rows={2}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-colors text-sm resize-none"
+                        placeholder="Tell us about your dance experience..."
                       />
                     </div>
                     <div>
