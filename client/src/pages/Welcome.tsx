@@ -371,11 +371,14 @@ export default function Welcome() {
             {/* Content with white background for ARK Dance Studios */}
             <div className="relative z-10 h-full flex flex-col items-center justify-center p-10 md:p-14">
               <div className="bg-white/95 backdrop-blur-sm rounded-3xl px-10 md:px-14 py-7 md:py-10 shadow-2xl border border-white/50">
-                <h1 className="text-5xl md:text-7xl font-semibold text-slate-900 mb-4 leading-tight text-center">
+                <h1 className="text-5xl md:text-7xl font-semibold mb-4 leading-tight text-center bg-gradient-to-b from-amber-600 via-yellow-600 to-amber-700 bg-clip-text text-transparent drop-shadow-lg">
                   ARK Dance Studios
                 </h1>
-                <p className="text-xl md:text-2xl text-slate-700 text-center">
+                <p className="text-xl md:text-2xl text-slate-700 text-center mb-3">
                   Indian Classical Dance
+                </p>
+                <p className="text-sm md:text-base text-amber-700/90 text-center font-medium">
+                  Miss Teen India USA • International Indian Icon Season 8th Winner • 14 years of experience
                 </p>
               </div>
             </div>
@@ -435,7 +438,7 @@ export default function Welcome() {
         </section>
 
         {/* Meet Arshia Section */}
-        <section className="px-6 md:px-10 py-19 bg-gradient-to-b from-white to-slate-50">
+        <section className="px-6 md:px-10 py-20 bg-gradient-to-b from-white to-slate-50">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
